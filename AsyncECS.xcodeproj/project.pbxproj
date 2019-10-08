@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		72B483C8233A992700E44E78 /* systemDependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483C7233A992700E44E78 /* systemDependencies.cpp */; };
+		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
+		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
+		72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */; };
 		72B483CE233D485800E44E78 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483CC233D485800E44E78 /* Timer.cpp */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +27,15 @@
 
 /* Begin PBXFileReference section */
 		72332DBA233A90F3007DBD21 /* AsyncECS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncECS; sourceTree = BUILT_PRODUCTS_DIR; };
-		72B483C7233A992700E44E78 /* systemDependencies.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = systemDependencies.cpp; sourceTree = "<group>"; };
+		728D876D234D1969003EA2C6 /* Registry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Registry.hpp; sourceTree = "<group>"; };
+		728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectCollection.cpp; sourceTree = "<group>"; };
+		728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectCollection.hpp; sourceTree = "<group>"; };
+		728D8772234D1BE9003EA2C6 /* GameObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
+		728D8774234D1D5E003EA2C6 /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
+		728D8775234D1E15003EA2C6 /* Scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
+		728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectDatabase.cpp; sourceTree = "<group>"; };
+		728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectDatabase.hpp; sourceTree = "<group>"; };
+		72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestSystemDependencies.cpp; sourceTree = "<group>"; };
 		72B483C9233BE20900E44E78 /* ComponentContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentContainer.hpp; sourceTree = "<group>"; };
 		72B483CA233BEDA200E44E78 /* TupleHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TupleHelper.hpp; sourceTree = "<group>"; };
 		72B483CB233BF01000E44E78 /* IdHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IdHelper.hpp; sourceTree = "<group>"; };
@@ -63,14 +73,38 @@
 		72332DBC233A90F3007DBD21 /* AsyncECS */ = {
 			isa = PBXGroup;
 			children = (
-				72B483C7233A992700E44E78 /* systemDependencies.cpp */,
-				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
-				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
-				72B483CB233BF01000E44E78 /* IdHelper.hpp */,
-				72B483CC233D485800E44E78 /* Timer.cpp */,
-				72B483CD233D485800E44E78 /* Timer.hpp */,
+				728D877A234D239E003EA2C6 /* Tools */,
+				728D8779234D2350003EA2C6 /* ECS */,
+				72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */,
 			);
 			path = AsyncECS;
+			sourceTree = "<group>";
+		};
+		728D8779234D2350003EA2C6 /* ECS */ = {
+			isa = PBXGroup;
+			children = (
+				728D8772234D1BE9003EA2C6 /* GameObject.hpp */,
+				728D8774234D1D5E003EA2C6 /* System.hpp */,
+				728D8775234D1E15003EA2C6 /* Scene.hpp */,
+				728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */,
+				728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */,
+				728D876D234D1969003EA2C6 /* Registry.hpp */,
+				728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */,
+				728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */,
+				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
+			);
+			path = ECS;
+			sourceTree = "<group>";
+		};
+		728D877A234D239E003EA2C6 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				72B483CC233D485800E44E78 /* Timer.cpp */,
+				72B483CD233D485800E44E78 /* Timer.hpp */,
+				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
+				72B483CB233BF01000E44E78 /* IdHelper.hpp */,
+			);
+			path = Tools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,7 +165,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
-				72B483C8233A992700E44E78 /* systemDependencies.cpp in Sources */,
+				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
+				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
+				72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

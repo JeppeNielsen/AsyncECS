@@ -8,6 +8,8 @@
 
 #pragma once
 
+namespace AsyncECS {
+
 template<typename T>
 class IdHelper {
 public:
@@ -22,3 +24,5 @@ private:
 
 template<typename T>
 std::size_t IdHelper<T>::idCounter {0};
+
+}

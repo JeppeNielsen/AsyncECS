@@ -10,6 +10,7 @@
 #include <tuple>
 #include <type_traits>
 
+namespace AsyncECS {
 namespace TupleHelper {
 
     template<class F, class...Ts, std::size_t...Is>
@@ -61,7 +62,7 @@ namespace TupleHelper {
 
 
     template <class T>
-    using without_duplicates = typename filter<std::tuple<>, T>::type;
+    using UniqueTypes = typename filter<std::tuple<>, T>::type;
     
-    
+}
 }

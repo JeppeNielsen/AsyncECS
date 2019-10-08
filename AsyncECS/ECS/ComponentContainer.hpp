@@ -12,6 +12,8 @@
 #include <assert.h>
 #include <limits>
 
+namespace AsyncECS {
+
 template<typename T>
 struct ComponentContainer {
 
@@ -92,3 +94,5 @@ struct ComponentContainer {
     std::vector<std::uint32_t> indicies;
     std::vector<std::uint16_t> references;
 };
+
+}
