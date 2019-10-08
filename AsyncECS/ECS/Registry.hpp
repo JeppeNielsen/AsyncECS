@@ -30,7 +30,6 @@ struct Registry {
     void AddComponent(GameObject gameObject) {
         std::get<Component>(components).Create(gameObject);
     }
-    
 };
   
 }

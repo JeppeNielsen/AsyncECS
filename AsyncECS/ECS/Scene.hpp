@@ -24,7 +24,6 @@ struct Scene {
     GameObjectCollection gameObjects;
     
     Scene(Registry& registry) : registry(registry) {
-    
         TupleHelper::Iterate(systems, [this](auto& system) {
             auto this_system = std::make_tuple(&system);
             auto dependencies = system.GetDependenciesReferences(systems);

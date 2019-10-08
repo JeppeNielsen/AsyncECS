@@ -83,15 +83,15 @@
 		728D8779234D2350003EA2C6 /* ECS */ = {
 			isa = PBXGroup;
 			children = (
+				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
 				728D8772234D1BE9003EA2C6 /* GameObject.hpp */,
-				728D8774234D1D5E003EA2C6 /* System.hpp */,
-				728D8775234D1E15003EA2C6 /* Scene.hpp */,
+				728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */,
+				728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */,
 				728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */,
 				728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */,
 				728D876D234D1969003EA2C6 /* Registry.hpp */,
-				728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */,
-				728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */,
-				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
+				728D8775234D1E15003EA2C6 /* Scene.hpp */,
+				728D8774234D1D5E003EA2C6 /* System.hpp */,
 			);
 			path = ECS;
 			sourceTree = "<group>";

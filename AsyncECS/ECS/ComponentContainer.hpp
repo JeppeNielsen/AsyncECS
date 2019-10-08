@@ -20,7 +20,7 @@ struct ComponentContainer {
     const std::uint32_t NUllIndex = std::numeric_limits<std::uint32_t>::max();
 
     ComponentContainer() = default;
-    virtual ~ComponentContainer() = default;
+    ~ComponentContainer() = default;
 
     ComponentContainer(const ComponentContainer &) = delete;
     ComponentContainer(ComponentContainer &&) = default;

@@ -56,7 +56,8 @@ struct Renderable {
 
 
 
-struct VelocitySystem : System<Position, const Velocity>, NoDependencies {
+struct VelocitySystem : System<Position, const Velocity>,
+                        NoDependencies {
     
     void Initialize() {
         std::cout << "VelocitySystem :: Initialized"<<std::endl;
@@ -102,7 +103,6 @@ struct RenderSystem : System<Position, const Renderable, Mesh>,
         }
         
     }
-    
 };
 
 using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity>;
@@ -111,11 +111,9 @@ using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem>;
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-const int NUM_ENTITIES = 1000;
+const int NUM_ENTITIES = 10000;
 const int NUM_ITERATIONS = 1;
 const int NUM_TIMINGS = 1;
-
-
 
 int main() {
 
@@ -123,7 +121,6 @@ int main() {
 
     RegistryType registry;
     SceneType scene(registry);
-    
     
     int serialTime = 0;
     int parallelTime = 0;
