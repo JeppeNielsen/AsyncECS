@@ -65,20 +65,6 @@ struct Scene {
             using systemType = std::remove_reference_t<decltype(system)>;
         
             const auto this_system = std::make_tuple(&system);
-            /*typename systemType::Iterator it;
-            
-            int min = std::numeric_limits<int>::max();
-            int index = 0;
-            TupleHelper::Iterate(it, [&min, &index, this] (auto ptr) {
-                using Type = std::remove_const_t<std::remove_pointer_t<decltype(ptr)>>;
-                using ComponentIndexType = TupleHelper::Index<ComponentContainer<Type>, Components>;
-                const auto typeIndex = ComponentIndexType::value;
-                auto size = (int)componentObjects[typeIndex].objects.size();
-                if (size < min) {
-                    index = typeIndex;
-                    min = size;
-                }
-            });*/
             
             auto index = system.template GetContainerIndex<Components>(componentObjects);
             
@@ -130,13 +116,6 @@ struct Scene {
         });
         frameCounter++;
     }
-    
-    /*template<typename T, typename... Args>
-    std::enable_if_t<std::is_constructible<T, Args...>::value, void>
-    void AddComponent(const GameObject gameObject, Args&& ... args) {
-        std::get<T>(registry.components).Create(gameObject.index, std::forward<Args...>(args...));
-    }*/
-    
 };
 
 }
