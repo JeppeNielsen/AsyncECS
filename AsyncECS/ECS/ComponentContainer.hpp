@@ -7,17 +7,14 @@
 //
 
 #pragma once
-
 #include <vector>
 #include <assert.h>
-#include <limits>
+#include "GameObject.hpp"
 
 namespace AsyncECS {
 
 template<typename T>
 struct ComponentContainer {
-
-    const std::uint32_t NUllIndex = std::numeric_limits<std::uint32_t>::max();
 
     ComponentContainer() = default;
     ~ComponentContainer() = default;
@@ -28,70 +25,83 @@ struct ComponentContainer {
     ComponentContainer & operator=(const ComponentContainer &) = delete;
     ComponentContainer & operator=(ComponentContainer &&) = default;
     
-    bool Contains(const int index) const {
-        return index<indicies.size() && indicies[index] != NUllIndex;
-    }
-    
-    void CreateIndex(const int index) {
-        assert(!Contains(index));
-        if (index>=indicies.size()) {
-            indicies.resize(index + 1, NUllIndex);
+    void CreateIndex(const GameObject gameObject) {
+        const auto objectIndex = gameObject & GameObjectIndexMask;
+        
+        if (objectIndex>=indicies.size()) {
+            indicies.resize(objectIndex + 1, GameObjectNull);
         }
-        indicies[index] = (std::uint32_t)elements.size();
-        references.emplace_back(1);
+        
+        indicies[objectIndex] = (std::uint32_t)elements.size();
+        references.push_back(1);
+        changed.push_back(0);
     }
     
-    void Create(const int index) {
-        CreateIndex(index);
+    void Create(const GameObject gameObject) {
+        CreateIndex(gameObject);
         elements.resize(elements.size() + 1);
     }
     
     template<typename... Args>
     std::enable_if_t<!std::is_constructible<T, Args...>::value, void>
-    Create(const int index, Args&& ... args) {
-        CreateIndex(index);
+    Create(const GameObject gameObject, Args&& ... args) {
+        CreateIndex(gameObject);
         elements.emplace_back(T{std::forward<Args>(args)...});
     }
     
     template<typename... Args>
     std::enable_if_t<std::is_constructible<T, Args...>::value, void>
-    Create(const int index, Args&& ... args) {
-        CreateIndex(index);
+    Create(const GameObject gameObject, Args&& ... args) {
+        CreateIndex(gameObject);
         elements.emplace_back(std::forward<Args>(args)...);
     }
     
-    void Reference(const int index, const int referenceIndex) {
-        assert(!Contains(index));
-        assert(Contains(referenceIndex));
-        if (index>=indicies.size()) {
-            indicies.resize(index + 1, NUllIndex);
+    void Reference(const GameObject gameObject, const GameObject referenceGameObject) {
+        const auto objectIndex = gameObject & GameObjectIndexMask;
+        
+        if (objectIndex>=indicies.size()) {
+            indicies.resize(objectIndex + 1, GameObjectNull);
         }
         
-        indicies[index] = referenceIndex;
+        const auto referenceObjectIndex = referenceGameObject & GameObjectIndexMask;
+        
+        const auto referenceIndex = indicies[referenceObjectIndex];
+        
+        indicies[objectIndex] = referenceIndex;
         ++references[referenceIndex];
     }
     
-    void Destroy(const int index) {
-        assert(Contains(index));
+    void Destroy(const GameObject gameObject) {
         
-        if ((references[index]--)==0) {
+        const auto objectIndex = gameObject & GameObjectIndexMask;
+        const auto index = indicies[objectIndex];
+        
+        if ((--references[index])==0) {
             auto tmp = std::move(elements.back());
             elements[index] = std::move(tmp);
             elements.pop_back();
             references[index] = references.back();
             references.pop_back();
-            indicies[indicies.size() - 1] = index;
+            changed[index] = changed.back();
+            changed.pop_back();
         }
         
-        indicies[index] = NUllIndex;
+        indicies[objectIndex] = GameObjectNull;
     }
     
-    T& Get(const int index) const {
-        return (T&)elements[indicies[index]];
+    T& Get(const GameObject gameObject, const int changedFrame) {
+        auto const elementIndex = indicies[gameObject & GameObjectIndexMask];
+        changed[elementIndex] = changedFrame;
+        return (T&)elements[elementIndex];
     }
     
-    std::vector<T> elements;
+    const T& GetConst(const GameObject gameObject) const {
+        return (const T&)elements[indicies[gameObject & GameObjectIndexMask]];
+    }
+    
     std::vector<std::uint32_t> indicies;
+    std::vector<T> elements;
+    std::vector<std::uint32_t> changed;
     std::vector<std::uint16_t> references;
 };
 

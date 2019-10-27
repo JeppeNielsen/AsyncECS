@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
 		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
+		728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */; };
 		72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */; };
 		72B483CE233D485800E44E78 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483CC233D485800E44E78 /* Timer.cpp */; };
 /* End PBXBuildFile section */
@@ -35,6 +36,7 @@
 		728D8775234D1E15003EA2C6 /* Scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
 		728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectDatabase.cpp; sourceTree = "<group>"; };
 		728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectDatabase.hpp; sourceTree = "<group>"; };
+		728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestComponentContainer.cpp; sourceTree = "<group>"; };
 		72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestSystemDependencies.cpp; sourceTree = "<group>"; };
 		72B483C9233BE20900E44E78 /* ComponentContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentContainer.hpp; sourceTree = "<group>"; };
 		72B483CA233BEDA200E44E78 /* TupleHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TupleHelper.hpp; sourceTree = "<group>"; };
@@ -76,6 +78,7 @@
 				728D877A234D239E003EA2C6 /* Tools */,
 				728D8779234D2350003EA2C6 /* ECS */,
 				72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */,
+				728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */,
 			);
 			path = AsyncECS;
 			sourceTree = "<group>";
@@ -165,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
+				728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
 				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
 				72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */,

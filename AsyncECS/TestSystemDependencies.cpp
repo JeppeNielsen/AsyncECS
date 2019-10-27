@@ -58,39 +58,46 @@ struct Renderable {
 
 struct VelocitySystem : System<Position, const Velocity>,
                         NoDependencies {
-    
     void Initialize() {
         std::cout << "VelocitySystem :: Initialized"<<std::endl;
-        number = 123;
     }
     
     void Update(Position& position, const Velocity& velocity) {
         position.position.x += velocity.velocity.x;
         position.position.y += velocity.velocity.y;
     }
-    
-    int number;
-    
 };
 
-struct BoundingBoxSystem : System<const Position, BoundingBox>,
-                           Dependencies<VelocitySystem> {
+struct BoundingBoxSystem : System<const Position, const Mesh, BoundingBox>,
+                           NoDependencies {
 
-    void Initialize(VelocitySystem& system) {
-        std::cout << "BoundingBoxSystem :: Initialized" << system.number <<std::endl;
+    void Initialize() {
+        std::cout << "BoundingBoxSystem :: Initialized" << std::endl;
     }
 
-    void Update(const Position& position, BoundingBox& boundingBox) const {
+    void Update(const Position& position, const Mesh& mesh, BoundingBox& boundingBox) const {
         boundingBox.min = position.position;
     }
 
+};
+
+struct QuadTreeSystem : System<const BoundingBox>,
+                        NoDependencies {
+
+    void Initialize() {
+    
+    }
+    
+    void Update(const BoundingBox& box) {
+        
+    }
 };
 
 struct RenderSystem : System<Position, const Renderable, Mesh>,
                       Dependencies<BoundingBoxSystem, VelocitySystem> {
 
     void Initialize(BoundingBoxSystem& dependency, VelocitySystem& s) {
-        std::cout << "RenderSystem :: Initialized" << s.number <<std::endl;
+        std::cout << "RenderSystem :: Initialized" << std::endl;
     }
 
     void Update(Position& position, const Renderable& renderable, Mesh& mesh) const {
@@ -98,7 +105,7 @@ struct RenderSystem : System<Position, const Renderable, Mesh>,
     
         position.position.x += renderable.materialId;
         
-        for (int i=0; i<10000; ++i) {
+        for (int i=0; i<1000; ++i) {
             position.position.y += sin(i * sqrt(i/1.0f));
         }
         
@@ -122,16 +129,28 @@ int main() {
     RegistryType registry;
     SceneType scene(registry);
     
+    using count = std::tuple_size<std::tuple<int, bool,bool>>;
+    std::array<int, count::value> array;
+    
     int serialTime = 0;
     int parallelTime = 0;
     {
-        for (int i=0; i<NUM_ENTITIES; ++i) {
+    
+        for (int i=0; i<10; ++i) {
         
             auto gameObject = scene.CreateGameObject();
             scene.AddComponent<Position>(gameObject, 128.0f, 3.0f);
-            scene.AddComponent<Renderable>(gameObject, 102);
-            scene.AddComponent<Mesh>(gameObject);
-            scene.AddComponent<BoundingBox>(gameObject, 1.0f);
+            scene.AddComponent<Velocity>(gameObject, 1.0f,2.0f);
+        }
+        
+    
+        for (int i=0; i<NUM_ENTITIES; ++i) {
+        
+            auto gameObject = scene.CreateGameObject();
+            //scene.AddComponent<Position>(gameObject, 128.0f, 3.0f);
+            //scene.AddComponent<Renderable>(gameObject, 102);
+            //scene.AddComponent<Mesh>(gameObject);
+            //scene.AddComponent<BoundingBox>(gameObject, 1.0f);
             scene.AddComponent<Velocity>(gameObject, 1.0f,2.0f);
         
         }
@@ -174,86 +193,5 @@ int main() {
     
     std::cout << "Serial/Parallel ratio: " << serialTime / (float)parallelTime << std::endl;
     
-   
-    /*
-    {
-        Timer timer("UpdateParallel");
-        for(int i=0; i<500; ++i) {
-            scene.UpdateParallel();
-        }
-    }
-    */
-    
-    RenderSystem renderSystem;// =  std::get<1>(scene.systems);
-    
-    {
-        
-        ComponentContainer<Position>& positions = std::get<0>(scene.registry.components);
-        ComponentContainer<Renderable>& renderables = std::get<1>(scene.registry.components);
-        ComponentContainer<Mesh>& meshes = std::get<2>(scene.registry.components);
-        
-        /*
-        for(int i=0; i<NUM_ENTITIES; ++i) {
-            positions.Create(i);
-            renderables.Create(i);
-            meshes.Create(i);
-        }
-        */
-    
-        int totalTime = 0;
-        for (int i=0; i<NUM_TIMINGS; ++i)
-        {
-           
-            Timer timer;
-            
-            for(int o=0; o<NUM_ITERATIONS; ++o) {
-                for (int i=0; i<NUM_ENTITIES; ++i) {
-                    //auto& pos = positions.Get(i);
-                    //auto& renderable = renderables.Get(i);
-                    //auto& mesh = meshes.Get(i);
-                    //renderSystem.Update(pos, renderable, mesh);
-                    renderSystem.Update(positions.Get(i), renderables.Get(i), meshes.Get(i));
-                }
-            }
-            
-            totalTime += timer.Stop();
-            
-        }
-        
-        std::stringstream s;
-        s<<(totalTime / NUM_TIMINGS);
-        std::cout << "ComponentContainer " << s.str() << std::endl;
-        
-    }
-    
-    /*
-    std::vector<Position> vector(NUM_ENTITIES);
-    std::vector<Renderable> vector2(NUM_ENTITIES);
-    std::vector<Mesh> vector3(NUM_ENTITIES);
-    
-    {
-        int totalTime = 0;
-        for (int i=0; i<NUM_TIMINGS; ++i)
-        {
-            Timer timer;
-            for(int o=0; o<NUM_ITERATIONS; ++o) {
-                for (int i=0; i<NUM_ENTITIES; ++i) {
-                    auto& pos = vector[i];
-                    auto& renderable = vector2[i];
-                    auto& mesh = vector3[i];
-                
-                    renderSystem.Update(pos, renderable, mesh);
-                }
-            }
-            totalTime+=timer.Stop();
-        }
-        std::stringstream s;
-        s<<(totalTime / NUM_TIMINGS);
-        std::cout << "Vector " << s.str() << std::endl;
-    }
-    */
-    
-    
-    
-    return 0;
+    return EXIT_SUCCESS;
 }

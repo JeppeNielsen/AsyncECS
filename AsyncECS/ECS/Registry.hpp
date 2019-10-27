@@ -21,6 +21,8 @@ struct Registry {
     Components components;
     GameObjectDatabase gameObjects;
     
+    using NumComponentsType = std::tuple_size<decltype(components)>;
+    
     template<typename Component>
     Component& GetComponent(GameObject gameObject) {
         return std::get<Component>(components).Get(gameObject);

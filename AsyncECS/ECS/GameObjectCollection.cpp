@@ -15,7 +15,7 @@ void GameObjectCollection::Add(const GameObject object) {
     if (objectIndex>=indicies.size()) {
         indicies.resize(objectIndex + 1, GameObjectNull);
     }
-    indicies[objectIndex] = objects.size();
+    indicies[objectIndex] = (GameObject)objects.size();
     objects.emplace_back(object);
 }
 
@@ -27,7 +27,7 @@ void GameObjectCollection::Remove(const GameObject object) {
     const auto indexInObjects = indicies[objectIndex];
     const auto lastIndexInObjects = indicies[lastIndex];
     
-    indicies[lastIndex] = indicies[objectIndex];
+    indicies[lastIndex] = indexInObjects;
     indicies[objectIndex] = GameObjectNull;
     
     objects[indexInObjects] = objects[lastIndexInObjects];
@@ -37,4 +37,8 @@ void GameObjectCollection::Remove(const GameObject object) {
 bool GameObjectCollection::Contains(const GameObject object) const {
     const auto index = object & GameObjectIndexMask;
     return index<indicies.size() && indicies[index] != GameObjectNull;
+}
+
+std::size_t GameObjectCollection::Get(const GameObject object) const {
+    return indicies[object & GameObjectIndexMask];
 }
