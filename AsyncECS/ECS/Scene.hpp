@@ -44,17 +44,20 @@ struct Scene {
     
     template<typename T, typename... Args>
     void AddComponent(const GameObject gameObject, Args&& ... args) {
+        static_assert(TupleHelper::has_type<ComponentContainer<T>, Components>::value == true, "Component not found");
         componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Add(gameObject);
         std::get<ComponentContainer<T>>(registry.components).Create(gameObject,args...);
     }
     
     template<typename T>
     T& GetComponent(const GameObject gameObject) {
-        return std::get<ComponentContainer<T>>(registry.components).Get(gameObject);
+        static_assert(TupleHelper::has_type<ComponentContainer<T>, Components>::value == true, "Component not found");
+        return std::get<ComponentContainer<T>>(registry.components).Get(gameObject, 0);
     }
     
     template<typename T>
     void RemoveComponent(const GameObject gameObject) {
+        static_assert(TupleHelper::has_type<ComponentContainer<T>, Components>::value == true, "Component not found");
         componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Remove(gameObject);
         return std::get<ComponentContainer<T>>(registry.components).Remove(gameObject);
     }
@@ -62,34 +65,38 @@ struct Scene {
     void Update() {
         const auto& components = registry.components;
         TupleHelper::Iterate(systems, [&components, this](auto& system) {
+        
             using systemType = std::remove_reference_t<decltype(system)>;
+            system.template Iterate<Components, decltype(componentObjects), systemType>(frameCounter, components, componentObjects);
+        
+            
+            /*using systemType = std::remove_reference_t<decltype(system)>;
         
             const auto this_system = std::make_tuple(&system);
             
-            auto index = system.template GetContainerIndex<Components>(componentObjects);
+            auto& gameObjectsInSystem = system.template GetObjects<Components>(componentObjects);
             
-            auto& gameObjectsInSystem = componentObjects[index].objects;
-            size_t size = gameObjectsInSystem.size();
-            
-            for(int i = 0; i < size; ++i) {
-                const auto componentValues = system.GetComponentValuesFromGameObject(gameObjectsInSystem[i], frameCounter, components);
+            for(auto gameObject : gameObjectsInSystem) {
+                const auto componentValues = system.GetComponentValuesFromGameObject(gameObject, frameCounter, components);
                 const auto iterator = std::tuple_cat(this_system, componentValues);
                 std::apply(&systemType::Update, iterator);
             }
+            */
         });
         frameCounter++;
     }
     
     void UpdateParallel() {
-        return;
         const auto& components = registry.components;
-        std::vector<GameObject>& gameObjectsInSystem = gameObjects.objects;
+        
         auto frameNo = frameCounter;
         
-        TupleHelper::Iterate(systems, [&gameObjectsInSystem, &components, frameNo](auto& system) {
+        TupleHelper::Iterate(systems, [&components, frameNo, this](auto& system) {
+        
+            std::vector<GameObject>& gameObjectsInSystem = system.template GetObjects<Components>(componentObjects);
         
             std::vector<std::future<void>> chunks;
-            const int chunkSize = 30;
+            const int chunkSize = 500;
             
             auto this_system = std::make_tuple(&system);
             auto size = gameObjectsInSystem.size();

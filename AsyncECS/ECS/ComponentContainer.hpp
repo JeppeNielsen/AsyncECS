@@ -99,6 +99,10 @@ struct ComponentContainer {
         return (const T&)elements[indicies[gameObject & GameObjectIndexMask]];
     }
     
+    std::uint32_t GetChanged(const GameObject gameObject) const {
+        return changed[indicies[gameObject & GameObjectIndexMask]];
+    }
+    
     std::vector<std::uint32_t> indicies;
     std::vector<T> elements;
     std::vector<std::uint32_t> changed;

@@ -8,6 +8,7 @@
 
 #pragma once
 #include "ComponentContainer.hpp"
+#include "GameObjectCollection.hpp"
 #include "TupleHelper.hpp"
 
 namespace AsyncECS {
@@ -59,9 +60,7 @@ struct SystemTypes {
 
 
 template<typename...T>
-struct System {
-
-    using Iterator = std::tuple<T*...>;
+struct SystemBase {
 
     template<typename O, typename Components>
     const O& Get(const int index, const int changedFrame, Components& components, const O* ptr) const {
@@ -79,23 +78,72 @@ struct System {
     }
     
     template<typename Components, typename ComponentObjects>
-    int GetContainerIndex(ComponentObjects& componentObjects) {
-        Iterator it;
+    GameObjectCollection::Objects& GetObjects(ComponentObjects& componentObjects) const {
+        const int numElements = sizeof...(T);
         
-        int min = std::numeric_limits<int>::max();
-        int index = 0;
-        TupleHelper::Iterate(it, [&min, &index, &componentObjects] (auto ptr) {
-            using Type = std::remove_const_t<std::remove_pointer_t<decltype(ptr)>>;
-            using ComponentIndexType = TupleHelper::Index<ComponentContainer<Type>, Components>;
-            const auto typeIndex = ComponentIndexType::value;
-            auto size = (int)componentObjects[typeIndex].objects.size();
-            if (size < min) {
-                index = typeIndex;
-                min = size;
+        int indicies[] { TupleHelper::Index<ComponentContainer<std::remove_const_t<std::remove_pointer_t<T>>>, Components>::value... };
+        int sizes[] { (int)componentObjects[TupleHelper::Index<ComponentContainer<std::remove_const_t<std::remove_pointer_t<T>>>, Components>::value].objects.size()... };
+        
+        int min = sizes[0];
+        int foundIndex = indicies[0];
+        for(int i = 1; i < numElements; ++i) {
+            if (sizes[i] < min) {
+                min = sizes[i];
+                foundIndex = indicies[i];
             }
-        });
+        }
+        return componentObjects[foundIndex].objects;
+    }
+};
+
+template<typename...T>
+struct System : SystemBase<T...> {
     
-        return index;
+    template<typename Components, typename ComponentObjects, typename SystemType>
+    void Iterate(const int frameCounter, const Components& components, ComponentObjects& componentObjects) {
+        const auto this_system = std::make_tuple((SystemType*)this);
+        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
+        for(auto gameObject : gameObjectsInSystem) {
+            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, frameCounter, components);
+            const auto iterator = std::tuple_cat(this_system, componentValues);
+            std::apply(&SystemType::Update, iterator);
+        }
+    }
+};
+
+template<typename...T>
+struct SystemChanged : SystemBase<T...> {
+
+    template<typename O, typename Components>
+    bool IsChanged(const GameObject gameObject, const int changedFrame, const Components& components, const O* ptr) const {
+        return std::get<ComponentContainer<std::remove_const_t<O>>>(components).GetChanged(gameObject) == changedFrame;
+    }
+    
+    template<typename O, typename Components>
+    bool IsChanged(const GameObject gameObject, const int changedFrame, const Components& components, O* ptr) const {
+        return false;
+    }
+   
+    template<typename Components>
+    bool AnyComponentChanged(const GameObject gameObject, const int changedFrame, const Components& components) const {
+       const int numElements = sizeof...(T);
+       bool changed[] { IsChanged(gameObject, changedFrame, components, (T*)nullptr)... };
+       for(int i=0; i<numElements; ++i) {
+           if (changed[i]) return true;
+       }
+       return false;
+    }
+    
+    template<typename Components, typename ComponentObjects, typename SystemType>
+    void Iterate(const int frameCounter, const Components& components, ComponentObjects& componentObjects) {
+        const auto this_system = std::make_tuple((SystemType*)this);
+        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
+        for(auto gameObject : gameObjectsInSystem) {
+            if (!AnyComponentChanged(gameObject, frameCounter, components)) continue;
+            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, frameCounter, components);
+            const auto iterator = std::tuple_cat(this_system, componentValues);
+            std::apply(&SystemType::Update, iterator);
+        }
     }
 };
 

@@ -41,14 +41,38 @@ struct Mesh {
 };
 
 struct BoundingBox {
-    Vector2 min;
-    Vector2 max;
+    float left;
+    float top;
+    float right;
+    float bottom;
+    
+    bool Intersect(const BoundingBox& other) const{
+        return !(left > other.right
+                    || right < other.left
+                    || top < other.bottom
+                    || bottom > other.top);
+    }
+
+    bool Inside(const Vector2& position) const{
+        return !(position.x < left ||
+                 position.x > right ||
+                 position.y > top ||
+                 position.y < bottom);
+    }
+};
+
+struct QuadTreeNode {
+    
 };
 
 struct Renderable {
     int materialId;
 };
 
+struct Touchable {
+    bool Down[10];
+    bool Up[10];
+};
 
 
 
@@ -68,7 +92,7 @@ struct VelocitySystem : System<Position, const Velocity>,
     }
 };
 
-struct BoundingBoxSystem : System<const Position, const Mesh, BoundingBox>,
+struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox>,
                            NoDependencies {
 
     void Initialize() {
@@ -76,27 +100,66 @@ struct BoundingBoxSystem : System<const Position, const Mesh, BoundingBox>,
     }
 
     void Update(const Position& position, const Mesh& mesh, BoundingBox& boundingBox) const {
-        boundingBox.min = position.position;
+        if (mesh.vertices.empty()) return;
+        
+        float minX = mesh.vertices[0].x;
+        float minY = mesh.vertices[0].y;
+        
+        float maxX = mesh.vertices[0].x;
+        float maxY = mesh.vertices[0].y;
+        
+        for(int i=1; i<mesh.vertices.size();++i) {
+            minX = std::min(minX, mesh.vertices[i].x);
+            minY = std::min(minY, mesh.vertices[i].y);
+            
+            maxX = std::max(maxX, mesh.vertices[i].x);
+            maxY = std::max(maxY, mesh.vertices[i].y);
+        }
+    
+        boundingBox.left = position.position.x + minX;
+        boundingBox.bottom = position.position.y + minY;
+        boundingBox.right = position.position.x + maxX;
+        boundingBox.top = position.position.y + maxY;
     }
-
 };
 
-struct QuadTreeSystem : System<const BoundingBox>,
-                        NoDependencies {
-
-    void Initialize() {
+struct QuadTreeSystem : SystemChanged<const BoundingBox, QuadTreeNode>,
+                        Dependencies<BoundingBoxSystem> {
     
+    /*
+    struct Node {
+        BoundingBox box;
+    };
+    
+    Node root;
+    */
+    
+    BoundingBox root;
+    int numInserted;
+    std::vector<QuadTreeNode> objects;
+    
+    void Initialize(BoundingBoxSystem& boundingBoxSystem) {
+        root.left = 0;
+        root.bottom = 0;
+        root.right = 1000;
+        root.top = 1000;
+        numInserted = 0;
+        std::cout << "QuadtreeSystem :: Initialized" << std::endl;
     }
     
-    void Update(const BoundingBox& box) {
-        
+    void Update(const BoundingBox& box, QuadTreeNode& node) {
+        //std::cout << box.top << std::endl;
+        if (root.Intersect(box)) {
+            numInserted++;
+        }
+        objects.push_back(node);
     }
 };
 
 struct RenderSystem : System<Position, const Renderable, Mesh>,
-                      Dependencies<BoundingBoxSystem, VelocitySystem> {
+                      Dependencies<QuadTreeSystem> {
 
-    void Initialize(BoundingBoxSystem& dependency, VelocitySystem& s) {
+    void Initialize(QuadTreeSystem& treeSystem) {
         std::cout << "RenderSystem :: Initialized" << std::endl;
     }
 
@@ -112,86 +175,40 @@ struct RenderSystem : System<Position, const Renderable, Mesh>,
     }
 };
 
-using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity>;
-using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem>;
+using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity, QuadTreeNode>;
+using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, QuadTreeSystem>;
 
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-const int NUM_ENTITIES = 10000;
-const int NUM_ITERATIONS = 1;
-const int NUM_TIMINGS = 1;
-
 int main() {
-
     DebugTemplate<AllSystems::UniqueSystems>();
 
     RegistryType registry;
     SceneType scene(registry);
     
-    using count = std::tuple_size<std::tuple<int, bool,bool>>;
-    std::array<int, count::value> array;
-    
-    int serialTime = 0;
-    int parallelTime = 0;
-    {
-    
-        for (int i=0; i<10; ++i) {
-        
-            auto gameObject = scene.CreateGameObject();
-            scene.AddComponent<Position>(gameObject, 128.0f, 3.0f);
-            scene.AddComponent<Velocity>(gameObject, 1.0f,2.0f);
-        }
-        
-    
-        for (int i=0; i<NUM_ENTITIES; ++i) {
-        
-            auto gameObject = scene.CreateGameObject();
-            //scene.AddComponent<Position>(gameObject, 128.0f, 3.0f);
-            //scene.AddComponent<Renderable>(gameObject, 102);
-            //scene.AddComponent<Mesh>(gameObject);
-            //scene.AddComponent<BoundingBox>(gameObject, 1.0f);
-            scene.AddComponent<Velocity>(gameObject, 1.0f,2.0f);
-        
-        }
-        
-        {
-            int totalTime = 0;
-            for (int j=0; j<NUM_TIMINGS; ++j)
-            {
-                Timer timer;
-                for(int i=0; i<NUM_ITERATIONS; ++i) {
-                    scene.Update();
-                    //StaticUpdate(context, std::get<0>(scene.systems), scene.entities);// scene.entities.size());
-                    //for (int k=0; k<NUM_ENTITIES; k++) {
-                    //    ren.Update(positions.Get(k), renderables.Get(k), meshes.Get(k));
-                    //}
-                }
-                totalTime+=timer.Stop();
-            }
-            serialTime =(totalTime / NUM_TIMINGS);
-            std::cout << "scene.Update() " << serialTime << std::endl;
-        }
-        
-        int totalTime = 0;
-        for (int j=0; j<NUM_TIMINGS; ++j)
-        {
-            Timer timer;
-            for(int i=0; i<NUM_ITERATIONS; ++i) {
-                scene.UpdateParallel();
-                //StaticUpdate(context, std::get<0>(scene.systems), scene.entities);// scene.entities.size());
-                //for (int k=0; k<NUM_ENTITIES; k++) {
-                //    ren.Update(positions.Get(k), renderables.Get(k), meshes.Get(k));
-                //}
-            }
-            totalTime+=timer.Stop();
-        }
-        parallelTime =(totalTime / NUM_TIMINGS);
-        std::cout << "scene.UpdateParallel() " << parallelTime << std::endl;
-    
+    for(int i=0; i<100000; i++) {
+        auto object = scene.CreateGameObject();
+        scene.AddComponent<Position>(object, 0.0f, 0.0f);
+        scene.AddComponent<Mesh>(object);
+        auto& mesh = scene.GetComponent<Mesh>(object);
+        mesh.vertices = { {0,0}, {10,0}, {10,10}, {0,10}};
+        mesh.indicies = {0,1,2,0,2,3};
+        scene.AddComponent<BoundingBox>(object);
+        scene.AddComponent<QuadTreeNode>(object);
     }
     
-    std::cout << "Serial/Parallel ratio: " << serialTime / (float)parallelTime << std::endl;
+    {
+        Timer timer;
+        scene.Update();
+        std::cout << timer.Stop() << std::endl;
+    }
+    {
+        Timer timer;
+        scene.Update();
+        std::cout << timer.Stop() << std::endl;
+    }
+    
     
     return EXIT_SUCCESS;
 }

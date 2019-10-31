@@ -40,7 +40,6 @@
 		72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestSystemDependencies.cpp; sourceTree = "<group>"; };
 		72B483C9233BE20900E44E78 /* ComponentContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentContainer.hpp; sourceTree = "<group>"; };
 		72B483CA233BEDA200E44E78 /* TupleHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TupleHelper.hpp; sourceTree = "<group>"; };
-		72B483CB233BF01000E44E78 /* IdHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IdHelper.hpp; sourceTree = "<group>"; };
 		72B483CC233D485800E44E78 /* Timer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
 		72B483CD233D485800E44E78 /* Timer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Timer.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -105,7 +104,6 @@
 				72B483CC233D485800E44E78 /* Timer.cpp */,
 				72B483CD233D485800E44E78 /* Timer.hpp */,
 				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
-				72B483CB233BF01000E44E78 /* IdHelper.hpp */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
