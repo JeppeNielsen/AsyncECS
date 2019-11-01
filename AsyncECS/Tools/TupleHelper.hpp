@@ -80,10 +80,10 @@ namespace TupleHelper {
     
     
     template <typename T, typename Tuple>
-    struct has_type;
+    struct HasType;
 
     template <typename T, typename... Us>
-    struct has_type<T, std::tuple<Us...>> : std::disjunction<std::is_same<T, Us>...> {};
+    struct HasType<T, std::tuple<Us...>> : std::disjunction<std::is_same<T, Us>...> {};
         
 }
 }
