@@ -12,6 +12,7 @@
 #include "System.hpp"
 #include "TupleHelper.hpp"
 #include "GameObjectCollection.hpp"
+#include <future>
 #include <array>
 
 namespace AsyncECS {
