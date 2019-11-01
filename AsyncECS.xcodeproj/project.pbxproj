@@ -15,6 +15,7 @@
 		728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */; };
 		72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */; };
 		72B483CE233D485800E44E78 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483CC233D485800E44E78 /* Timer.cpp */; };
+		72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +52,8 @@
 		72B483CA233BEDA200E44E78 /* TupleHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TupleHelper.hpp; sourceTree = "<group>"; };
 		72B483CC233D485800E44E78 /* Timer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Timer.cpp; sourceTree = "<group>"; };
 		72B483CD233D485800E44E78 /* Timer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Timer.hpp; sourceTree = "<group>"; };
+		72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestGameObjectDatabase.cpp; sourceTree = "<group>"; };
+		72ED8723236CCC2B00CB9E86 /* TestGameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestGameObjectDatabase.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +138,8 @@
 				720BC26C236C7889009F163B /* TestComponentContainer.cpp */,
 				720BC26D236C7889009F163B /* TestComponentContainer.hpp */,
 				720BC268236C7864009F163B /* TestFramework */,
+				72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */,
+				72ED8723236CCC2B00CB9E86 /* TestGameObjectDatabase.hpp */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -201,6 +206,7 @@
 				728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */,
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
+				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
 				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,
 				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
 				72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */,

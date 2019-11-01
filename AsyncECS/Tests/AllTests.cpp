@@ -8,6 +8,7 @@
 #include <iostream>
 #include "AllTests.hpp"
 #include "TestComponentContainer.hpp"
+#include "TestGameObjectDatabase.hpp"
 
 using namespace Tests;
 
@@ -18,6 +19,10 @@ void AllTests::Run() {
         TestComponentContainer test;
         test.Run();
     }
-
+    {
+        std::cout << "GameObjectDatabase : " << std::endl;
+        TestGameObjectDatabase test;
+        test.Run();
+    }
 
 }
