@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		720BC26B236C7864009F163B /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC269236C7864009F163B /* TestBase.cpp */; };
+		720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26C236C7889009F163B /* TestComponentContainer.cpp */; };
+		720BC271236C7AC4009F163B /* AllTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26F236C7AC4009F163B /* AllTests.cpp */; };
 		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
 		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
 		728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */; };
@@ -27,6 +30,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		720BC269236C7864009F163B /* TestBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestBase.cpp; sourceTree = "<group>"; };
+		720BC26A236C7864009F163B /* TestBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TestBase.hpp; sourceTree = "<group>"; };
+		720BC26C236C7889009F163B /* TestComponentContainer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestComponentContainer.cpp; sourceTree = "<group>"; };
+		720BC26D236C7889009F163B /* TestComponentContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestComponentContainer.hpp; sourceTree = "<group>"; };
+		720BC26F236C7AC4009F163B /* AllTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AllTests.cpp; sourceTree = "<group>"; };
+		720BC270236C7AC4009F163B /* AllTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AllTests.hpp; sourceTree = "<group>"; };
 		72332DBA233A90F3007DBD21 /* AsyncECS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncECS; sourceTree = BUILT_PRODUCTS_DIR; };
 		728D876D234D1969003EA2C6 /* Registry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Registry.hpp; sourceTree = "<group>"; };
 		728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectCollection.cpp; sourceTree = "<group>"; };
@@ -55,6 +64,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		720BC268236C7864009F163B /* TestFramework */ = {
+			isa = PBXGroup;
+			children = (
+				720BC269236C7864009F163B /* TestBase.cpp */,
+				720BC26A236C7864009F163B /* TestBase.hpp */,
+			);
+			path = TestFramework;
+			sourceTree = "<group>";
+		};
 		72332DB1233A90F3007DBD21 = {
 			isa = PBXGroup;
 			children = (
@@ -74,6 +92,7 @@
 		72332DBC233A90F3007DBD21 /* AsyncECS */ = {
 			isa = PBXGroup;
 			children = (
+				728D877D236C7309003EA2C6 /* Tests */,
 				728D877A234D239E003EA2C6 /* Tools */,
 				728D8779234D2350003EA2C6 /* ECS */,
 				72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */,
@@ -106,6 +125,18 @@
 				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
 			);
 			path = Tools;
+			sourceTree = "<group>";
+		};
+		728D877D236C7309003EA2C6 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				720BC26F236C7AC4009F163B /* AllTests.cpp */,
+				720BC270236C7AC4009F163B /* AllTests.hpp */,
+				720BC26C236C7889009F163B /* TestComponentContainer.cpp */,
+				720BC26D236C7889009F163B /* TestComponentContainer.hpp */,
+				720BC268236C7864009F163B /* TestFramework */,
+			);
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,8 +197,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
+				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
 				728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */,
+				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
+				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,
 				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
 				72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */,
 			);

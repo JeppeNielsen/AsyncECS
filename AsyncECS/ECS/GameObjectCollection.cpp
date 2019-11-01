@@ -42,3 +42,9 @@ bool GameObjectCollection::Contains(const GameObject object) const {
 std::size_t GameObjectCollection::Get(const GameObject object) const {
     return indicies[object & GameObjectIndexMask];
 }
+
+void GameObjectCollection::Clear() {
+    indicies.clear();
+    objects.clear();
+}
+

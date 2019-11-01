@@ -11,6 +11,7 @@
 #include <future>
 #include <sstream>
 #include <cmath>
+#include "AllTests.hpp"
 #include "ComponentContainer.hpp"
 #include "Timer.hpp"
 #include "Registry.hpp"
@@ -151,26 +152,20 @@ struct QuadTreeSystem : SystemChanged<const BoundingBox, QuadTreeNode>,
         if (root.Intersect(box)) {
             numInserted++;
         }
-        objects.push_back(node);
+        
+        //objects.push_back(node);
     }
 };
 
-struct RenderSystem : System<Position, const Renderable, Mesh>,
+struct RenderSystem : System<const Position, const Renderable, const Mesh>,
                       Dependencies<QuadTreeSystem> {
 
     void Initialize(QuadTreeSystem& treeSystem) {
         std::cout << "RenderSystem :: Initialized" << std::endl;
     }
 
-    void Update(Position& position, const Renderable& renderable, Mesh& mesh) const {
+    void Update(const Position& position, const Renderable& renderable, const Mesh& mesh) const {
         //std::cout << "RenderSystem::Update "<< &position << "  "<< position.position.x <<std::endl;
-    
-        position.position.x += renderable.materialId;
-        
-        for (int i=0; i<1000; ++i) {
-            position.position.y += sin(i * sqrt(i/1.0f));
-        }
-        
     }
 };
 
@@ -181,6 +176,9 @@ using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
 int main() {
+    AllTests tests;
+    tests.Run();
+
     DebugTemplate<AllSystems::UniqueSystems>();
 
     RegistryType registry;

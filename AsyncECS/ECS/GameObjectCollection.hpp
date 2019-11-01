@@ -21,6 +21,7 @@ public:
     void Remove(const GameObject object);
     bool Contains(const GameObject object) const;
     std::size_t Get(const GameObject object) const;
+    void Clear();
 
     Indicies indicies;
     Objects objects;

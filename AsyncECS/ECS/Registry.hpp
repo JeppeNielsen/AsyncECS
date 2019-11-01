@@ -10,6 +10,7 @@
 #include <tuple>
 #include "GameObjectDatabase.hpp"
 #include "ComponentContainer.hpp"
+#include "TupleHelper.hpp"
 
 namespace AsyncECS {
 
@@ -31,6 +32,12 @@ struct Registry {
     template<typename Component>
     void AddComponent(GameObject gameObject) {
         std::get<Component>(components).Create(gameObject);
+    }
+    
+    void ResetChanged() {
+        TupleHelper::Iterate(components, [](auto& components) {
+            components.changedThisFrame.Clear();
+        });
     }
 };
   

@@ -10,6 +10,7 @@
 #include <vector>
 #include <assert.h>
 #include "GameObject.hpp"
+#include "GameObjectCollection.hpp"
 
 namespace AsyncECS {
 
@@ -34,7 +35,7 @@ struct ComponentContainer {
         
         indicies[objectIndex] = (std::uint32_t)elements.size();
         references.push_back(1);
-        changed.push_back(0);
+        gameObjects.Add(gameObject);
     }
     
     void Create(const GameObject gameObject) {
@@ -58,17 +59,15 @@ struct ComponentContainer {
     
     void Reference(const GameObject gameObject, const GameObject referenceGameObject) {
         const auto objectIndex = gameObject & GameObjectIndexMask;
-        
+        const auto referenceObjectIndex = referenceGameObject & GameObjectIndexMask;
+        assert(objectIndex!=referenceObjectIndex);
         if (objectIndex>=indicies.size()) {
             indicies.resize(objectIndex + 1, GameObjectNull);
         }
-        
-        const auto referenceObjectIndex = referenceGameObject & GameObjectIndexMask;
-        
         const auto referenceIndex = indicies[referenceObjectIndex];
-        
         indicies[objectIndex] = referenceIndex;
         ++references[referenceIndex];
+        gameObjects.Add(gameObject);
     }
     
     void Destroy(const GameObject gameObject) {
@@ -82,16 +81,26 @@ struct ComponentContainer {
             elements.pop_back();
             references[index] = references.back();
             references.pop_back();
-            changed[index] = changed.back();
-            changed.pop_back();
         }
         
         indicies[objectIndex] = GameObjectNull;
+        gameObjects.Remove(gameObject);
     }
     
-    T& Get(const GameObject gameObject, const int changedFrame) {
+    T& Get(const GameObject gameObject) {
         auto const elementIndex = indicies[gameObject & GameObjectIndexMask];
-        changed[elementIndex] = changedFrame;
+        if (!changedThisFrame.Contains(gameObject)) {
+            if (references[elementIndex] == 1) {
+                changedThisFrame.Add(gameObject);
+            } else {
+                for(auto go : gameObjects.objects) {
+                    auto const index = indicies[go & GameObjectIndexMask];
+                    if (elementIndex == index && !changedThisFrame.Contains(go)) {
+                        changedThisFrame.Add(go);
+                    }
+                }
+            }
+        }
         return (T&)elements[elementIndex];
     }
     
@@ -99,14 +108,11 @@ struct ComponentContainer {
         return (const T&)elements[indicies[gameObject & GameObjectIndexMask]];
     }
     
-    std::uint32_t GetChanged(const GameObject gameObject) const {
-        return changed[indicies[gameObject & GameObjectIndexMask]];
-    }
-    
     std::vector<std::uint32_t> indicies;
     std::vector<T> elements;
-    std::vector<std::uint32_t> changed;
     std::vector<std::uint16_t> references;
+    GameObjectCollection changedThisFrame;
+    GameObjectCollection gameObjects;
 };
 
 }

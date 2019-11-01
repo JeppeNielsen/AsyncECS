@@ -52,7 +52,7 @@ struct Scene {
     template<typename T>
     T& GetComponent(const GameObject gameObject) {
         static_assert(TupleHelper::has_type<ComponentContainer<T>, Components>::value, "Component not found");
-        return std::get<ComponentContainer<T>>(registry.components).Get(gameObject, 0);
+        return std::get<ComponentContainer<T>>(registry.components).Get(gameObject);
     }
     
     template<typename T>
@@ -65,25 +65,11 @@ struct Scene {
     void Update() {
         const auto& components = registry.components;
         TupleHelper::Iterate(systems, [&components, this](auto& system) {
-        
-            using systemType = std::remove_reference_t<decltype(system)>;
-            system.template Iterate<Components, decltype(componentObjects), systemType>(frameCounter, components, componentObjects);
-        
-            
-            /*using systemType = std::remove_reference_t<decltype(system)>;
-        
-            const auto this_system = std::make_tuple(&system);
-            
-            auto& gameObjectsInSystem = system.template GetObjects<Components>(componentObjects);
-            
-            for(auto gameObject : gameObjectsInSystem) {
-                const auto componentValues = system.GetComponentValuesFromGameObject(gameObject, frameCounter, components);
-                const auto iterator = std::tuple_cat(this_system, componentValues);
-                std::apply(&systemType::Update, iterator);
-            }
-            */
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
         });
         frameCounter++;
+        registry.ResetChanged();
     }
     
     void UpdateParallel() {
