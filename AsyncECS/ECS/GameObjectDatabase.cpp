@@ -43,3 +43,7 @@ void GameObjectDatabase::Remove(const GameObject objectId) {
     ++available;
 }
 
+size_t GameObjectDatabase::Size() const {
+    return objects.size();
+}
+

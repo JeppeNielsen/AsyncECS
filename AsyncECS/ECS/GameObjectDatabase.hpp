@@ -16,6 +16,7 @@ namespace AsyncECS {
         bool IsValid(const GameObject object) const;
         GameObject Create();
         void Remove(const GameObject objectId);
+        size_t Size() const;
     private:
         std::vector<GameObject> objects;
         std::size_t available {};
