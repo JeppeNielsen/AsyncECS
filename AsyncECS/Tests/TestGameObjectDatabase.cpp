@@ -40,11 +40,11 @@ void TestGameObjectDatabase::Run() {
         return !database.IsValid(object);
     });
 
-    RunTest("Add remove different ids", [] () {
+    RunTest("Add/remove different ids", [] () {
         GameObjectDatabase database;
         auto object1 = database.Create();
         database.Remove(object1);
         auto object2 = database.Create();
-        return object1!=object2 && database.Size() == 1;
+        return object1 != object2 && database.Size() == 1;
     });
 }
