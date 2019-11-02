@@ -2,9 +2,7 @@
 Compile time asynchronous ECS in modern c++ 17
 
 ```c++
-
 #include <iostream>
-#include "Registry.hpp"
 #include "Scene.hpp"
 
 using namespace AsyncECS;
@@ -36,7 +34,7 @@ int main() {
     Scene<RegistryType, Systems> scene(registry);
     
     auto gameObject = scene.CreateGameObject();
-    scene.AddComponent<Position>(gameObject);
+    scene.AddComponent<Position>(gameObject, 0.0f, 0.0f);
     scene.AddComponent<Velocity>(gameObject, 1.0f, 2.0f);
     
     scene.Update();
@@ -46,6 +44,4 @@ int main() {
     
     return 0;
 }
-
-
 ```
