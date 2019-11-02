@@ -19,8 +19,8 @@ int main_containers() {
     
     container.Create(10);
     container.Reference(5,10);
-    container.Destroy(10);
-    container.Destroy(5);
+    container.Remove(10);
+    container.Remove(5);
 
     return 0;
 }

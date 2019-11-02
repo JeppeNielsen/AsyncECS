@@ -70,7 +70,7 @@ struct ComponentContainer {
         gameObjects.Add(gameObject);
     }
     
-    void Destroy(const GameObject gameObject) {
+    void Remove(const GameObject gameObject) {
         
         const auto objectIndex = gameObject & GameObjectIndexMask;
         const auto index = indicies[objectIndex];
@@ -113,6 +113,8 @@ struct ComponentContainer {
     std::vector<std::uint16_t> references;
     GameObjectCollection changedThisFrame;
     GameObjectCollection gameObjects;
+    
+    using Type = T;
 };
 
 }

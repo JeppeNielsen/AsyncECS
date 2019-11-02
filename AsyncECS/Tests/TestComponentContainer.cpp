@@ -31,7 +31,7 @@ void TestComponentContainer::Run() {
         GameObject go = 0;
         container.Create(go);
         bool wasOne = container.elements.size() == 1;
-        container.Destroy(go);
+        container.Remove(go);
         return container.elements.empty() && wasOne;
     });
 
@@ -82,7 +82,7 @@ void TestComponentContainer::Run() {
         return container.changedThisFrame.objects.size() == 2;
     });
 
-    RunTest("Destroy referenced will not destroy element",[] () {
+    RunTest("Remove referenced will not destroy element",[] () {
         ComponentContainer<Position> container;
         GameObject go1 = 0;
         GameObject go2 = 1;
@@ -91,11 +91,11 @@ void TestComponentContainer::Run() {
         
         bool wasOne = container.elements.size() == 1;
         
-        container.Destroy(go1);
+        container.Remove(go1);
         
         bool stillOne = container.elements.size() == 1;
         
-        container.Destroy(go2);
+        container.Remove(go2);
         
         bool isNone = container.elements.empty();
         
