@@ -43,24 +43,48 @@ struct Scene {
         return gameObject;
     }
     
+    void Remove(const GameObject gameObject) {
+        assert(registry.IsGameObjectValid(gameObject));
+        TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
+            using ComponentContainerType = std::remove_reference_t<decltype(component)>;
+            using ComponentType = typename ComponentContainerType::Type;
+            if (!componentObjects[TupleHelper::Index<ComponentContainerType, Components>::value].Contains(gameObject)) {
+                return;
+            }
+            RemoveComponent<ComponentType>(gameObject);
+        });
+        gameObjects.Remove(gameObject);
+        registry.gameObjects.Remove(gameObject);
+    }
+    
     template<typename T, typename... Args>
     void AddComponent(const GameObject gameObject, Args&& ... args) {
-        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component not found");
+        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
+        assert(registry.IsGameObjectValid(gameObject));
         componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Add(gameObject);
         std::get<ComponentContainer<T>>(registry.components).Create(gameObject,args...);
     }
     
     template<typename T>
+    void RemoveComponent(const GameObject gameObject) {
+        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
+        assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
+        componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Remove(gameObject);
+        return std::get<ComponentContainer<T>>(registry.components).Remove(gameObject);
+    }
+    
+    template<typename T>
     T& GetComponent(const GameObject gameObject) {
-        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component not found");
+        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
+        assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
         return std::get<ComponentContainer<T>>(registry.components).Get(gameObject);
     }
     
     template<typename T>
-    void RemoveComponent(const GameObject gameObject) {
+    const T& GetComponentConst(const GameObject gameObject) const {
         static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component not found");
-        componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Remove(gameObject);
-        return std::get<ComponentContainer<T>>(registry.components).Remove(gameObject);
+        assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
+        return std::get<ComponentContainer<T>>(registry.components).GetConst(gameObject);
     }
     
     void Update() {
