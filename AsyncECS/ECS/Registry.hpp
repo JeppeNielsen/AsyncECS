@@ -7,7 +7,6 @@
 //
 
 #pragma once
-#include <tuple>
 #include "GameObjectDatabase.hpp"
 #include "ComponentContainer.hpp"
 #include "TupleHelper.hpp"
@@ -38,6 +37,10 @@ struct Registry {
         TupleHelper::Iterate(components, [](auto& components) {
             components.changedThisFrame.Clear();
         });
+    }
+    
+    bool IsGameObjectValid(const GameObject gameObject) const {
+        return gameObjects.IsValid(gameObject);
     }
 };
   
