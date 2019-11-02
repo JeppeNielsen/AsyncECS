@@ -10,9 +10,9 @@
 
 using namespace AsyncECS;
 
-bool GameObjectDatabase::IsValid(const GameObject object) const {
-    const auto pos = GameObject(object & GameObjectIndexMask);
-    return (pos < objects.size() && objects[pos] == object);
+bool GameObjectDatabase::IsValid(const GameObject gameObject) const {
+    const auto pos = gameObject & GameObjectIndexMask;
+    return (pos < objects.size() && objects[pos] == gameObject);
 }
 
 GameObject GameObjectDatabase::Create() {
@@ -33,9 +33,9 @@ GameObject GameObjectDatabase::Create() {
     return object;
 }
 
-void GameObjectDatabase::Remove(const GameObject objectId) {
-    const auto object = objectId & GameObjectIndexMask;
-    const auto version = (((objectId >> 20) + 1) & GameObjectIndexMask) << 20;
+void GameObjectDatabase::Remove(const GameObject gameObject) {
+    const auto object = gameObject & GameObjectIndexMask;
+    const auto version = (((gameObject >> 20) + 1) & GameObjectIndexMask) << 20;
     const auto node = (available ? next : ((object + 1) & GameObjectIndexMask)) | version;
 
     objects[object] = node;

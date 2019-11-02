@@ -13,9 +13,9 @@
 namespace AsyncECS {
     class GameObjectDatabase {
     public:
-        bool IsValid(const GameObject object) const;
+        bool IsValid(const GameObject gameObject) const;
         GameObject Create();
-        void Remove(const GameObject objectId);
+        void Remove(const GameObject gameObject);
         size_t Size() const;
     private:
         std::vector<GameObject> objects;
