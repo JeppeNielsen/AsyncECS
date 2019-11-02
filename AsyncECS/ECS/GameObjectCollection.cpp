@@ -7,10 +7,12 @@
 //
 
 #include "GameObjectCollection.hpp"
+#include <assert.h>
 
 using namespace AsyncECS;
 
 void GameObjectCollection::Add(const GameObject object) {
+    assert(!Contains(object));
     const auto objectIndex = object & GameObjectIndexMask;
     if (objectIndex>=indicies.size()) {
         indicies.resize(objectIndex + 1, GameObjectNull);
@@ -20,6 +22,7 @@ void GameObjectCollection::Add(const GameObject object) {
 }
 
 void GameObjectCollection::Remove(const GameObject object) {
+    assert(Contains(object));
     const auto objectIndex = object & GameObjectIndexMask;
     const auto last = objects.back();
     const auto lastIndex = last & GameObjectIndexMask;
