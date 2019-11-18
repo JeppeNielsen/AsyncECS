@@ -17,6 +17,7 @@
 #include "Registry.hpp"
 #include "System.hpp"
 #include "Scene.hpp"
+#include <algorithm>
 
 using namespace AsyncECS;
 
@@ -40,48 +41,45 @@ struct Mesh {
     std::vector<int> indicies;
 };
 
+struct Nameable {
+    std::string name;
+};
+
 struct BoundingBox {
-    float left;
-    float top;
-    float right;
-    float bottom;
+    float minX;
+    float minY;
+    float maxX;
+    float maxY;
     
     bool Intersect(const BoundingBox& other) const{
-        return !(left > other.right
-                    || right < other.left
-                    || top < other.bottom
-                    || bottom > other.top);
+        return !(minX > other.maxX
+                    || maxX < other.minX
+                    || maxY < other.minY
+                    || minY > other.maxY);
     }
 
     bool Inside(const Vector2& position) const{
-        return !(position.x < left ||
-                 position.x > right ||
-                 position.y > top ||
-                 position.y < bottom);
+        return !(position.x < minX ||
+                 position.x > maxX ||
+                 position.y > maxY ||
+                 position.y < minY);
     }
 };
 
 struct QuadTreeNode {
-    
+    int prevIndex = -1;
 };
 
 struct Renderable {
     int materialId;
 };
 
-struct Touchable {
-    bool Down[10];
-    bool Up[10];
+struct Camera {
+    Vector2 size;
 };
 
-
-
-
-
-
-
 struct VelocitySystem : System<Position, const Velocity>,
-                        NoDependencies {
+                        NoDependencies, NoComponentView {
     void Initialize() {
         std::cout << "VelocitySystem :: Initialized"<<std::endl;
     }
@@ -93,7 +91,7 @@ struct VelocitySystem : System<Position, const Velocity>,
 };
 
 struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox>,
-                           NoDependencies {
+                           NoDependencies, NoComponentView {
 
     void Initialize() {
         std::cout << "BoundingBoxSystem :: Initialized" << std::endl;
@@ -108,7 +106,7 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
         float maxX = mesh.vertices[0].x;
         float maxY = mesh.vertices[0].y;
         
-        for(int i=1; i<mesh.vertices.size();++i) {
+        for(int i = 1; i < mesh.vertices.size();++i) {
             minX = std::min(minX, mesh.vertices[i].x);
             minY = std::min(minY, mesh.vertices[i].y);
             
@@ -116,66 +114,131 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
             maxY = std::max(maxY, mesh.vertices[i].y);
         }
     
-        boundingBox.left = position.position.x + minX;
-        boundingBox.bottom = position.position.y + minY;
-        boundingBox.right = position.position.x + maxX;
-        boundingBox.top = position.position.y + maxY;
+        boundingBox.minX = position.position.x + minX;
+        boundingBox.minY = position.position.y + minY;
+        boundingBox.maxX = position.position.x + maxX;
+        boundingBox.maxY = position.position.y + maxY;
     }
 };
 
-struct QuadTreeSystem : SystemChanged<const BoundingBox, QuadTreeNode>,
-                        Dependencies<BoundingBoxSystem> {
-    
-    /*
-    struct Node {
-        BoundingBox box;
-    };
-    
-    Node root;
-    */
-    
+struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>,
+                        Dependencies<BoundingBoxSystem>,
+                        NoComponentView {
     BoundingBox root;
-    int numInserted;
-    std::vector<QuadTreeNode> objects;
+    Vector2 rootSize;
+    static constexpr int GridSize = 10;
+    
+    std::array<GameObjectCollection, GridSize * GridSize> grid;
+    
+    void TryInsertGameObject(const GameObject gameObject, const BoundingBox& box, QuadTreeNode& node) {
+        float midX = (box.minX + box.maxX) * 0.5f;
+        float midY = (box.minY + box.maxY) * 0.5f;
+        
+        int gridX = floorf(midX / rootSize.x);
+        int gridY = floorf(midY / rootSize.y);
+        gridX = std::clamp(gridX, 0, GridSize - 1);
+        gridY = std::clamp(gridY, 0, GridSize - 1);
+        int index = gridX + gridY * GridSize;
+        
+        if (index == node.prevIndex) {
+            return;
+        }
+        
+        if (node.prevIndex != -1) {
+            auto& prevCollection = grid[node.prevIndex];
+            if (prevCollection.Contains(gameObject)) {
+                prevCollection.Remove(gameObject);
+            }
+        }
+        
+        auto& collection = grid[index];
+        if (!collection.Contains(gameObject)) {
+            collection.Add(gameObject);
+            node.prevIndex = index;
+        }
+    }
     
     void Initialize(BoundingBoxSystem& boundingBoxSystem) {
-        root.left = 0;
-        root.bottom = 0;
-        root.right = 1000;
-        root.top = 1000;
-        numInserted = 0;
+        root.minX = 0;
+        root.minY = 0;
+        root.maxX = 1000;
+        root.maxY = 1000;
+        
+        rootSize.x = root.maxX - root.minX;
+        rootSize.y = root.maxY - root.minY;
+        
         std::cout << "QuadtreeSystem :: Initialized" << std::endl;
     }
     
-    void Update(const BoundingBox& box, QuadTreeNode& node) {
-        //std::cout << box.top << std::endl;
-        if (root.Intersect(box)) {
-            numInserted++;
-        }
+    void Update(const GameObject gameObject, const BoundingBox& box, QuadTreeNode& node) {
+        TryInsertGameObject(gameObject, box, node);
+    }
+    
+    void GetObjectsInView(BoundingBox& box, GameObjectCollection& foundObjects) {
+        int minX = floorf(box.minX / rootSize.x)*GridSize;
+        int minY = floorf(box.minY / rootSize.y)*GridSize;
         
-        //objects.push_back(node);
+        int maxX = floorf(box.maxX / rootSize.x)*GridSize;
+        int maxY = floorf(box.maxY / rootSize.y)*GridSize;
+        
+        minX = std::clamp(minX, 0, GridSize - 1);
+        minY = std::clamp(minY, 0, GridSize - 1);
+        
+        maxX = std::clamp(maxX, 0, GridSize - 1);
+        maxY = std::clamp(maxY, 0, GridSize - 1);
+        
+        for(int x = minX; x<=maxX; ++x) {
+            for(int y = minY; y<=maxY; ++y) {
+                int index = x + y * GridSize;
+                auto& collection = grid[index];
+                for(auto go : collection.objects) {
+                    foundObjects.Add(go);
+                }
+            }
+        }
     }
 };
 
-struct RenderSystem : System<const Position, const Renderable, const Mesh>,
-                      Dependencies<QuadTreeSystem> {
+struct RenderSystem : System<const Position, const Camera>,
+                      Dependencies<QuadTreeSystem>,
+                      ComponentView<const Nameable, const Renderable> {
+                      
+    QuadTreeSystem* quadTreeSystem;
+    GameObjectCollection foundObjects;
 
-    void Initialize(QuadTreeSystem& treeSystem) {
-        std::cout << "RenderSystem :: Initialized" << std::endl;
+    void Initialize(QuadTreeSystem& quadTreeSystem) {
+        this->quadTreeSystem = &quadTreeSystem;
     }
 
-    void Update(const Position& position, const Renderable& renderable, const Mesh& mesh) const {
+    void Update(const Position& position, const Camera& camera) {
         //std::cout << "RenderSystem::Update "<< &position << "  "<< position.position.x <<std::endl;
+        BoundingBox box;
+        box.minX = position.position.x - camera.size.x;
+        box.minY = position.position.y - camera.size.y;
+        box.maxX = position.position.x + camera.size.x;
+        box.maxY = position.position.y + camera.size.y;
+        
+        foundObjects.Clear();
+        
+        quadTreeSystem->GetObjectsInView(box, foundObjects);
+        
+        for(auto go : foundObjects.objects) {
+            GetComponents(go, [] (const Nameable& nameable, const Renderable& renderable) {
+                std::cout << nameable.name << " ";
+            });
+        }
+        std::cout << std::endl;
+        
     }
 };
 
-using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity, QuadTreeNode>;
+using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity, QuadTreeNode, Camera, Nameable>;
 using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, QuadTreeSystem>;
 
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-int main() {
+int main_dependencies() {
     AllTests tests;
     tests.Run();
 
@@ -184,21 +247,40 @@ int main() {
     RegistryType registry;
     SceneType scene(registry);
     
-    for(int i=0; i<100000; i++) {
-        auto object = scene.CreateGameObject();
-        scene.AddComponent<Position>(object, 0.0f, 0.0f);
-        scene.AddComponent<Mesh>(object);
-        auto& mesh = scene.GetComponent<Mesh>(object);
-        mesh.vertices = { {0,0}, {10,0}, {10,10}, {0,10}};
-        mesh.indicies = {0,1,2,0,2,3};
-        scene.AddComponent<BoundingBox>(object);
-        scene.AddComponent<QuadTreeNode>(object);
+    for (int x=0; x<1000; x++) {
+        for(int y=0; y<1000; y++) {
+            auto object = scene.CreateGameObject();
+            scene.AddComponent<Position>(object, x*10.0f, y*10.0f);
+            scene.AddComponent<Mesh>(object);
+            auto& mesh = scene.GetComponent<Mesh>(object);
+            mesh.vertices = { {0,0}, {10,0}, {10,10}, {0,10}};
+            mesh.indicies = {0,1,2,0,2,3};
+            scene.AddComponent<BoundingBox>(object);
+            scene.AddComponent<QuadTreeNode>(object);
+            
+            if (x == 0) {
+                std::stringstream ss;
+                ss << x << " - " << y;
+                scene.AddComponent<Nameable>(object, ss.str());
+                
+                if (y == 0 || y==10) {
+                    scene.AddComponent<Renderable>(object);
+                }
+            }
+        }
     }
+    
+    auto cameraGo = scene.CreateGameObject();
+    scene.AddComponent<Camera>(cameraGo, Vector2 {5.0f,5.0f});
+    scene.AddComponent<Position>(cameraGo, 100.0f, 100.0f);
     
     {
         Timer timer;
         scene.Update();
         std::cout << timer.Stop() << std::endl;
+        
+        //std::cout << "numInserted = "<<scene.GetSystem<QuadTreeSystem>().numInserted<<std::endl;
+        
     }
     {
         Timer timer;

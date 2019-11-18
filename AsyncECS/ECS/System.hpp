@@ -10,6 +10,7 @@
 #include "ComponentContainer.hpp"
 #include "GameObjectCollection.hpp"
 #include "TupleHelper.hpp"
+#include "ComponentView.hpp"
 
 namespace AsyncECS {
 
@@ -82,7 +83,6 @@ struct SystemBase {
         const int numElements = sizeof...(T);
         
         int indicies[] { TupleHelper::Index<ComponentContainer<std::remove_const_t<std::remove_pointer_t<T>>>, Components>::value... };
-        //int sizes[] { (int)componentObjects[TupleHelper::Index<ComponentContainer<std::remove_const_t<std::remove_pointer_t<T>>>, Components>::value].objects.size()... };
         
         int foundIndex = indicies[0];
         int min = (int)componentObjects[foundIndex].objects.size();
@@ -95,26 +95,7 @@ struct SystemBase {
         }
         return componentObjects[foundIndex];
     }
-};
-
-template<typename...T>
-struct System : SystemBase<T...> {
     
-    template<typename Components, typename ComponentObjects, typename SystemType>
-    void Iterate(const Components& components, ComponentObjects& componentObjects) {
-        const auto this_system = std::make_tuple((SystemType*)this);
-        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects).objects;
-        for(auto gameObject : gameObjectsInSystem) {
-            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
-            const auto iterator = std::tuple_cat(this_system, componentValues);
-            std::apply(&SystemType::Update, iterator);
-        }
-    }
-};
-
-template<typename...T>
-struct SystemChanged : SystemBase<T...> {
-
     template<typename Components>
     const GameObjectCollection::Objects& GetChangedObjects(const Components& components) const {
         const int numElements = sizeof...(T);
@@ -132,14 +113,32 @@ struct SystemChanged : SystemBase<T...> {
         }
         return *objects[foundIndex];
     }
+};
 
+template<typename...T>
+struct System : SystemBase<T...> {
+    
+    template<typename Components, typename ComponentObjects, typename SystemType>
+    void Iterate(const Components& components, ComponentObjects& componentObjects) {
+        const auto this_system = std::make_tuple((SystemType*)this);
+        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects).objects;
+        for(const auto gameObject : gameObjectsInSystem) {
+            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+            const auto iterator = std::tuple_cat(this_system, componentValues);
+            std::apply(&SystemType::Update, iterator);
+        }
+    }
+};
+
+template<typename...T>
+struct SystemChanged : SystemBase<T...> {
     template<typename Components, typename ComponentObjects, typename SystemType>
     void Iterate(const Components& components, ComponentObjects& componentObjects) {
         const auto this_system = std::make_tuple((SystemType*)this);
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
         std::cout << changedGameObjects.size() << std::endl;
-        for(auto gameObject : changedGameObjects) {
+        for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
                 continue;
             }
@@ -149,5 +148,25 @@ struct SystemChanged : SystemBase<T...> {
         }
     }
 };
+
+template<typename...T>
+struct SystemChangedGameObject : SystemBase<T...> {
+    template<typename Components, typename ComponentObjects, typename SystemType>
+    void Iterate(const Components& components, ComponentObjects& componentObjects) {
+        const auto this_system = std::make_tuple((SystemType*)this);
+        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
+        const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
+        std::cout << changedGameObjects.size() << std::endl;
+        for(const auto gameObject : changedGameObjects) {
+            if (!gameObjectsInSystem.Contains(gameObject)) {
+                continue;
+            }
+            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+            const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
+            std::apply(&SystemType::Update, iterator);
+        }
+    }
+};
+
 
 }

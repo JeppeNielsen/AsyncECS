@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Scene.hpp"
 
+#include <variant>
+
 using namespace AsyncECS;
 
 struct Position {
@@ -13,7 +15,7 @@ struct Velocity {
     float y;
 };
 
-struct MovementSystem : System<Position, const Velocity>, NoDependencies {
+struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComponentView {
     void Initialize() { }
     void Update(Position& position, const Velocity& velocity) {
         position.x += velocity.x;

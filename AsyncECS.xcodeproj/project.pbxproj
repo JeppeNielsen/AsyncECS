@@ -17,6 +17,7 @@
 		72B483CE233D485800E44E78 /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483CC233D485800E44E78 /* Timer.cpp */; };
 		72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */; };
 		72ED8727236CE59200CB9E86 /* Simple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72ED8726236CE59200CB9E86 /* Simple.cpp */; };
+		72ED875323778CDB00CB9E86 /* TestTaskflow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72ED875223778CDB00CB9E86 /* TestTaskflow.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,8 @@
 		72ED8723236CCC2B00CB9E86 /* TestGameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestGameObjectDatabase.hpp; sourceTree = "<group>"; };
 		72ED8725236CE13600CB9E86 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		72ED8726236CE59200CB9E86 /* Simple.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Simple.cpp; sourceTree = "<group>"; };
+		72ED872823735D6B00CB9E86 /* ComponentView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentView.hpp; sourceTree = "<group>"; };
+		72ED875223778CDB00CB9E86 /* TestTaskflow.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestTaskflow.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +108,7 @@
 				72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */,
 				728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */,
 				72ED8726236CE59200CB9E86 /* Simple.cpp */,
+				72ED875223778CDB00CB9E86 /* TestTaskflow.cpp */,
 			);
 			path = AsyncECS;
 			sourceTree = "<group>";
@@ -121,6 +125,7 @@
 				728D876D234D1969003EA2C6 /* Registry.hpp */,
 				728D8775234D1E15003EA2C6 /* Scene.hpp */,
 				728D8774234D1D5E003EA2C6 /* System.hpp */,
+				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
 			);
 			path = ECS;
 			sourceTree = "<group>";
@@ -208,6 +213,7 @@
 			files = (
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
 				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
+				72ED875323778CDB00CB9E86 /* TestTaskflow.cpp in Sources */,
 				728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */,
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
@@ -332,6 +338,10 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_STYLE = Automatic;
 				GCC_FAST_MATH = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

@@ -29,11 +29,12 @@ struct Scene {
     std::array<GameObjectCollection, Registry::NumComponentsType::value> componentObjects;
     
     Scene(Registry& registry) : registry(registry), frameCounter(0) {
-        TupleHelper::Iterate(systems, [this](auto& system) {
+        TupleHelper::Iterate(systems, [&registry, this](auto& system) {
             auto this_system = std::make_tuple(&system);
             auto dependencies = system.GetDependenciesReferences(systems);
             auto initializer = std::tuple_cat(this_system, dependencies);
             std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
+            system.SetComponents(registry.components);
         });
     }
 
@@ -85,6 +86,18 @@ struct Scene {
         static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component not found");
         assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
         return std::get<ComponentContainer<T>>(registry.components).GetConst(gameObject);
+    }
+    
+   template<typename T>
+   bool HasComponent(const GameObject gameObject) const {
+        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
+        assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
+        return componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Contains(gameObject);
+    }
+    
+    template<typename System>
+    System& GetSystem() {
+        return std::get<System>(systems);
     }
     
     void Update() {
