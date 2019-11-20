@@ -14,6 +14,8 @@
 #include "GameObjectCollection.hpp"
 #include <future>
 #include <array>
+#include "ClassNameHelper.hpp"
+#include "../taskflow/taskflow.hpp"
 
 namespace AsyncECS {
     
@@ -25,8 +27,16 @@ struct Scene {
     int frameCounter;
     
     typename Systems::UniqueSystems systems;
+    
+    using NumSystemsType = std::tuple_size<decltype(systems)>;
+    
+    static constexpr decltype(NumSystemsType::value) NumSystems = NumSystemsType::value;
+    
     GameObjectCollection gameObjects;
     std::array<GameObjectCollection, Registry::NumComponentsType::value> componentObjects;
+    tf::Taskflow flow;
+    tf::Executor executor;
+    std::array<tf::Task, NumSystems> tasks;
     
     Scene(Registry& registry) : registry(registry), frameCounter(0) {
         TupleHelper::Iterate(systems, [&registry, this](auto& system) {
@@ -35,6 +45,21 @@ struct Scene {
             auto initializer = std::tuple_cat(this_system, dependencies);
             std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
             system.SetComponents(registry.components);
+        });
+        
+        int counter = 0;
+        TupleHelper::Iterate(systems, [this, &counter](auto& system) {
+            tasks[counter] = flow.placeholder();
+            tasks[counter].work([counter] () {
+                if (counter == 0) {
+                    int num = 0;
+                    for(int i=0; i<1000000; i++) {
+                        num += sqrt(i);
+                    }
+                }
+                std::cout << "System : "<< ClassNameHelper::GetName<std::remove_reference_t<decltype(system)>>()<<" \n";
+            });
+            counter++;
         });
     }
 
@@ -101,6 +126,9 @@ struct Scene {
     }
     
     void Update() {
+    
+        executor.run(flow).wait();
+    
         const auto& components = registry.components;
         TupleHelper::Iterate(systems, [&components, this](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
