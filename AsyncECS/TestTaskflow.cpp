@@ -7,20 +7,25 @@
 //
 
 
-//#include "taskflow.hpp"
-/*
+#include "taskflow/taskflow.hpp"
 
-int main(){
+int main_taskflow(){
 
   tf::Executor executor;
   tf::Taskflow taskflow;
   
-  auto [A, B, C, D] = taskflow.emplace(
-    [] () { std::cout << "TaskA\n"; },     //
-    [] () { std::cout << "TaskB\n"; },     //          +---+
-    [] () { std::cout << "TaskC\n"; },     //    +---->| B |-----+
-    [] () { std::cout << "TaskD\n"; }      //    |     +---+     |
-  );                                       //  +---+           +-v-+
+  auto A = taskflow.placeholder();
+   auto B = taskflow.placeholder();
+   auto C = taskflow.placeholder();
+   auto D = taskflow.placeholder();
+   
+   A.work([] () { std::cout << "TaskA\n"; });
+   B.work([] () { std::cout << "TaskB\n"; });
+   C.work([] () { std::cout << "TaskC\n"; });
+   D.work([] () { std::cout << "TaskD\n"; });
+   
+  
+ 
                                            //  | A |           | D |
   A.precede(B);  // B runs after A         //  +---+           +-^-+
   A.precede(C);  // C runs after A         //    |     +---+     |
@@ -31,4 +36,4 @@ int main(){
 
   return 0;
 }
-*/
+
