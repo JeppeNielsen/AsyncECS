@@ -15,6 +15,10 @@ struct Velocity {
     float y;
 };
 
+struct Renderable {
+    int imageNo;
+};
+
 struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComponentView {
     void Initialize() { }
     void Update(Position& position, const Velocity& velocity) {
@@ -23,9 +27,20 @@ struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComp
     }
 };
 
+struct RenderSystem : System<const Position, const Renderable>, NoDependencies, NoComponentView {
+    void Initialize() { }
+    void Update(const Position& position, const Renderable& renderable) {
+        DrawRenderable(position, renderable);
+    }
+    
+    void DrawRenderable(const Position& position, const Renderable& renderable) {
+        
+    }
+};
+
 int main() {
-    using Components = ComponentTypes<Position, Velocity>;
-    using Systems = SystemTypes<MovementSystem>;
+    using Components = ComponentTypes<Position, Velocity, Renderable>;
+    using Systems = SystemTypes<MovementSystem, RenderSystem>;
     using RegistryType = Registry<Components>;
     
     RegistryType registry;
