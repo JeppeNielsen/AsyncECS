@@ -47,19 +47,48 @@ struct Scene {
             system.SetComponents(registry.components);
         });
         
-        int counter = 0;
-        TupleHelper::Iterate(systems, [this, &counter](auto& system) {
-            tasks[counter] = flow.placeholder();
-            tasks[counter].work([counter] () {
-                if (counter == 0) {
-                    int num = 0;
-                    for(int i=0; i<1000000; i++) {
-                        num += sqrt(i);
-                    }
-                }
-                std::cout << "System : "<< ClassNameHelper::GetName<std::remove_reference_t<decltype(system)>>()<<" \n";
+        CreateTasks();
+        ConnectTasks();
+    }
+    
+    void CreateTasks() {
+        TupleHelper::Iterate(systems, [this](auto& system) {
+            const auto& components = this->registry.components;
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
+            tasks[taskIndex] = flow.emplace([this, &components, &system] () {
+                using SystemType = std::remove_reference_t<decltype(system)>;
+                system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
+                std::cout << "System : "<< ClassNameHelper::GetName<SystemType>()<<" \n";
             });
-            counter++;
+            tasks[taskIndex].name(ClassNameHelper::GetName<SystemType>());
+        });
+    }
+    
+    void ConnectTasks() {
+        TupleHelper::Iterate(systems, [this](auto& system) {
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
+            auto& systemTask = tasks[taskIndex];
+            
+            TupleHelper::Iterate(system.GetComponentTypes(), [this, taskIndex, &systemTask](auto type) {
+                if (!type) return; //only write types, ie non const components
+                using ComponentType = std::remove_pointer_t<decltype(type)>;
+            
+                
+                TupleHelper::Iterate(systems, [this, taskIndex, &systemTask](auto& innerSystem) {
+                    using InnerSystemType = std::remove_reference_t<decltype(innerSystem)>;
+                    const auto targetTaskIndex = TupleHelper::Index<InnerSystemType, decltype(systems)>::value;
+                    if (taskIndex == targetTaskIndex) return;
+                    
+                    if (innerSystem.template HasComponentType<const ComponentType>()) {
+                    
+                        systemTask.precede(tasks[targetTaskIndex]);
+                        
+                        std::cout << ClassNameHelper::GetName<SystemType>() << " will precede " << ClassNameHelper::GetName<InnerSystemType>() << "\n";
+                    }
+                });
+            });
         });
     }
 
@@ -126,14 +155,7 @@ struct Scene {
     }
     
     void Update() {
-    
         executor.run(flow).wait();
-    
-        const auto& components = registry.components;
-        TupleHelper::Iterate(systems, [&components, this](auto& system) {
-            using SystemType = std::remove_reference_t<decltype(system)>;
-            system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
-        });
         frameCounter++;
         registry.ResetChanged();
     }

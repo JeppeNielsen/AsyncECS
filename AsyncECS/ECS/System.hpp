@@ -63,19 +63,38 @@ struct SystemTypes {
 template<typename...T>
 struct SystemBase {
 
+    template<typename O>
+    std::tuple<O*> GetComponentType(const O* ptr) const {
+        return std::make_tuple((O*)nullptr);
+    }
+    
+    template<typename O>
+    std::tuple<O*> GetComponentType(O* ptr) const {
+        return std::make_tuple((O*)1);
+    }
+
+    std::tuple<T*...> GetComponentTypes() {
+        return std::tuple_cat(GetComponentType((T*)nullptr)...);
+    }
+    
+    template<typename ComponentType>
+    bool HasComponentType() {
+        return TupleHelper::HasType<ComponentType, std::tuple<T...> >::value;
+    }
+
     template<typename O, typename Components>
-    const O& Get(const int index, Components& components, const O* ptr) const {
-        return (const O&)std::get<ComponentContainer<std::remove_const_t<O>>>(components).GetConst(index);
+    const O& Get(const GameObject gameObject, Components& components, const O* ptr) const {
+        return (const O&)std::get<ComponentContainer<std::remove_const_t<O>>>(components).GetConst(gameObject);
     }
     
     template<typename O, typename Components>
-    O& Get(const int index, Components& components, O* ptr) const {
-        return (O&)((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>>(components)).Get(index);
+    O& Get(const GameObject gameObject, Components& components, O* ptr) const {
+        return (O&)((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>>(components)).Get(gameObject);
     }
    
     template<typename Components>
-    std::tuple<T&...> GetComponentValuesFromGameObject(const int index, Components& components) const {
-        return std::tie(Get(index, components, (T*)nullptr)...);
+    std::tuple<T&...> GetComponentValuesFromGameObject(const GameObject gameObject, Components& components) const {
+        return std::tie(Get(gameObject, components, (T*)nullptr)...);
     }
     
     template<typename Components, typename ComponentObjects>
