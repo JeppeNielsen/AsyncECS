@@ -87,10 +87,11 @@ struct SystemBase {
         int foundIndex = indicies[0];
         int min = (int)componentObjects[foundIndex].objects.size();
         for(int i = 1; i < numElements; ++i) {
-            int size =  (int)componentObjects[i].objects.size();
+            int index = indicies[i];
+            int size =  (int)componentObjects[index].objects.size();
             if (size < min) {
                 min =  size;
-                foundIndex = indicies[i];
+                foundIndex = index;
             }
         }
         return componentObjects[foundIndex];
