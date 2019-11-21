@@ -50,6 +50,11 @@ namespace AsyncECS {
             //func(std::get<ComponentContainer<std::remove_const_t<T>>*>(componentsPtrs)->Get(gameObject)...);
             func(Get(gameObject, (T*)nullptr)...);
         }
+        
+        template<typename ComponentType>
+        bool HasComponentViewType() {
+            return TupleHelper::HasType<ComponentType, std::tuple<T...> >::value;
+        }
     };
     
     using NoComponentView = ComponentView<>;
