@@ -16,6 +16,7 @@
 #include <array>
 #include "ClassNameHelper.hpp"
 #include "../taskflow/taskflow.hpp"
+#include <map>
 
 namespace AsyncECS {
     
@@ -46,7 +47,7 @@ struct Scene {
             std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
             system.SetComponents(registry.components);
         });
-        
+        flow.name("Scene");
         CreateTasks();
         ConnectTasks();
     }
@@ -66,30 +67,40 @@ struct Scene {
     }
     
     void ConnectTasks() {
-        TupleHelper::Iterate(systems, [this](auto& system) {
+        std::map<int, std::set<int>> connections;
+        TupleHelper::Iterate(systems, [this, &connections](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
             const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
-            auto& systemTask = tasks[taskIndex];
             
-            TupleHelper::Iterate(system.GetComponentTypes(), [this, taskIndex, &systemTask](auto type) {
+            TupleHelper::Iterate(system.GetComponentTypes(), [this, taskIndex, &connections](auto type) {
                 if (!type) return; //only write types, ie non const components
                 using ComponentType = std::remove_pointer_t<decltype(type)>;
             
                 
-                TupleHelper::Iterate(systems, [this, taskIndex, &systemTask](auto& innerSystem) {
+                TupleHelper::Iterate(systems, [this, taskIndex, &connections](auto& innerSystem) {
                     using InnerSystemType = std::remove_reference_t<decltype(innerSystem)>;
                     const auto targetTaskIndex = TupleHelper::Index<InnerSystemType, decltype(systems)>::value;
                     if (taskIndex == targetTaskIndex) return;
                     
-                    if (innerSystem.template HasComponentType<const ComponentType>()) {
-                    
-                        systemTask.precede(tasks[targetTaskIndex]);
-                        
-                        std::cout << ClassNameHelper::GetName<SystemType>() << " will precede " << ClassNameHelper::GetName<InnerSystemType>() << "\n";
+                    if (innerSystem.template HasComponentType<const ComponentType>() ||
+                        innerSystem.template HasComponentViewType<const ComponentType>()) {
+                        connections[taskIndex].insert(targetTaskIndex);
                     }
                 });
             });
+            
+            TupleHelper::Iterate(system.GetDependencyTypes(), [this, taskIndex, &connections](auto type) {
+                using DependencySystemType = std::remove_pointer_t<decltype(type)>;
+                const auto targetTaskIndex = TupleHelper::Index<DependencySystemType, decltype(systems)>::value;
+                connections[targetTaskIndex].insert(taskIndex);
+            });
         });
+        
+        for(auto [taskIndex, targets] : connections) {
+            for(auto target : targets) {
+                tasks[taskIndex].precede(tasks[target]);
+            }
+        }
     }
 
     GameObject CreateGameObject() {
