@@ -39,6 +39,10 @@ struct Dependencies {
     static std::tuple<T&...> GetDependenciesReferences(Systems& systems) {
         return std::tie((T&)std::get<T>(systems)...);
     }
+    
+    std::tuple<T*...> GetDependencyTypes() {
+        return std::tuple<T*...> {};
+    }
 };
 
 using NoDependencies = Dependencies<>;
