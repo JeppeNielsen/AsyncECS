@@ -154,10 +154,10 @@ inline void Taskflow::dump(std::ostream& os) const {
   std::stack<const Taskflow*> stack;
   std::unordered_set<const Taskflow*> visited; 
   
-  os << "digraph Taskflow_";
+  os << "digraph ";
   if(_name.empty()) os << 'p' << this;
   else os << _name;
-  os << " {\nrankdir=\"LR\";\n";
+  os << " {\nrankdir=\"TB\";\n";
   
   stack.push(this);
   visited.insert(this);
@@ -173,7 +173,7 @@ inline void Taskflow::dump(std::ostream& os) const {
     else os << f->_name;
     os << " {\n";
 
-    os << "label=\"Taskflow_";
+    os << "label=\"";
     if(f->_name.empty()) os << 'p' << f;
     else os << f->_name;
     os << "\";\n";
