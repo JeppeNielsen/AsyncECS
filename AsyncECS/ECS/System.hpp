@@ -161,7 +161,6 @@ struct SystemChanged : SystemBase<T...> {
         const auto this_system = std::make_tuple((SystemType*)this);
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
-        std::cout << changedGameObjects.size() << std::endl;
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
                 continue;
@@ -180,7 +179,6 @@ struct SystemChangedGameObject : SystemBase<T...> {
         const auto this_system = std::make_tuple((SystemType*)this);
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
-        std::cout << changedGameObjects.size() << std::endl;
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
                 continue;
