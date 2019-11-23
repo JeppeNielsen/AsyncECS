@@ -17,6 +17,8 @@
 #include "ClassNameHelper.hpp"
 #include "../taskflow/taskflow.hpp"
 #include <map>
+#include "SystemTask.hpp"
+#include "TaskRunner.hpp"
 
 namespace AsyncECS {
     
@@ -38,6 +40,8 @@ struct Scene {
     tf::Taskflow flow;
     tf::Executor executor;
     std::array<tf::Task, NumSystems> tasks;
+    std::array<SystemTask, NumSystems> systemTasks;
+    TaskRunner taskRunner;
     
     Scene(Registry& registry) : registry(registry), frameCounter(0) {
         TupleHelper::Iterate(systems, [&registry, this](auto& system) {
@@ -60,9 +64,12 @@ struct Scene {
             tasks[taskIndex] = flow.emplace([this, &components, &system] () {
                 using SystemType = std::remove_reference_t<decltype(system)>;
                 system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
-                std::cout << "System : "<< ClassNameHelper::GetName<SystemType>()<<" \n";
             });
             tasks[taskIndex].name(ClassNameHelper::GetName<SystemType>());
+            systemTasks[taskIndex].name = ClassNameHelper::GetName<SystemType>();
+            systemTasks[taskIndex].work = [this, &components, &system] () {
+                system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
+            };
         });
     }
     
@@ -99,6 +106,7 @@ struct Scene {
         for(auto [taskIndex, targets] : connections) {
             for(auto target : targets) {
                 tasks[taskIndex].precede(tasks[target]);
+                systemTasks[taskIndex].Precede(systemTasks[target]);
             }
         }
     }
@@ -165,8 +173,44 @@ struct Scene {
         return std::get<System>(systems);
     }
     
+    void RunTask(SystemTask& task) {
+        if (!task.IsReady()) return;
+        
+        taskRunner.RunTask(task.work, [this, &task] () {
+            task.isDone = true;
+            std::cout << task.name << " - done"<<std::endl;
+            for(auto outgoingTask : task.outgoing) {
+                RunTask(*outgoingTask);
+            }
+        });
+    }
+    
     void Update() {
-        executor.run(flow).wait();
+        
+        
+        for(auto& task : systemTasks) {
+            task.isDone = false;
+            if (task.incoming.empty()) {
+                RunTask(task);
+            }
+        }
+        
+        while(taskRunner.Update());
+        
+        /*
+        executor.run(flow);
+        executor.wait_for_all();
+        */
+        
+        /*
+        const auto& components = this->registry.components;
+        TupleHelper::Iterate(systems, [this, &components](auto& system) {
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
+            std::cout << "System : "<< ClassNameHelper::GetName<SystemType>()<<" \n";
+        });
+        */
+        
         frameCounter++;
         registry.ResetChanged();
     }
@@ -208,6 +252,26 @@ struct Scene {
         });
         frameCounter++;
     }
+    
+    void WriteGraph(std::ostream& os) {
+        os << "digraph Scene { \n";
+        os << "rankdir=\"TB\"; \n";
+        os << "subgraph cluster_Scene { \n";
+        os << "label=\"Scene\"; \n";
+        
+        for(auto& task : systemTasks) {
+            os << "p"<<(&task) << "[label=\""<< task.name <<"\"]; \n";
+            
+            for(auto outgoing : task.outgoing) {
+                os << "p"<<(&task) << " -> " << "p"<<(outgoing)<< ";\n";
+            }
+        }
+    
+        os << "} \n";
+        os << "} \n";
+    }
+    
+    
 };
 
 }
