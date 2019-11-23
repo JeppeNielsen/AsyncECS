@@ -10,6 +10,8 @@
 		720BC26B236C7864009F163B /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC269236C7864009F163B /* TestBase.cpp */; };
 		720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26C236C7889009F163B /* TestComponentContainer.cpp */; };
 		720BC271236C7AC4009F163B /* AllTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26F236C7AC4009F163B /* AllTests.cpp */; };
+		72676565238889C20080412E /* SystemTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72676563238889C20080412E /* SystemTask.cpp */; };
+		726765682388A1680080412E /* TaskRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726765662388A1680080412E /* TaskRunner.cpp */; };
 		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
 		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
 		728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D877B235F96E2003EA2C6 /* TestComponentContainer.cpp */; };
@@ -41,6 +43,10 @@
 		720BC270236C7AC4009F163B /* AllTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AllTests.hpp; sourceTree = "<group>"; };
 		72332DBA233A90F3007DBD21 /* AsyncECS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncECS; sourceTree = BUILT_PRODUCTS_DIR; };
 		72676562238567540080412E /* ClassNameHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClassNameHelper.hpp; sourceTree = "<group>"; };
+		72676563238889C20080412E /* SystemTask.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SystemTask.cpp; sourceTree = "<group>"; };
+		72676564238889C20080412E /* SystemTask.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemTask.hpp; sourceTree = "<group>"; };
+		726765662388A1680080412E /* TaskRunner.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TaskRunner.cpp; sourceTree = "<group>"; };
+		726765672388A1680080412E /* TaskRunner.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TaskRunner.hpp; sourceTree = "<group>"; };
 		728D876D234D1969003EA2C6 /* Registry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Registry.hpp; sourceTree = "<group>"; };
 		728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectCollection.cpp; sourceTree = "<group>"; };
 		728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectCollection.hpp; sourceTree = "<group>"; };
@@ -161,6 +167,8 @@
 				728D8775234D1E15003EA2C6 /* Scene.hpp */,
 				728D8774234D1D5E003EA2C6 /* System.hpp */,
 				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
+				72676563238889C20080412E /* SystemTask.cpp */,
+				72676564238889C20080412E /* SystemTask.hpp */,
 			);
 			path = ECS;
 			sourceTree = "<group>";
@@ -172,6 +180,8 @@
 				72B483CC233D485800E44E78 /* Timer.cpp */,
 				72B483CD233D485800E44E78 /* Timer.hpp */,
 				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
+				726765662388A1680080412E /* TaskRunner.cpp */,
+				726765672388A1680080412E /* TaskRunner.hpp */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -344,12 +354,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
+				726765682388A1680080412E /* TaskRunner.cpp in Sources */,
 				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
 				72ED875323778CDB00CB9E86 /* TestTaskflow.cpp in Sources */,
 				728D877C235F96E2003EA2C6 /* TestComponentContainer.cpp in Sources */,
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
 				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
+				72676565238889C20080412E /* SystemTask.cpp in Sources */,
 				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,
 				72ED8727236CE59200CB9E86 /* Simple.cpp in Sources */,
 				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
