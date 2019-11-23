@@ -122,7 +122,7 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
 };
 
 struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>,
-                        Dependencies<BoundingBoxSystem>,
+                        NoDependencies,
                         NoComponentView {
     BoundingBox root;
     Vector2 rootSize;
@@ -158,7 +158,7 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
         }
     }
     
-    void Initialize(BoundingBoxSystem& boundingBoxSystem) {
+    void Initialize() {
         root.minX = 0;
         root.minY = 0;
         root.maxX = 1000;
@@ -199,6 +199,14 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
     }
 };
 
+struct NameableSystem : System<Nameable>, NoDependencies, NoComponentView {
+    void Initialize() { }
+    
+    void Update(Nameable& nameable) {
+        nameable.name = "No way";
+    }
+};
+
 struct RenderSystem : System<const Position, const Camera>,
                       Dependencies<QuadTreeSystem>,
                       ComponentView<const Nameable, const Renderable> {
@@ -228,21 +236,18 @@ struct RenderSystem : System<const Position, const Camera>,
             });
         }
         std::cout << std::endl;
-        
     }
 };
 
 using AllComponents = ComponentTypes<Position, Renderable, Mesh, BoundingBox, Velocity, QuadTreeNode, Camera, Nameable>;
-using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, QuadTreeSystem>;
+using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, QuadTreeSystem, NameableSystem>;
 
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-int main_dependencies() {
+int main() {
     AllTests tests;
     tests.Run();
-
-    DebugTemplate<AllSystems::UniqueSystems>();
 
     RegistryType registry;
     SceneType scene(registry);
@@ -288,6 +293,9 @@ int main_dependencies() {
         std::cout << timer.Stop() << std::endl;
     }
     
+    std::cout << "   ---> "<<std::endl;
+    //scene.flow.dump(std::cout);
+    scene.WriteGraph(std::cout);
     
     return EXIT_SUCCESS;
 }

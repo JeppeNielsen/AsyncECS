@@ -38,7 +38,7 @@ struct RenderSystem : System<const Position, const Renderable>, NoDependencies, 
     }
 };
 
-int main() {
+int main_simple() {
     using Components = ComponentTypes<Position, Velocity, Renderable>;
     using Systems = SystemTypes<MovementSystem, RenderSystem>;
     using RegistryType = Registry<Components>;
@@ -54,6 +54,9 @@ int main() {
     
     auto& p = scene.GetComponent<Position>(gameObject);
     std::cout << "Position " << p.x << " " << p.y << std::endl;
+    
+    std::cout << "   ---> "<<std::endl;
+    scene.flow.dump(std::cout);
     
     return 0;
 }
