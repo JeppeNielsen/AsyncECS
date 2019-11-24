@@ -56,7 +56,7 @@ int main_simple() {
     std::cout << "Position " << p.x << " " << p.y << std::endl;
     
     std::cout << "   ---> "<<std::endl;
-    scene.flow.dump(std::cout);
+    scene.WriteGraph(std::cout);
     
     return 0;
 }

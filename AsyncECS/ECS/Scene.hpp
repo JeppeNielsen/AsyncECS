@@ -15,8 +15,8 @@
 #include <future>
 #include <array>
 #include "ClassNameHelper.hpp"
-#include "../taskflow/taskflow.hpp"
 #include <map>
+#include <set>
 #include "SystemTask.hpp"
 #include "TaskRunner.hpp"
 
@@ -37,9 +37,6 @@ struct Scene {
     
     GameObjectCollection gameObjects;
     std::array<GameObjectCollection, Registry::NumComponentsType::value> componentObjects;
-    tf::Taskflow flow;
-    tf::Executor executor;
-    std::array<tf::Task, NumSystems> tasks;
     std::array<SystemTask, NumSystems> systemTasks;
     TaskRunner taskRunner;
     
@@ -51,7 +48,6 @@ struct Scene {
             std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
             system.SetComponents(registry.components);
         });
-        flow.name("Scene");
         CreateTasks();
         ConnectTasks();
     }
@@ -61,11 +57,6 @@ struct Scene {
             const auto& components = this->registry.components;
             using SystemType = std::remove_reference_t<decltype(system)>;
             const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
-            tasks[taskIndex] = flow.emplace([this, &components, &system] () {
-                using SystemType = std::remove_reference_t<decltype(system)>;
-                system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
-            });
-            tasks[taskIndex].name(ClassNameHelper::GetName<SystemType>());
             systemTasks[taskIndex].name = ClassNameHelper::GetName<SystemType>();
             systemTasks[taskIndex].work = [this, &components, &system] () {
                 system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
@@ -82,7 +73,6 @@ struct Scene {
             TupleHelper::Iterate(system.GetComponentTypes(), [this, taskIndex, &connections](auto type) {
                 if (!type) return; //only write types, ie non const components
                 using ComponentType = std::remove_pointer_t<decltype(type)>;
-            
                 
                 TupleHelper::Iterate(systems, [this, taskIndex, &connections](auto& innerSystem) {
                     using InnerSystemType = std::remove_reference_t<decltype(innerSystem)>;
@@ -105,7 +95,6 @@ struct Scene {
         
         for(auto [taskIndex, targets] : connections) {
             for(auto target : targets) {
-                tasks[taskIndex].precede(tasks[target]);
                 systemTasks[taskIndex].Precede(systemTasks[target]);
             }
         }
