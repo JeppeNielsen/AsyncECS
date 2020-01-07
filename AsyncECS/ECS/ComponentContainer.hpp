@@ -88,19 +88,27 @@ struct ComponentContainer {
     }
     
     T& Get(const GameObject gameObject) {
+        SetChanged(gameObject);
+        return GetNoChange(gameObject);
+    }
+    
+    void SetChanged(const GameObject gameObject) {
+        if (changedThisFrame.Contains(gameObject)) return;
         auto const elementIndex = indicies[gameObject & GameObjectIndexMask];
-        if (!changedThisFrame.Contains(gameObject)) {
-            if (references[elementIndex] == 1) {
-                changedThisFrame.Add(gameObject);
-            } else {
-                for(auto go : gameObjects.objects) {
-                    auto const index = indicies[go & GameObjectIndexMask];
-                    if (elementIndex == index && !changedThisFrame.Contains(go)) {
-                        changedThisFrame.Add(go);
-                    }
+        if (references[elementIndex] == 1) {
+            changedThisFrame.Add(gameObject);
+        } else {
+            for(auto go : gameObjects.objects) {
+                auto const index = indicies[go & GameObjectIndexMask];
+                if (elementIndex == index && !changedThisFrame.Contains(go)) {
+                    changedThisFrame.Add(go);
                 }
             }
         }
+    }
+    
+    T& GetNoChange(const GameObject gameObject) {
+        auto const elementIndex = indicies[gameObject & GameObjectIndexMask];
         return (T&)elements[elementIndex];
     }
     
