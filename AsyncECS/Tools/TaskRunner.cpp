@@ -11,23 +11,13 @@
 using namespace AsyncECS;
 
 void TaskRunner::RunTask(std::function<void ()> work, std::function<void ()> finished) {
-    auto task = std::make_unique<Task>();
-    
-    task->work = work;
-    task->finished = finished;
-    task->isFinished = false;
-    
-    std::async(std::launch::async, [&task, work] () {
-        work();
-        task->isFinished = true;
-    });
-    tasks.push_back(std::move(task));
+    tasks.emplace_back(std::make_unique<Task>( finished, work ));
 }
 
 bool TaskRunner::Update() {
     for(int i=0; i<tasks.size(); ++i) {
         auto& task = tasks[i];
-        if (task->isFinished) {
+        if (task->future.valid()) {
             task->finished();
             tasks.erase(tasks.begin() + i);
             i--;

@@ -14,13 +14,17 @@
 namespace AsyncECS {
     struct TaskRunner {
     
-        void RunTask(std::function<void()> work, std::function<void()> finished);
+        void RunTask(std::function<void()> work, std::function<void()> finished = nullptr);
         bool Update();
         
         struct Task {
             std::function<void()> work;
             std::function<void()> finished;
-            std::atomic<bool> isFinished;
+            std::future<void> future;
+           
+            Task(std::function<void()> finished, std::function<void()> work) : finished(finished) {
+                future = std::async(std::launch::async, work);
+            }
         };
         
         using Tasks = std::vector<std::unique_ptr<Task>>;
