@@ -18,6 +18,7 @@
 #include "System.hpp"
 #include "Scene.hpp"
 #include <algorithm>
+#include <mutex>
 
 using namespace AsyncECS;
 
@@ -130,6 +131,8 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
     
     std::array<GameObjectCollection, GridSize * GridSize> grid;
     
+    std::mutex* mutex;
+    
     void TryInsertGameObject(const GameObject gameObject, const BoundingBox& box, QuadTreeNode& node) {
         float midX = (box.minX + box.maxX) * 0.5f;
         float midY = (box.minY + box.maxY) * 0.5f;
@@ -153,6 +156,7 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
         
         auto& collection = grid[index];
         if (!collection.Contains(gameObject)) {
+            //std::lock_guard guard(*mutex);
             collection.Add(gameObject);
             node.prevIndex = index;
         }
@@ -168,6 +172,8 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
         rootSize.y = root.maxY - root.minY;
         
         std::cout << "QuadtreeSystem :: Initialized" << std::endl;
+        
+        mutex = new std::mutex();
     }
     
     void Update(const GameObject gameObject, const BoundingBox& box, QuadTreeNode& node) {
@@ -245,10 +251,12 @@ using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, 
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-int main() {
+int main_dep() {
     AllTests tests;
     tests.Run();
-
+    
+    std::cout << "Number of cores available : " << std::thread::hardware_concurrency() << "\n";
+    
     RegistryType registry;
     SceneType scene(registry);
     
@@ -283,9 +291,6 @@ int main() {
         Timer timer;
         scene.Update();
         std::cout << timer.Stop() << std::endl;
-        
-        //std::cout << "numInserted = "<<scene.GetSystem<QuadTreeSystem>().numInserted<<std::endl;
-        
     }
     {
         Timer timer;
@@ -293,9 +298,7 @@ int main() {
         std::cout << timer.Stop() << std::endl;
     }
     
-    std::cout << "   ---> "<<std::endl;
-    //scene.flow.dump(std::cout);
+    std::cout << "Graph: "<<std::endl;
     scene.WriteGraph(std::cout);
-    
     return EXIT_SUCCESS;
 }
