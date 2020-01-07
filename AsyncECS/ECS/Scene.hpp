@@ -167,7 +167,7 @@ struct Scene {
         
         taskRunner.RunTask(task.work, [this, &task] () {
             task.isDone = true;
-            std::cout << task.name << " - done"<<std::endl;
+            //std::cout << task.name << " - done"<<std::endl;
             for(auto outgoingTask : task.outgoing) {
                 RunTask(*outgoingTask);
             }
@@ -175,8 +175,6 @@ struct Scene {
     }
     
     void Update() {
-        
-        
         for(auto& task : systemTasks) {
             task.isDone = false;
             if (task.incoming.empty()) {
