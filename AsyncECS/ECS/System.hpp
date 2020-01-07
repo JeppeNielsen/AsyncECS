@@ -11,6 +11,9 @@
 #include "GameObjectCollection.hpp"
 #include "TupleHelper.hpp"
 #include "ComponentView.hpp"
+#include "TaskRunner.hpp"
+#include <algorithm>
+#include "ClassNameHelper.hpp"
 
 namespace AsyncECS {
 
@@ -93,12 +96,28 @@ struct SystemBase {
     
     template<typename O, typename Components>
     O& Get(const GameObject gameObject, Components& components, O* ptr) const {
-        return (O&)((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>>(components)).Get(gameObject);
+        return (O&)((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>>(components)).GetNoChange(gameObject);
     }
    
     template<typename Components>
     std::tuple<T&...> GetComponentValuesFromGameObject(const GameObject gameObject, Components& components) const {
         return std::tie(Get(gameObject, components, (T*)nullptr)...);
+    }
+    
+    template<typename O, typename Components>
+    void ChangeComponent(const GameObject gameObject, Components& components, const O* ptr) const {
+        /*empty*/ // no change for const components
+    }
+    
+    template<typename O, typename Components>
+    void ChangeComponent(const GameObject gameObject, Components& components, O* ptr) const {
+        ((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>>(components)).SetChanged(gameObject);
+    }
+    
+    template<typename Components>
+    void ChangeComponents(const GameObject gameObject, Components& components) const {
+        using expander = int[];
+        (void) expander { 0, ((void)ChangeComponent(gameObject, components, (T*)nullptr),0)... };
     }
     
     template<typename Components, typename ComponentObjects>
@@ -151,34 +170,96 @@ struct System : SystemBase<T...> {
             const auto iterator = std::tuple_cat(this_system, componentValues);
             std::apply(&SystemType::Update, iterator);
         }
+        
+        for(const auto gameObject : gameObjectsInSystem) {
+            this->template ChangeComponents(gameObject, components);
+        }
     }
 };
 
 template<typename...T>
 struct SystemChanged : SystemBase<T...> {
+
+    TaskRunner taskRunner;
+
     template<typename Components, typename ComponentObjects, typename SystemType>
     void Iterate(const Components& components, ComponentObjects& componentObjects) {
         const auto this_system = std::make_tuple((SystemType*)this);
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
+        
+        const int chunkSize = 50000;
+        
+        //std::cout << ClassNameHelper::GetName<SystemType>() << ".changedObjects.size() == "<< changedGameObjects.size() << std::endl;
+        
+        for (int i=0; i<changedGameObjects.size(); i+=chunkSize) {
+            int fromIndex = i;
+            int toIndex = std::min((int)changedGameObjects.size(),  fromIndex + chunkSize);
+            
+            taskRunner.RunTask([this, &components, &changedGameObjects, &gameObjectsInSystem, this_system, fromIndex, toIndex]() {
+                for(int i = fromIndex; i<toIndex; ++i) {
+                    const auto gameObject = changedGameObjects[i];
+                    if (!gameObjectsInSystem.Contains(gameObject)) {
+                        continue;
+                    }
+                    const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                    const auto iterator = std::tuple_cat(this_system, componentValues);
+                    std::apply(&SystemType::Update, iterator);
+                }
+            });
+        }
+        
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
                 continue;
             }
-            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
-            const auto iterator = std::tuple_cat(this_system, componentValues);
-            std::apply(&SystemType::Update, iterator);
+            this->template ChangeComponents(gameObject, components);
         }
     }
 };
 
 template<typename...T>
 struct SystemChangedGameObject : SystemBase<T...> {
+
+    TaskRunner taskRunner;
+
     template<typename Components, typename ComponentObjects, typename SystemType>
     void Iterate(const Components& components, ComponentObjects& componentObjects) {
         const auto this_system = std::make_tuple((SystemType*)this);
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
+        
+        const int chunkSize = ClassNameHelper::GetName<SystemType>() == "QuadTreeSystem" ? 10000000 : 100000;
+        
+        //std::cout << ClassNameHelper::GetName<SystemType>() << ".changedObjects.size() == "<< changedGameObjects.size() << std::endl;
+        
+        for (int i=0; i<changedGameObjects.size(); i+=chunkSize) {
+            int fromIndex = i;
+            int toIndex = std::min((int)changedGameObjects.size(),  fromIndex + chunkSize);
+            
+            taskRunner.RunTask([this, &components, &changedGameObjects, &gameObjectsInSystem, &this_system, fromIndex, toIndex]() {
+                for(int i = fromIndex; i<toIndex; ++i) {
+                    const auto gameObject = changedGameObjects[i];
+                    if (!gameObjectsInSystem.Contains(gameObject)) {
+                        continue;
+                    }
+                    const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                    const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
+                    std::apply(&SystemType::Update, iterator);
+                }
+            }, []() {});
+        }
+        
+        while(taskRunner.Update());
+        
+        for(const auto gameObject : changedGameObjects) {
+            if (!gameObjectsInSystem.Contains(gameObject)) {
+                continue;
+            }
+            this->template ChangeComponents(gameObject, components);
+        }
+        
+        /*
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
                 continue;
@@ -187,6 +268,7 @@ struct SystemChangedGameObject : SystemBase<T...> {
             const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
             std::apply(&SystemType::Update, iterator);
         }
+        */
     }
 };
 
