@@ -240,6 +240,7 @@ struct Scene {
         frameCounter++;
     }
     
+    //http://www.webgraphviz.com/
     void WriteGraph(std::ostream& os) {
         os << "digraph Scene { \n";
         os << "rankdir=\"TB\"; \n";
