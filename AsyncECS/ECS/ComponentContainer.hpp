@@ -27,6 +27,7 @@ struct ComponentContainer {
     ComponentContainer & operator=(ComponentContainer &&) = default;
     
     void CreateIndex(const GameObject gameObject) {
+        assert(!gameObjects.Contains(gameObject));
         const auto objectIndex = gameObject & GameObjectIndexMask;
         
         if (objectIndex>=indicies.size()) {
@@ -58,6 +59,8 @@ struct ComponentContainer {
     }
     
     void Reference(const GameObject gameObject, const GameObject referenceGameObject) {
+		assert(!gameObjects.Contains(gameObject));
+        assert(gameObjects.Contains(referenceGameObject));
         const auto objectIndex = gameObject & GameObjectIndexMask;
         const auto referenceObjectIndex = referenceGameObject & GameObjectIndexMask;
         assert(objectIndex!=referenceObjectIndex);
@@ -71,6 +74,7 @@ struct ComponentContainer {
     }
     
     void Remove(const GameObject gameObject) {
+        assert(gameObjects.Contains(gameObject));
         
         const auto objectIndex = gameObject & GameObjectIndexMask;
         const auto index = indicies[objectIndex];
@@ -79,8 +83,27 @@ struct ComponentContainer {
             auto tmp = std::move(elements.back());
             elements[index] = std::move(tmp);
             elements.pop_back();
-            references[index] = references.back();
+            
+            auto lastReferences = references.back();
+            
+            references[index] = lastReferences;
             references.pop_back();
+            
+            if (lastReferences>1) {
+                auto lastIndex = elements.size();
+                for(int i=0; i<indicies.size(); ++i) {
+                    if (indicies[i] == lastIndex) {
+                        indicies[i] = index;
+                        --lastReferences;
+                        if (lastReferences<=0) {
+                            break;
+                        }
+                    }
+                }
+            } else {
+                auto lastObjectIndex = gameObjects.objects.back();
+                indicies[lastObjectIndex] = index;
+            }
         }
         
         indicies[objectIndex] = GameObjectNull;
@@ -88,6 +111,7 @@ struct ComponentContainer {
     }
     
     T& Get(const GameObject gameObject) {
+        assert(gameObjects.Contains(gameObject));
         SetChanged(gameObject);
         return GetNoChange(gameObject);
     }
@@ -108,6 +132,7 @@ struct ComponentContainer {
     }
     
     T& GetNoChange(const GameObject gameObject) {
+    	assert(gameObjects.Contains(gameObject));
         auto const elementIndex = indicies[gameObject & GameObjectIndexMask];
         return (T&)elements[elementIndex];
     }
