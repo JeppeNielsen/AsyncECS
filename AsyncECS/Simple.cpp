@@ -1,6 +1,6 @@
 #include <iostream>
+#include "AllTests.hpp"
 #include "Scene.hpp"
-
 #include <variant>
 
 using namespace AsyncECS;
@@ -24,6 +24,7 @@ struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComp
     void Update(Position& position, const Velocity& velocity) {
         position.x += velocity.x;
         position.y += velocity.y;
+        std::cout << "Movement: "<< position.x << ", " << position.y <<std::endl;
     }
 };
 
@@ -34,13 +35,17 @@ struct RenderSystem : System<const Position, const Renderable>, NoDependencies, 
     }
     
     void DrawRenderable(const Position& position, const Renderable& renderable) {
-        
+        std::cout << "Render: "<< position.x << ", " << position.y <<std::endl;
     }
 };
 
 int main() {
+
+    AllTests alltests;
+    alltests.Run();
+
     using Components = ComponentTypes<Position, Velocity, Renderable>;
-    using Systems = SystemTypes<MovementSystem, RenderSystem>;
+    using Systems = SystemTypes<RenderSystem, MovementSystem>;
     using RegistryType = Registry<Components>;
     
     RegistryType registry;
@@ -49,12 +54,16 @@ int main() {
     auto gameObject = scene.CreateGameObject();
     scene.AddComponent<Position>(gameObject, 0.0f, 0.0f);
     scene.AddComponent<Velocity>(gameObject, 1.0f, 2.0f);
+    scene.AddComponent<Renderable>(gameObject);
     
-    scene.Update();
+    for (int i=0; i<10; i++) {
     
-    auto& p = scene.GetComponent<Position>(gameObject);
-    std::cout << "Position " << p.x << " " << p.y << std::endl;
+        scene.Update();
     
+        auto& p = scene.GetComponent<Position>(gameObject);
+        //std::cout << "Position " << p.x << " " << p.y << std::endl;
+
+    }
     std::cout << " graph: "<<std::endl;
     scene.WriteGraph(std::cout);
     
