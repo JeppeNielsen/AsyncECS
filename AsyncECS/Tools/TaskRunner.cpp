@@ -17,7 +17,7 @@ void TaskRunner::RunTask(std::function<void ()> work, std::function<void ()> fin
 bool TaskRunner::Update() {
     for(int i=0; i<tasks.size(); ++i) {
         auto& task = tasks[i];
-        if (task->future.valid()) {
+        if (task->HasFinished()) {
             task->finished();
             tasks.erase(tasks.begin() + i);
             i--;

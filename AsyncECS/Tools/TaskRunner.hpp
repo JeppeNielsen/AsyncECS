@@ -25,6 +25,10 @@ namespace AsyncECS {
             Task(std::function<void()> finished, std::function<void()> work) : finished(finished) {
                 future = std::async(std::launch::async, work);
             }
+            
+            bool HasFinished() {
+                return future.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+            }
         };
         
         using Tasks = std::vector<std::unique_ptr<Task>>;
