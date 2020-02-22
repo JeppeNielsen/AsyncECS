@@ -11,6 +11,9 @@
 using namespace AsyncECS;
 
 void SystemTask::Precede(SystemTask &task) {
+    if (std::find(task.outgoing.begin(), task.outgoing.end(), this)!=task.outgoing.end()) {
+        return;
+    }
     outgoing.push_back(&task);
     task.incoming.push_back(this);
 }
