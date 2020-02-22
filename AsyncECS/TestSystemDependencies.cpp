@@ -80,7 +80,7 @@ struct Camera {
 };
 
 struct VelocitySystem : System<Position, const Velocity>,
-                        NoDependencies, NoComponentView {
+                        NoSystemDependencies, NoComponentView {
     void Initialize() {
         std::cout << "VelocitySystem :: Initialized"<<std::endl;
     }
@@ -92,7 +92,7 @@ struct VelocitySystem : System<Position, const Velocity>,
 };
 
 struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox>,
-                           NoDependencies, NoComponentView {
+                           NoSystemDependencies, NoComponentView {
 
     void Initialize() {
         std::cout << "BoundingBoxSystem :: Initialized" << std::endl;
@@ -127,7 +127,7 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
 };
 
 struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>,
-                        NoDependencies,
+                        NoSystemDependencies,
                         NoComponentView {
     BoundingBox root;
     Vector2 rootSize;
@@ -211,7 +211,7 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
     }
 };
 
-struct NameableSystem : System<Nameable>, NoDependencies, NoComponentView {
+struct NameableSystem : System<Nameable>, NoSystemDependencies, NoComponentView {
     void Initialize() { }
     
     void Update(Nameable& nameable) {
@@ -220,7 +220,7 @@ struct NameableSystem : System<Nameable>, NoDependencies, NoComponentView {
 };
 
 struct RenderSystem : System<const Position, const Camera>,
-                      Dependencies<QuadTreeSystem>,
+                      SystemDependencies<QuadTreeSystem>,
                       ComponentView<const Nameable, const Renderable> {
                       
     QuadTreeSystem* quadTreeSystem;

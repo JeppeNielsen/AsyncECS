@@ -9,7 +9,13 @@
 #pragma once
 #include "GameObject.hpp"
 #include "Registry.hpp"
+#include "SystemDependencies.hpp"
+#include "SystemTypes.hpp"
 #include "System.hpp"
+#include "System.hpp"
+#include "SystemChanged.hpp"
+#include "SystemChangedGameObject.hpp"
+#include "ComponentView.hpp"
 #include "TupleHelper.hpp"
 #include "GameObjectCollection.hpp"
 #include <future>

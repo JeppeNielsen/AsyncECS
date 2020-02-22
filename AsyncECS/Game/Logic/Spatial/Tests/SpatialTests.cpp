@@ -18,7 +18,7 @@ struct ExpensiveComponent {
     int waitTime;
 };
 
-struct ExpensionSystem : System<ExpensiveComponent>, NoDependencies, NoComponentView {
+struct ExpensionSystem : System<ExpensiveComponent>, NoSystemDependencies, NoComponentView {
     void Initialize() {
     
     }

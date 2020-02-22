@@ -74,7 +74,6 @@
 		728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectCollection.cpp; sourceTree = "<group>"; };
 		728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectCollection.hpp; sourceTree = "<group>"; };
 		728D8772234D1BE9003EA2C6 /* GameObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
-		728D8774234D1D5E003EA2C6 /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
 		728D8775234D1E15003EA2C6 /* Scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
 		728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectDatabase.cpp; sourceTree = "<group>"; };
 		728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectDatabase.hpp; sourceTree = "<group>"; };
@@ -108,6 +107,11 @@
 		72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTransformSystem.hpp; sourceTree = "<group>"; };
 		72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTransformSystem.cpp; sourceTree = "<group>"; };
 		72F2E7F52401B53B0041B56A /* SystemDependencies.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemDependencies.hpp; sourceTree = "<group>"; };
+		72F2E7F62401B8E70041B56A /* SystemTypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemTypes.hpp; sourceTree = "<group>"; };
+		72F2E7F72401B9900041B56A /* SystemBase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemBase.hpp; sourceTree = "<group>"; };
+		72F2E7F82401BA380041B56A /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
+		72F2E7F92401BA9B0041B56A /* SystemChanged.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemChanged.hpp; sourceTree = "<group>"; };
+		72F2E7FA2401BB5E0041B56A /* SystemChangedGameObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemChangedGameObject.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,7 +220,7 @@
 		728D8779234D2350003EA2C6 /* ECS */ = {
 			isa = PBXGroup;
 			children = (
-				72F2E7F42401B4070041B56A /* SystemTypes */,
+				72F2E7F42401B4070041B56A /* Systems */,
 				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
 				728D8772234D1BE9003EA2C6 /* GameObject.hpp */,
 				728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */,
@@ -225,7 +229,6 @@
 				728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */,
 				728D876D234D1969003EA2C6 /* Registry.hpp */,
 				728D8775234D1E15003EA2C6 /* Scene.hpp */,
-				728D8774234D1D5E003EA2C6 /* System.hpp */,
 				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
 				72676563238889C20080412E /* SystemTask.cpp */,
 				72676564238889C20080412E /* SystemTask.hpp */,
@@ -291,12 +294,17 @@
 			path = Hierarchy;
 			sourceTree = "<group>";
 		};
-		72F2E7F42401B4070041B56A /* SystemTypes */ = {
+		72F2E7F42401B4070041B56A /* Systems */ = {
 			isa = PBXGroup;
 			children = (
 				72F2E7F52401B53B0041B56A /* SystemDependencies.hpp */,
+				72F2E7F62401B8E70041B56A /* SystemTypes.hpp */,
+				72F2E7F72401B9900041B56A /* SystemBase.hpp */,
+				72F2E7F82401BA380041B56A /* System.hpp */,
+				72F2E7F92401BA9B0041B56A /* SystemChanged.hpp */,
+				72F2E7FA2401BB5E0041B56A /* SystemChangedGameObject.hpp */,
 			);
-			path = SystemTypes;
+			path = Systems;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

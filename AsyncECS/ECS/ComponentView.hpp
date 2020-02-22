@@ -8,9 +8,7 @@
 
 #pragma once
 #include "ComponentContainer.hpp"
-#include <tuple>
-
-//template <typename T> void DebugTemplateInternal() { std::cout << __PRETTY_FUNCTION__ << std::endl;  }
+#include "TupleHelper.hpp"
 
 namespace AsyncECS {
     template<typename ...T>

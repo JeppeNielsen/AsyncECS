@@ -15,7 +15,7 @@
 namespace Game {
     struct WorldTransformSystem :
         AsyncECS::SystemChanged<const LocalTransform, const Parent, WorldTransform>,
-        AsyncECS::NoDependencies,
+        AsyncECS::NoSystemDependencies,
         AsyncECS::ComponentView<const LocalTransform, const Parent, WorldTransform> {
         
         void Initialize();

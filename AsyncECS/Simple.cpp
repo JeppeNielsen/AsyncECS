@@ -19,7 +19,7 @@ struct Renderable {
     int imageNo;
 };
 
-struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComponentView {
+struct MovementSystem : System<Position, const Velocity>, NoSystemDependencies, NoComponentView {
     void Initialize() { }
     void Update(Position& position, const Velocity& velocity) {
         position.x += velocity.x;
@@ -28,7 +28,7 @@ struct MovementSystem : System<Position, const Velocity>, NoDependencies, NoComp
     }
 };
 
-struct RenderSystem : System<const Position, const Renderable>, NoDependencies, NoComponentView {
+struct RenderSystem : System<const Position, const Renderable>, NoSystemDependencies, NoComponentView {
     void Initialize() { }
     void Update(const Position& position, const Renderable& renderable) {
         DrawRenderable(position, renderable);
