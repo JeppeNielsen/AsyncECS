@@ -204,10 +204,23 @@ struct SystemChanged : SystemBase<T...> {
                     }
                     const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                     const auto iterator = std::tuple_cat(this_system, componentValues);
+                    
+                    std::apply(&SystemType::Changed, iterator);
+                }
+                for(int i = fromIndex; i<toIndex; ++i) {
+                    const auto gameObject = changedGameObjects[i];
+                    if (!gameObjectsInSystem.Contains(gameObject)) {
+                        continue;
+                    }
+                    const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                    const auto iterator = std::tuple_cat(this_system, componentValues);
+                    
                     std::apply(&SystemType::Update, iterator);
                 }
             });
         }
+        
+        while (taskRunner.Update());
         
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {

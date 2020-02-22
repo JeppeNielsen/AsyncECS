@@ -97,6 +97,10 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
     void Initialize() {
         std::cout << "BoundingBoxSystem :: Initialized" << std::endl;
     }
+    
+    void Changed(const Position& position, const Mesh& mesh, BoundingBox& boundingBox) const {
+    
+    }
 
     void Update(const Position& position, const Mesh& mesh, BoundingBox& boundingBox) const {
         if (mesh.vertices.empty()) return;
@@ -160,6 +164,8 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
             collection.Add(gameObject);
             node.prevIndex = index;
         }
+        
+        std::cout << "Inserted " << gameObject<<std::endl;
     }
     
     void Initialize() {
@@ -238,7 +244,7 @@ struct RenderSystem : System<const Position, const Camera>,
         
         for(auto go : foundObjects.objects) {
             GetComponents(go, [] (const Nameable& nameable, const Renderable& renderable) {
-                std::cout << nameable.name << " ";
+                std::cout << " render: "<<nameable.name << " ";
             });
         }
         std::cout << std::endl;
@@ -251,17 +257,17 @@ using AllSystems = SystemTypes<RenderSystem, BoundingBoxSystem, VelocitySystem, 
 using RegistryType = Registry<AllComponents>;
 using SceneType = Scene<RegistryType, AllSystems>;
 
-int main_dep() {
-    AllTests tests;
-    tests.Run();
+int main_complex() {
+    //AllTests tests;
+    //tests.Run();
     
     std::cout << "Number of cores available : " << std::thread::hardware_concurrency() << "\n";
     
     RegistryType registry;
     SceneType scene(registry);
     
-    for (int x=0; x<1000; x++) {
-        for(int y=0; y<1000; y++) {
+    for (int x=0; x<1; x++) {
+        for(int y=0; y<10; y++) {
             auto object = scene.CreateGameObject();
             scene.AddComponent<Position>(object, x*10.0f, y*10.0f);
             scene.AddComponent<Mesh>(object);

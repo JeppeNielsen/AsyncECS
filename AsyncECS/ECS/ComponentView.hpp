@@ -10,8 +10,7 @@
 #include "ComponentContainer.hpp"
 #include <tuple>
 
-template <typename T> void DebugTemplateInternal() { std::cout << __PRETTY_FUNCTION__ << std::endl;  }
-
+//template <typename T> void DebugTemplateInternal() { std::cout << __PRETTY_FUNCTION__ << std::endl;  }
 
 namespace AsyncECS {
     template<typename ...T>
@@ -29,12 +28,14 @@ namespace AsyncECS {
         
         template<typename O>
         const O& Get(const GameObject gameObject, const O* ptr) const {
-            return (const O&)std::get<ComponentContainer<std::remove_const_t<O>>*>(componentsPtrs)->GetConst(gameObject);
+            return
+            (const O&)std::get<ComponentContainer<std::remove_const_t<O>>*>(componentsPtrs)->GetConst(gameObject);
         }
         
         template<typename O>
         O& Get(const GameObject gameObject, O* ptr) const {
-            return (O&)((ComponentContainer<std::remove_const_t<O>>&)std::get<ComponentContainer<std::remove_const_t<O>>*>(componentsPtrs))->Get(gameObject);
+            return
+            (O&)std::get<ComponentContainer<std::remove_const_t<O>>*>(componentsPtrs)->Get(gameObject);
         }
        
         template<typename Func>

@@ -39,13 +39,13 @@ struct RenderSystem : System<const Position, const Renderable>, NoDependencies, 
     }
 };
 
-int main() {
+int main_simple() {
 
     AllTests alltests;
     alltests.Run();
 
     using Components = ComponentTypes<Position, Velocity, Renderable>;
-    using Systems = SystemTypes<RenderSystem, MovementSystem>;
+    using Systems = SystemTypes<MovementSystem, RenderSystem>;
     using RegistryType = Registry<Components>;
     
     RegistryType registry;

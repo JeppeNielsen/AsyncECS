@@ -18,7 +18,9 @@ bool TaskRunner::Update() {
     for(int i=0; i<tasks.size(); ++i) {
         auto& task = tasks[i];
         if (task->HasFinished()) {
-            task->finished();
+            if (task->finished) {
+                task->finished();
+            }
             tasks.erase(tasks.begin() + i);
             i--;
         }
