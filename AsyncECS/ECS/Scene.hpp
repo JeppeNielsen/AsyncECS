@@ -19,6 +19,7 @@
 #include <set>
 #include "SystemTask.hpp"
 #include "TaskRunner.hpp"
+#include <ostream>
 
 namespace AsyncECS {
     
@@ -81,6 +82,11 @@ struct Scene {
                     
                     if (innerSystem.template HasComponentType<const ComponentType>() ||
                         innerSystem.template HasComponentViewType<const ComponentType>()) {
+                        connections[taskIndex].insert(targetTaskIndex);
+                    }
+                    
+                    if (innerSystem.template HasComponentType<ComponentType>() ||
+                        innerSystem.template HasComponentViewType<ComponentType>()) {
                         connections[taskIndex].insert(targetTaskIndex);
                     }
                 });
