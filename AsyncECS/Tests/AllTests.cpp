@@ -9,6 +9,7 @@
 #include "AllTests.hpp"
 #include "TestComponentContainer.hpp"
 #include "TestGameObjectDatabase.hpp"
+#include "TestTaskRunner.hpp"
 
 using namespace Tests;
 
@@ -22,6 +23,12 @@ void AllTests::Run() {
     {
         std::cout << "GameObjectDatabase : " << std::endl;
         TestGameObjectDatabase test;
+        test.Run();
+    }
+    
+    {
+        std::cout << "TaskRunner : " << std::endl;
+        TestTaskRunner test;
         test.Run();
     }
 
