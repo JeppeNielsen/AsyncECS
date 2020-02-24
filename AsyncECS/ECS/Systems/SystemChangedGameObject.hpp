@@ -9,6 +9,8 @@
 #pragma once
 #include "SystemBase.hpp"
 #include "ClassNameHelper.hpp"
+#include "TaskRunner.hpp"
+#include <iostream>
 
 namespace AsyncECS {
 
@@ -23,7 +25,7 @@ struct SystemChangedGameObject : SystemBase<T...> {
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
         
-        const int chunkSize = ClassNameHelper::GetName<SystemType>() == "QuadTreeSystem" ? 10000000 : 100000;
+        const int chunkSize = 50000;
         
         //std::cout << ClassNameHelper::GetName<SystemType>() << ".changedObjects.size() == "<< changedGameObjects.size() << std::endl;
         

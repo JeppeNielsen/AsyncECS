@@ -9,6 +9,8 @@
 #pragma once
 #include "SystemBase.hpp"
 #include "TaskRunner.hpp"
+#include "ClassNameHelper.hpp"
+#include <iostream>
 
 namespace AsyncECS {
 
