@@ -30,11 +30,11 @@
 namespace AsyncECS {
     
 template<typename Registry, typename Systems>
-struct Scene {
+class Scene {
+private:
     using Components = decltype(Registry::components);
     
     Registry& registry;
-    int frameCounter;
     
     typename Systems::UniqueSystems systems;
     
@@ -46,18 +46,6 @@ struct Scene {
     std::array<GameObjectCollection, Registry::NumComponentsType::value> componentObjects;
     std::array<SystemTask, NumSystems> systemTasks;
     TaskRunner taskRunner;
-    
-    Scene(Registry& registry) : registry(registry), frameCounter(0) {
-        TupleHelper::Iterate(systems, [&registry, this](auto& system) {
-            auto this_system = std::make_tuple(&system);
-            auto dependencies = system.GetDependenciesReferences(systems);
-            auto initializer = std::tuple_cat(this_system, dependencies);
-            std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
-            system.SetComponents(registry.components);
-        });
-        CreateTasks();
-        ConnectTasks();
-    }
     
     void CreateTasks() {
         TupleHelper::Iterate(systems, [this](auto& system) {
@@ -111,6 +99,31 @@ struct Scene {
             }
         }
     }
+    
+    void RunTask(SystemTask& task) {
+        if (!task.IsReady()) return;
+        
+        taskRunner.RunTask(task.work, [this, &task] () {
+            task.isDone = true;
+            //std::cout << task.name << " - done"<<std::endl;
+            for(auto outgoingTask : task.outgoing) {
+                RunTask(*outgoingTask);
+            }
+        });
+    }
+
+public:
+    Scene(Registry& registry) : registry(registry){
+        TupleHelper::Iterate(systems, [&registry, this](auto& system) {
+          auto this_system = std::make_tuple(&system);
+          auto dependencies = system.GetDependenciesReferences(systems);
+          auto initializer = std::tuple_cat(this_system, dependencies);
+          std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
+          system.SetComponents(registry.components);
+        });
+        CreateTasks();
+        ConnectTasks();
+    }
 
     GameObject CreateGameObject() {
         auto gameObject = registry.gameObjects.Create();
@@ -162,8 +175,8 @@ struct Scene {
         return std::get<ComponentContainer<T>>(registry.components).GetConst(gameObject);
     }
     
-   template<typename T>
-   bool HasComponent(const GameObject gameObject) const {
+    template<typename T>
+    bool HasComponent(const GameObject gameObject) const {
         static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
         assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));
         return componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Contains(gameObject);
@@ -173,19 +186,7 @@ struct Scene {
     System& GetSystem() {
         return std::get<System>(systems);
     }
-    
-    void RunTask(SystemTask& task) {
-        if (!task.IsReady()) return;
         
-        taskRunner.RunTask(task.work, [this, &task] () {
-            task.isDone = true;
-            //std::cout << task.name << " - done"<<std::endl;
-            for(auto outgoingTask : task.outgoing) {
-                RunTask(*outgoingTask);
-            }
-        });
-    }
-    
     void Update() {
         for(auto& task : systemTasks) {
             task.isDone = false;
@@ -195,62 +196,9 @@ struct Scene {
         }
         
         while(taskRunner.Update());
-        
-        /*
-        executor.run(flow);
-        executor.wait_for_all();
-        */
-        
-        /*
-        const auto& components = this->registry.components;
-        TupleHelper::Iterate(systems, [this, &components](auto& system) {
-            using SystemType = std::remove_reference_t<decltype(system)>;
-            system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
-            std::cout << "System : "<< ClassNameHelper::GetName<SystemType>()<<" \n";
-        });
-        */
-        
-        frameCounter++;
         registry.ResetChanged();
     }
     
-    void UpdateParallel() {
-        const auto& components = registry.components;
-        
-        auto frameNo = frameCounter;
-        
-        TupleHelper::Iterate(systems, [&components, frameNo, this](auto& system) {
-        
-            std::vector<GameObject>& gameObjectsInSystem = system.template GetObjects<Components>(componentObjects);
-        
-            std::vector<std::future<void>> chunks;
-            const int chunkSize = 500;
-            
-            auto this_system = std::make_tuple(&system);
-            auto size = gameObjectsInSystem.size();
-           
-            
-            for(size_t startIndex = 0; startIndex < size; startIndex+=chunkSize) {
-                size_t endIndex = startIndex + chunkSize;
-                if (endIndex >= size) {
-                    endIndex = size;
-                }
-                
-                chunks.push_back(std::async(std::launch::async, [&gameObjectsInSystem, &components, &this_system, &system, startIndex, endIndex, frameNo]() {
-                    for(size_t i = startIndex; i<endIndex; ++i) {
-                        auto componentValues = system.GetComponentValuesFromGameObject(gameObjectsInSystem[i], frameNo, components);
-                        auto iterator = std::tuple_cat(this_system, componentValues);
-                        std::apply(&std::remove_reference_t<decltype(system)>::Update, iterator);
-                    }
-                }));
-            }
-            
-            for(const auto& chunk : chunks) {
-                chunk.wait();
-            }
-        });
-        frameCounter++;
-    }
     
     //http://www.webgraphviz.com/
     void WriteGraph(std::ostream& os) {
@@ -270,8 +218,6 @@ struct Scene {
         os << "} \n";
         os << "} \n";
     }
-    
-    
 };
 
 }
