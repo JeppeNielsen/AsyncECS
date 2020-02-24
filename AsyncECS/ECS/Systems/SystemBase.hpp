@@ -8,6 +8,9 @@
 
 #pragma once
 #include "TupleHelper.hpp"
+#include "GameObjectCollection.hpp"
+#include "ComponentContainer.hpp"
+#include "SystemDependencies.hpp"
 
 namespace AsyncECS {
 
