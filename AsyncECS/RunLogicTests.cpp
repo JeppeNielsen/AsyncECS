@@ -10,13 +10,6 @@
 #include "LogicTests.hpp"
 
 int main() {
-    Tests::TestTaskRunner taskRunner;
-    taskRunner.Run();
-
-
-for (int i=0; i<1; i++) {
     Game::Tests::LogicTests logicTests;
     logicTests.Run();
-}
-    
 }
