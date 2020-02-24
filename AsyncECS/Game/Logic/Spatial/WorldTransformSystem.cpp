@@ -10,7 +10,7 @@
 
 using namespace Game;
 
-void WorldTransformSystem::Initialize() {
+void WorldTransformSystem::Initialize(ChildrenWorldTransformSystem&) {
 
 }
 

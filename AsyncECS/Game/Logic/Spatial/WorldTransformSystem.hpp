@@ -11,14 +11,15 @@
 #include "Parent.hpp"
 #include "LocalTransform.hpp"
 #include "WorldTransform.hpp"
+#include "ChildrenWorldTransformSystem.hpp"
 
 namespace Game {
     struct WorldTransformSystem :
         AsyncECS::SystemChanged<const LocalTransform, const Parent, WorldTransform>,
-        AsyncECS::NoSystemDependencies,
+        AsyncECS::SystemDependencies<ChildrenWorldTransformSystem>,
         AsyncECS::ComponentView<const LocalTransform, const Parent, WorldTransform> {
         
-        void Initialize();
+        void Initialize(ChildrenWorldTransformSystem&);
         void Changed(const LocalTransform& localTransform, const Parent& parent, WorldTransform& worldTransform);
         void Update(const LocalTransform& localTransform, const Parent& parent, WorldTransform& worldTransform);
     

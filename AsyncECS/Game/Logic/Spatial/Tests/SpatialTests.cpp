@@ -7,56 +7,17 @@
 //
 
 #include "SpatialTests.hpp"
-#include "LocalTransformSystem.hpp"
-#include "ParentTransformSystem.hpp"
-#include "TransformSystem.hpp"
 #include "WorldTransformSystem.hpp"
+#include "AssignChildrenSystem.hpp"
 
 using namespace Game::Tests;
 
-struct ExpensiveComponent {
-    int waitTime;
-};
-
-struct ExpensionSystem : System<ExpensiveComponent>, NoSystemDependencies, NoComponentView {
-    void Initialize() {
-    
-    }
-
-    void Update(ExpensiveComponent& component) {
-        while (component.waitTime>0) {
-            component.waitTime--;
-            float d = 0;
-            for (int i=0; i<100000; i++) {
-                d += sin(i*10)*0.01f;
-            }
-        }
-    }
-};
 
 void SpatialTests::Run() {
 
-
-/*
-    RunTest("Expensive system",[]() {
-        
-        using ComponentTypes = AsyncECS::ComponentTypes<ExpensiveComponent>;
-        using Systems = AsyncECS::SystemTypes<ExpensionSystem>;
-        using Registry = AsyncECS::Registry<ComponentTypes>;
-        
-        Registry registry;
-        using Scene = AsyncECS::Scene<Registry, Systems>;
-        Scene scene(registry);
-        
-        auto go = scene.CreateGameObject();
-        scene.AddComponent<ExpensiveComponent>(go, 100);
-        
-        scene.Update();
-        
-        return true;
-    });
-    
-*/
+    using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Parent, Children>;
+    using Registry = AsyncECS::Registry<ComponentTypes>;
+    using Systems = AsyncECS::SystemTypes<WorldTransformSystem, ChildrenWorldTransformSystem, AssignChildrenSystem>;
 
     RunTest("LocalTransform ctor gives default values",[]() {
         LocalTransform t;
@@ -65,87 +26,39 @@ void SpatialTests::Run() {
                 t.rotation == 0 &&
                 t.scale == Vector2(1,1);
     });
-
-    RunTest("TransformSystem Calculate WorldTransform",[]() {
-        
-        using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Parent, DirtyTransform>;
-        using Registry = AsyncECS::Registry<ComponentTypes>;
-        using Systems = AsyncECS::SystemTypes<LocalTransformSystem, ParentTransformSystem, TransformSystem>;
+    
+    RunTest("LocalTransform applied to WorldTransform",[]() {
         
         Registry registry;
         AsyncECS::Scene<Registry, Systems> scene(registry);
         
-        auto go = scene.CreateGameObject();
-        scene.AddComponent<LocalTransform>(go);
-        scene.AddComponent<WorldTransform>(go);
-        scene.AddComponent<Parent>(go);
-        scene.AddComponent<DirtyTransform>(go);
+        const Vector2 position = {10,10};
         
-        auto& localTransform = scene.GetComponent<LocalTransform>(go);
-        localTransform.position = {12, 34};
-        auto& worldTransform = scene.GetComponent<WorldTransform>(go);
+        auto object = scene.CreateGameObject();
+        scene.AddComponent<LocalTransform>(object);
+        scene.AddComponent<WorldTransform>(object);
+        scene.AddComponent<Parent>(object);
+        scene.GetComponent<LocalTransform>(object).position = position;
         
         scene.Update();
-        scene.WriteGraph(std::cout);
         
-        Matrix3x3 target = Matrix3x3::CreateTranslation({12, 34});
-        return worldTransform.world == target;
+        return scene.GetComponent<WorldTransform>(object).world ==
+        Matrix3x3::CreateTranslation(position);
     });
- 
     
-    RunTest("Parent/Child WorldTransform",[]() {
-        
-        using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Parent, DirtyTransform>;
-        using Registry = AsyncECS::Registry<ComponentTypes>;
-        using Systems = AsyncECS::SystemTypes<LocalTransformSystem, ParentTransformSystem, TransformSystem>;
+    RunTest("Child LocalTransform Affected by Parent",[]() {
         
         Registry registry;
         AsyncECS::Scene<Registry, Systems> scene(registry);
+        
+        const Vector2 parentPosition = {10,10};
+        const Vector2 childPosition = {20,20};
         
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);
         scene.AddComponent<WorldTransform>(parent);
         scene.AddComponent<Parent>(parent);
-        scene.AddComponent<DirtyTransform>(parent);
-        scene.GetComponent<LocalTransform>(parent).position = {10,10};
-        
-        auto child = scene.CreateGameObject();
-        scene.AddComponent<LocalTransform>(child);
-        scene.AddComponent<WorldTransform>(child);
-        scene.AddComponent<Parent>(child);
-        scene.AddComponent<DirtyTransform>(child);
-        
-       
-        
-        scene.GetComponent<Parent>(child).parent = parent;
-        scene.GetComponent<LocalTransform>(child).position = {10,10};
-        
-        
-        scene.Update();
-        auto worldTransform1 = scene.GetComponent<WorldTransform>(child);
-        Matrix3x3 target1 = Matrix3x3::CreateTranslation({20, 20});
-        scene.GetComponent<Parent>(child).parent = GameObjectNull;
-        scene.Update();
-        auto worldTransform2 = scene.GetComponent<WorldTransform>(parent);
-        Matrix3x3 target2 = Matrix3x3::CreateTranslation({10, 10});
-        
-        return worldTransform1.world == target1 && worldTransform2.world == target2;
-    });
-    
-    RunTest("Parent/Child WorldTransform no transform",[]() {
-        
-        using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Parent>;
-        using Registry = AsyncECS::Registry<ComponentTypes>;
-        using Systems = AsyncECS::SystemTypes<WorldTransformSystem>;
-        
-        Registry registry;
-        AsyncECS::Scene<Registry, Systems> scene(registry);
-        
-        auto parent = scene.CreateGameObject();
-        scene.AddComponent<LocalTransform>(parent);
-        scene.AddComponent<WorldTransform>(parent);
-        scene.AddComponent<Parent>(parent);
-        scene.GetComponent<LocalTransform>(parent).position = {10,10};
+        scene.GetComponent<LocalTransform>(parent).position = parentPosition;
         
         auto child = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(child);
@@ -153,27 +66,98 @@ void SpatialTests::Run() {
         scene.AddComponent<Parent>(child);
         
         scene.GetComponent<Parent>(child).parent = parent;
-        scene.GetComponent<LocalTransform>(child).position = {10,10};
-        
+        scene.GetComponent<LocalTransform>(child).position = childPosition;
         
         scene.Update();
-        auto worldTransform1 = scene.GetComponent<WorldTransform>(child);
-        Matrix3x3 target1 = Matrix3x3::CreateTranslation({20, 20});
-        scene.GetComponent<Parent>(child).parent = GameObjectNull;
-        scene.Update();
-        auto worldTransform2 = scene.GetComponent<WorldTransform>(child);
-        Matrix3x3 target2 = Matrix3x3::CreateTranslation({10, 10});
-        scene.GetComponent<Parent>(child).parent = parent;
-        scene.Update();
-        auto worldTransform3 = scene.GetComponent<WorldTransform>(child);
-        Matrix3x3 target3 = Matrix3x3::CreateTranslation({20, 20});
-        
-        scene.WriteGraph(std::cout);
         
         return
-        worldTransform1.world == target1 &&
-        worldTransform2.world == target2 &&
-        worldTransform3.world == target3;
+        scene.GetComponent<WorldTransform>(child).world ==
+        Matrix3x3::CreateTranslation(parentPosition + childPosition);
     });
+    
+    RunTest("Child reparented WorldTransform should reflect",[]() {
+        
+        Registry registry;
+        AsyncECS::Scene<Registry, Systems> scene(registry);
+        
+        const Vector2 parentPosition = {10,10};
+        const Vector2 childPosition = {20,20};
+        
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<LocalTransform>(parent);
+        scene.AddComponent<WorldTransform>(parent);
+        scene.AddComponent<Parent>(parent);
+        scene.GetComponent<LocalTransform>(parent).position = parentPosition;
+        
+        auto child = scene.CreateGameObject();
+        scene.AddComponent<LocalTransform>(child);
+        scene.AddComponent<WorldTransform>(child);
+        scene.AddComponent<Parent>(child);
+        
+        scene.GetComponent<Parent>(child).parent = parent;
+        scene.GetComponent<LocalTransform>(child).position = childPosition;
+        
+        scene.Update();
+        
+        bool parentPositionWasApplied =
+        scene.GetComponent<WorldTransform>(child).world ==
+        Matrix3x3::CreateTranslation(parentPosition + childPosition);
+   
+        scene.GetComponent<Parent>(child).parent = GameObjectNull;
+   
+        scene.Update();
+   
+        bool parentPositionNotApplied =
+             scene.GetComponent<WorldTransform>(child).world ==
+             Matrix3x3::CreateTranslation(childPosition);
+        
+   
+        return parentPositionWasApplied &&
+               parentPositionNotApplied;
+    });
+    
+    RunTest("Parent moved, Child should be moved also",[]() {
+         
+         Registry registry;
+         AsyncECS::Scene<Registry, Systems> scene(registry);
+         
+         const Vector2 parentPositionStart = {10,10};
+         const Vector2 parentPositionEnd = {20,20};
+         const Vector2 childPosition = {20,20};
+         
+         auto parent = scene.CreateGameObject();
+         scene.AddComponent<LocalTransform>(parent);
+         scene.AddComponent<WorldTransform>(parent);
+         scene.AddComponent<Parent>(parent);
+         scene.AddComponent<Children>(parent);
+         scene.GetComponent<LocalTransform>(parent).position = parentPositionStart;
+         
+         auto child = scene.CreateGameObject();
+         scene.AddComponent<LocalTransform>(child);
+         scene.AddComponent<WorldTransform>(child);
+         scene.AddComponent<Parent>(child);
+         
+         scene.GetComponent<Parent>(child).parent = parent;
+         scene.GetComponent<LocalTransform>(child).position = childPosition;
+         
+         scene.Update();
+         
+         bool childPositionEqualsStart =
+         scene.GetComponent<WorldTransform>(child).world ==
+         Matrix3x3::CreateTranslation(parentPositionStart + childPosition);
+    
+         scene.GetComponent<LocalTransform>(parent).position = parentPositionEnd;
+    
+         scene.Update();
+         
+         auto childWorld = scene.GetComponent<WorldTransform>(child).world;
+    
+         bool childPositionEqualsEnd =
+         childWorld ==
+         Matrix3x3::CreateTranslation(parentPositionEnd + childPosition);
+         
+         return childPositionEqualsStart &&
+                childPositionEqualsEnd;
+     });
     
 }

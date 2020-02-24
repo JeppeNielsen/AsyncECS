@@ -14,5 +14,8 @@ using namespace AsyncECS;
 namespace Game {
     struct Parent {
         GameObject parent = GameObjectNull;
+        
+        
+        
     };
 }

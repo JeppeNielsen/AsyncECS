@@ -11,7 +11,8 @@
 #include "GameObject.hpp"
 
 namespace Game {
-  struct Children {
-    std::vector<AsyncECS::GameObject> children;
-  };
+    struct Children {
+        std::vector<AsyncECS::GameObject> children;
+        AsyncECS::GameObject assignedParent = AsyncECS::GameObjectNull;
+    };
 }
