@@ -10,23 +10,23 @@
 
 using namespace Game;
 
-void WorldTransformSystem::Initialize(ChildrenWorldTransformSystem&) {
+void WorldTransformSystem::Initialize(HierarchyWorldTransformSystem&) {
 
 }
 
-void WorldTransformSystem::Changed(const LocalTransform& localTransform, const Parent& parent, WorldTransform& worldTransform) {
+void WorldTransformSystem::Changed(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform) {
     worldTransform.isDirty = true;
 }
 
-void WorldTransformSystem::Update(const LocalTransform& localTransform, const Parent& parent, WorldTransform& worldTransform) {
+void WorldTransformSystem::Update(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform) {
     if (!worldTransform.isDirty) {
         return;
     }
     worldTransform.isDirty = false;
-    if (parent.parent != GameObjectNull) {
+    if (hierarchy.parent != AsyncECS::GameObjectNull) {
         WorldTransform* parentTransform;
-        GetComponents(parent.parent, [this, &parentTransform](const LocalTransform& parentLocalTransform, const Parent& parentParent, WorldTransform& parentWorldTransform) {
-            Update(parentLocalTransform, parentParent, parentWorldTransform);
+        GetComponents(hierarchy.parent, [this, &parentTransform](const LocalTransform& parentLocalTransform, const Hierarchy& parentHierarchy, WorldTransform& parentWorldTransform) {
+            Update(parentLocalTransform, parentHierarchy, parentWorldTransform);
             parentTransform = &parentWorldTransform;
         });
         worldTransform.world =

@@ -7,46 +7,43 @@
 //
 
 #include "HierarchicalTests.hpp"
-#include "AssignChildrenSystem.hpp"
+#include "HierarchySystem.hpp"
 #include "Scene.hpp"
 
 using namespace Game::Tests;
 
 void HierarchicalTests::Run() {
 
-    RunTest("Children ctor gives default values",[]() {
-        Children c;
+    RunTest("Hierarchy ctor gives default values",[]() {
+        Hierarchy h;
         
-        return c.assignedParent == GameObjectNull &&
-                c.children.size() == 0;
+        return h.previousParent == AsyncECS::GameObjectNull &&
+                h.parent == AsyncECS::GameObjectNull &&
+                h.children.size() == 0;
     });
     
     RunTest("Parent children contains child",[]() {
         
-        using Components = AsyncECS::ComponentTypes<Parent, Children>;
-        using Systems = AsyncECS::SystemTypes<AssignChildrenSystem>;
+        using Components = AsyncECS::ComponentTypes<Hierarchy>;
+        using Systems = AsyncECS::SystemTypes<HierarchySystem>;
         using Registry = AsyncECS::Registry<Components>;
-        using Scene = Scene<Registry, Systems>;
+        using Scene = AsyncECS::Scene<Registry, Systems>;
         Registry registry;
         Scene scene(registry);
         
         auto parent = scene.CreateGameObject();
-        scene.AddComponent<Parent>(parent);
-        scene.AddComponent<Children>(parent);
+        scene.AddComponent<Hierarchy>(parent);
         
         auto child = scene.CreateGameObject();
-        scene.AddComponent<Parent>(child);
-        scene.AddComponent<Children>(child);
+        scene.AddComponent<Hierarchy>(child);
         
-        scene.GetComponent<Parent>(child).parent = parent;
+        scene.GetComponent<Hierarchy>(child).parent = parent;
         
         scene.Update();
         
-        auto& childrenInParent = scene.GetComponent<Children>(parent).children;
-        
+        auto& childrenInParent = scene.GetComponent<Hierarchy>(parent).children;
         
         return std::find(childrenInParent.begin(), childrenInParent.end(), child) != childrenInParent.end();
     });
-    
     
 }

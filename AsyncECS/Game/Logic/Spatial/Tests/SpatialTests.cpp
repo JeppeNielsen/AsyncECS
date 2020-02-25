@@ -8,16 +8,18 @@
 
 #include "SpatialTests.hpp"
 #include "WorldTransformSystem.hpp"
-#include "AssignChildrenSystem.hpp"
+#include "HierarchySystem.hpp"
+#include "Timer.hpp"
 
 using namespace Game::Tests;
 
 
 void SpatialTests::Run() {
 
-    using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Parent, Children>;
+    using ComponentTypes = AsyncECS::ComponentTypes<LocalTransform, WorldTransform, Hierarchy>;
     using Registry = AsyncECS::Registry<ComponentTypes>;
-    using Systems = AsyncECS::SystemTypes<WorldTransformSystem, ChildrenWorldTransformSystem, AssignChildrenSystem>;
+    using Systems = AsyncECS::SystemTypes<WorldTransformSystem, HierarchyWorldTransformSystem, HierarchySystem>;
+    using Scene = AsyncECS::Scene<Registry, Systems>;
 
     RunTest("LocalTransform ctor gives default values",[]() {
         LocalTransform t;
@@ -30,14 +32,14 @@ void SpatialTests::Run() {
     RunTest("LocalTransform applied to WorldTransform",[]() {
         
         Registry registry;
-        AsyncECS::Scene<Registry, Systems> scene(registry);
+        Scene scene(registry);
         
         const Vector2 position = {10,10};
         
         auto object = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(object);
         scene.AddComponent<WorldTransform>(object);
-        scene.AddComponent<Parent>(object);
+        scene.AddComponent<Hierarchy>(object);
         scene.GetComponent<LocalTransform>(object).position = position;
         
         scene.Update();
@@ -49,7 +51,7 @@ void SpatialTests::Run() {
     RunTest("Child LocalTransform Affected by Parent",[]() {
         
         Registry registry;
-        AsyncECS::Scene<Registry, Systems> scene(registry);
+        Scene scene(registry);
         
         const Vector2 parentPosition = {10,10};
         const Vector2 childPosition = {20,20};
@@ -57,15 +59,15 @@ void SpatialTests::Run() {
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);
         scene.AddComponent<WorldTransform>(parent);
-        scene.AddComponent<Parent>(parent);
+        scene.AddComponent<Hierarchy>(parent);
         scene.GetComponent<LocalTransform>(parent).position = parentPosition;
         
         auto child = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(child);
         scene.AddComponent<WorldTransform>(child);
-        scene.AddComponent<Parent>(child);
+        scene.AddComponent<Hierarchy>(child);
         
-        scene.GetComponent<Parent>(child).parent = parent;
+        scene.GetComponent<Hierarchy>(child).parent = parent;
         scene.GetComponent<LocalTransform>(child).position = childPosition;
         
         scene.Update();
@@ -78,7 +80,7 @@ void SpatialTests::Run() {
     RunTest("Child reparented WorldTransform should reflect",[]() {
         
         Registry registry;
-        AsyncECS::Scene<Registry, Systems> scene(registry);
+        Scene scene(registry);
         
         const Vector2 parentPosition = {10,10};
         const Vector2 childPosition = {20,20};
@@ -86,15 +88,15 @@ void SpatialTests::Run() {
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);
         scene.AddComponent<WorldTransform>(parent);
-        scene.AddComponent<Parent>(parent);
+        scene.AddComponent<Hierarchy>(parent);
         scene.GetComponent<LocalTransform>(parent).position = parentPosition;
         
         auto child = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(child);
         scene.AddComponent<WorldTransform>(child);
-        scene.AddComponent<Parent>(child);
+        scene.AddComponent<Hierarchy>(child);
         
-        scene.GetComponent<Parent>(child).parent = parent;
+        scene.GetComponent<Hierarchy>(child).parent = parent;
         scene.GetComponent<LocalTransform>(child).position = childPosition;
         
         scene.Update();
@@ -103,7 +105,7 @@ void SpatialTests::Run() {
         scene.GetComponent<WorldTransform>(child).world ==
         Matrix3x3::CreateTranslation(parentPosition + childPosition);
    
-        scene.GetComponent<Parent>(child).parent = GameObjectNull;
+        scene.GetComponent<Hierarchy>(child).parent = AsyncECS::GameObjectNull;
    
         scene.Update();
    
@@ -119,7 +121,7 @@ void SpatialTests::Run() {
     RunTest("Parent moved, Child should be moved also",[]() {
          
          Registry registry;
-         AsyncECS::Scene<Registry, Systems> scene(registry);
+         Scene scene(registry);
          
          const Vector2 parentPositionStart = {10,10};
          const Vector2 parentPositionEnd = {20,20};
@@ -128,17 +130,16 @@ void SpatialTests::Run() {
          auto parent = scene.CreateGameObject();
          scene.AddComponent<LocalTransform>(parent);
          scene.AddComponent<WorldTransform>(parent);
-         scene.AddComponent<Parent>(parent);
-         scene.AddComponent<Children>(parent);
+         scene.AddComponent<Hierarchy>(parent);
          scene.GetComponent<LocalTransform>(parent).position = parentPositionStart;
          
          auto child = scene.CreateGameObject();
          scene.AddComponent<LocalTransform>(child);
          scene.AddComponent<WorldTransform>(child);
-         scene.AddComponent<Parent>(child);
+         scene.AddComponent<Hierarchy>(child);
          
-         scene.GetComponent<Parent>(child).parent = parent;
          scene.GetComponent<LocalTransform>(child).position = childPosition;
+         scene.GetComponent<Hierarchy>(child).parent = parent;
          
          scene.Update();
          
@@ -159,5 +160,51 @@ void SpatialTests::Run() {
          return childPositionEqualsStart &&
                 childPositionEqualsEnd;
      });
+    
+    
+    RunTest("Multiple children affected by parent's movement",[]() {
+         
+        const int numChildren = 100;
+        
+         Registry registry;
+         Scene scene(registry);
+         
+         const Vector2 parentPositionStart = {10,10};
+         const Vector2 parentPositionEnd = {20,20};
+         const Vector2 childPosition = {20,20};
+         
+         auto parent = scene.CreateGameObject();
+         scene.AddComponent<LocalTransform>(parent);
+         scene.AddComponent<WorldTransform>(parent);
+         scene.AddComponent<Hierarchy>(parent);
+         scene.GetComponent<LocalTransform>(parent).position = parentPositionStart;
+         
+        std::vector<AsyncECS::GameObject> children;
+        
+        for (int i=0; i<numChildren; ++i) {
+            auto child = scene.CreateGameObject();
+            scene.AddComponent<LocalTransform>(child);
+            scene.AddComponent<WorldTransform>(child);
+            scene.AddComponent<Hierarchy>(child);
+            
+            scene.GetComponent<LocalTransform>(child).position = childPosition;
+            scene.GetComponent<Hierarchy>(child).parent = parent;
+            children.push_back(child);
+        }
+        
+        scene.Update();
+        
+        auto targetWorld = Matrix3x3::CreateTranslation(parentPositionStart + childPosition);
+        
+        int anyNotAligned = false;
+        for(auto child : children) {
+            auto childWorld = scene.GetComponent<WorldTransform>(child).world;
+            if (childWorld!=targetWorld) {
+                anyNotAligned = true;
+            }
+        }
+        
+        return !anyNotAligned;
+    });
     
 }

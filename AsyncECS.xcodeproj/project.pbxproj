@@ -12,6 +12,7 @@
 		720BC271236C7AC4009F163B /* AllTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26F236C7AC4009F163B /* AllTests.cpp */; };
 		72676565238889C20080412E /* SystemTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72676563238889C20080412E /* SystemTask.cpp */; };
 		726765682388A1680080412E /* TaskRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726765662388A1680080412E /* TaskRunner.cpp */; };
+		726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726BDD3D2404F8B100204F45 /* Hierarchy.cpp */; };
 		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
 		72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7E23FDA43800735591 /* Matrix3x3.cpp */; };
@@ -25,13 +26,11 @@
 		72F2E7D723FDA90B0041B56A /* LogicTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7D523FDA90B0041B56A /* LogicTests.cpp */; };
 		72F2E7DA23FDA9A40041B56A /* RunLogicTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7D923FDA9A40041B56A /* RunLogicTests.cpp */; };
 		72F2E7DD23FDCFEA0041B56A /* WorldTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7DB23FDCFEA0041B56A /* WorldTransform.cpp */; };
-		72F2E7E123FDDD610041B56A /* Parent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7DF23FDDD610041B56A /* Parent.cpp */; };
-		72F2E7E423FEE9690041B56A /* Children.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7E223FEE9690041B56A /* Children.cpp */; };
 		72F2E7F0240080690041B56A /* TestTaskRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7EE240080690041B56A /* TestTaskRunner.cpp */; };
 		72F2E7F3240088C60041B56A /* WorldTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */; };
-		72F2E7FD2402D0F20041B56A /* AssignChildrenSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7FB2402D0F20041B56A /* AssignChildrenSystem.cpp */; };
+		72F2E7FD2402D0F20041B56A /* HierarchySystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7FB2402D0F20041B56A /* HierarchySystem.cpp */; };
 		72F2E801240329960041B56A /* HierarchicalTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E7FF240329960041B56A /* HierarchicalTests.cpp */; };
-		72F2E80424046F260041B56A /* ChildrenWorldTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E80224046F260041B56A /* ChildrenWorldTransformSystem.cpp */; };
+		72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +58,8 @@
 		72676564238889C20080412E /* SystemTask.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemTask.hpp; sourceTree = "<group>"; };
 		726765662388A1680080412E /* TaskRunner.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TaskRunner.cpp; sourceTree = "<group>"; };
 		726765672388A1680080412E /* TaskRunner.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TaskRunner.hpp; sourceTree = "<group>"; };
+		726BDD3D2404F8B100204F45 /* Hierarchy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
+		726BDD3E2404F8B100204F45 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
 		72859C7823FDA31600735591 /* Vector2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector2.hpp; sourceTree = "<group>"; };
 		72859C7A23FDA38C00735591 /* LocalTransform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalTransform.cpp; sourceTree = "<group>"; };
@@ -89,10 +90,6 @@
 		72F2E7D923FDA9A40041B56A /* RunLogicTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RunLogicTests.cpp; sourceTree = "<group>"; };
 		72F2E7DB23FDCFEA0041B56A /* WorldTransform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTransform.cpp; sourceTree = "<group>"; };
 		72F2E7DC23FDCFEA0041B56A /* WorldTransform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WorldTransform.hpp; sourceTree = "<group>"; };
-		72F2E7DF23FDDD610041B56A /* Parent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Parent.cpp; sourceTree = "<group>"; };
-		72F2E7E023FDDD610041B56A /* Parent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Parent.hpp; sourceTree = "<group>"; };
-		72F2E7E223FEE9690041B56A /* Children.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Children.cpp; sourceTree = "<group>"; };
-		72F2E7E323FEE9690041B56A /* Children.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Children.hpp; sourceTree = "<group>"; };
 		72F2E7EE240080690041B56A /* TestTaskRunner.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestTaskRunner.cpp; sourceTree = "<group>"; };
 		72F2E7EF240080690041B56A /* TestTaskRunner.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestTaskRunner.hpp; sourceTree = "<group>"; };
 		72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTransformSystem.hpp; sourceTree = "<group>"; };
@@ -103,12 +100,12 @@
 		72F2E7F82401BA380041B56A /* System.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = System.hpp; sourceTree = "<group>"; };
 		72F2E7F92401BA9B0041B56A /* SystemChanged.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemChanged.hpp; sourceTree = "<group>"; };
 		72F2E7FA2401BB5E0041B56A /* SystemChangedGameObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemChangedGameObject.hpp; sourceTree = "<group>"; };
-		72F2E7FB2402D0F20041B56A /* AssignChildrenSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AssignChildrenSystem.cpp; sourceTree = "<group>"; };
-		72F2E7FC2402D0F20041B56A /* AssignChildrenSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AssignChildrenSystem.hpp; sourceTree = "<group>"; };
+		72F2E7FB2402D0F20041B56A /* HierarchySystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchySystem.cpp; sourceTree = "<group>"; };
+		72F2E7FC2402D0F20041B56A /* HierarchySystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HierarchySystem.hpp; sourceTree = "<group>"; };
 		72F2E7FF240329960041B56A /* HierarchicalTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchicalTests.cpp; sourceTree = "<group>"; };
 		72F2E800240329960041B56A /* HierarchicalTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchicalTests.hpp; sourceTree = "<group>"; };
-		72F2E80224046F260041B56A /* ChildrenWorldTransformSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ChildrenWorldTransformSystem.cpp; sourceTree = "<group>"; };
-		72F2E80324046F260041B56A /* ChildrenWorldTransformSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ChildrenWorldTransformSystem.hpp; sourceTree = "<group>"; };
+		72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyWorldTransformSystem.cpp; sourceTree = "<group>"; };
+		72F2E80324046F260041B56A /* HierarchyWorldTransformSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HierarchyWorldTransformSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +170,8 @@
 				72F2E7DC23FDCFEA0041B56A /* WorldTransform.hpp */,
 				72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */,
 				72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */,
-				72F2E80224046F260041B56A /* ChildrenWorldTransformSystem.cpp */,
-				72F2E80324046F260041B56A /* ChildrenWorldTransformSystem.hpp */,
+				72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */,
+				72F2E80324046F260041B56A /* HierarchyWorldTransformSystem.hpp */,
 			);
 			path = Spatial;
 			sourceTree = "<group>";
@@ -278,12 +275,10 @@
 			isa = PBXGroup;
 			children = (
 				72F2E7FE240329960041B56A /* Tests */,
-				72F2E7DF23FDDD610041B56A /* Parent.cpp */,
-				72F2E7E023FDDD610041B56A /* Parent.hpp */,
-				72F2E7E223FEE9690041B56A /* Children.cpp */,
-				72F2E7E323FEE9690041B56A /* Children.hpp */,
-				72F2E7FB2402D0F20041B56A /* AssignChildrenSystem.cpp */,
-				72F2E7FC2402D0F20041B56A /* AssignChildrenSystem.hpp */,
+				72F2E7FB2402D0F20041B56A /* HierarchySystem.cpp */,
+				72F2E7FC2402D0F20041B56A /* HierarchySystem.hpp */,
+				726BDD3D2404F8B100204F45 /* Hierarchy.cpp */,
+				726BDD3E2404F8B100204F45 /* Hierarchy.hpp */,
 			);
 			path = Hierarchy;
 			sourceTree = "<group>";
@@ -370,14 +365,13 @@
 				72F2E801240329960041B56A /* HierarchicalTests.cpp in Sources */,
 				72F2E7DA23FDA9A40041B56A /* RunLogicTests.cpp in Sources */,
 				72F2E7DD23FDCFEA0041B56A /* WorldTransform.cpp in Sources */,
+				726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */,
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
-				72F2E7E123FDDD610041B56A /* Parent.cpp in Sources */,
-				72F2E80424046F260041B56A /* ChildrenWorldTransformSystem.cpp in Sources */,
+				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
 				72859C7923FDA31600735591 /* Vector2.cpp in Sources */,
-				72F2E7E423FEE9690041B56A /* Children.cpp in Sources */,
 				726765682388A1680080412E /* TaskRunner.cpp in Sources */,
-				72F2E7FD2402D0F20041B56A /* AssignChildrenSystem.cpp in Sources */,
+				72F2E7FD2402D0F20041B56A /* HierarchySystem.cpp in Sources */,
 				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				72F2E7F3240088C60041B56A /* WorldTransformSystem.cpp in Sources */,

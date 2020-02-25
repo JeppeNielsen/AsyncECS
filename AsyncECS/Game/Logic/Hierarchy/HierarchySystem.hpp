@@ -7,19 +7,18 @@
 //
 
 #pragma once
-#include "Parent.hpp"
-#include "Children.hpp"
+#include "Hierarchy.hpp"
 #include "SystemChangedGameObject.hpp"
 #include "ComponentView.hpp"
 
 namespace Game {
-    struct AssignChildrenSystem :
-        AsyncECS::SystemChangedGameObject<const Parent, Children>,
+    struct HierarchySystem :
+        AsyncECS::SystemChangedGameObject<Hierarchy>,
         AsyncECS::NoSystemDependencies,
-        AsyncECS::ComponentView<Children> {
+        AsyncECS::ComponentView<Hierarchy> {
         
         void Initialize();
-        void Update(GameObject gameObject, const Parent& parent, Children& children);
+        void Update(AsyncECS::GameObject gameObject, Hierarchy& hierarchy);
     
     };
 }
