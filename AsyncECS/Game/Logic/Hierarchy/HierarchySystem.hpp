@@ -14,11 +14,9 @@
 namespace Game {
     struct HierarchySystem :
         AsyncECS::SystemChangedGameObject<Hierarchy>,
-        AsyncECS::NoSystemDependencies,
         AsyncECS::ComponentView<Hierarchy> {
         
         void Initialize();
         void Update(AsyncECS::GameObject gameObject, Hierarchy& hierarchy);
-    
     };
 }

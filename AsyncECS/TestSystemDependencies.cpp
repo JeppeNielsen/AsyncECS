@@ -79,25 +79,15 @@ struct Camera {
     Vector2 size;
 };
 
-struct VelocitySystem : System<Position, const Velocity>,
-                        NoSystemDependencies, NoComponentView {
-    void Initialize() {
-        std::cout << "VelocitySystem :: Initialized"<<std::endl;
-    }
-    
+struct VelocitySystem : System<Position, const Velocity> {
     void Update(Position& position, const Velocity& velocity) {
         position.position.x += velocity.velocity.x;
         position.position.y += velocity.velocity.y;
     }
 };
 
-struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox>,
-                           NoSystemDependencies, NoComponentView {
+struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox> {
 
-    void Initialize() {
-        std::cout << "BoundingBoxSystem :: Initialized" << std::endl;
-    }
-    
     void Changed(const Position& position, const Mesh& mesh, BoundingBox& boundingBox) const {
     
     }
@@ -126,9 +116,7 @@ struct BoundingBoxSystem : SystemChanged<const Position, const Mesh, BoundingBox
     }
 };
 
-struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>,
-                        NoSystemDependencies,
-                        NoComponentView {
+struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>{
     BoundingBox root;
     Vector2 rootSize;
     static constexpr int GridSize = 10;
@@ -168,7 +156,7 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
         std::cout << "Inserted " << gameObject<<std::endl;
     }
     
-    void Initialize() {
+    QuadTreeSystem() {
         root.minX = 0;
         root.minY = 0;
         root.maxX = 1000;
@@ -211,9 +199,7 @@ struct QuadTreeSystem : SystemChangedGameObject<const BoundingBox, QuadTreeNode>
     }
 };
 
-struct NameableSystem : System<Nameable>, NoSystemDependencies, NoComponentView {
-    void Initialize() { }
-    
+struct NameableSystem : System<Nameable> {
     void Update(Nameable& nameable) {
         nameable.name = "No way";
     }

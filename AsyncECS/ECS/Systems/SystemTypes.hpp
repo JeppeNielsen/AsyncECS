@@ -8,6 +8,7 @@
 
 #pragma once
 #include "TupleHelper.hpp"
+#include "SystemDependencies.hpp"
 
 namespace AsyncECS {
 
@@ -16,7 +17,11 @@ struct SystemTypes {
     
     template<typename System>
     constexpr static auto GetDependency() {
-        return std::tuple_cat(System::GetDependenciesRecursive(),std::tuple<System>{});
+        if constexpr (AsyncECS::Internal::has_IsSystemDependencies<System, void()>::value) {
+            return std::tuple_cat(System::GetDependenciesRecursive(),std::tuple<System>{});
+        } else {
+            return std::tuple<System>{};
+        }
     }
 
     constexpr static auto GetDependencies() {

@@ -54,17 +54,6 @@ struct SystemChangedGameObject : SystemBase<T...> {
             }
             this->template ChangeComponents(gameObject, components);
         }
-        
-        /*
-        for(const auto gameObject : changedGameObjects) {
-            if (!gameObjectsInSystem.Contains(gameObject)) {
-                continue;
-            }
-            const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
-            const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
-            std::apply(&SystemType::Update, iterator);
-        }
-        */
     }
 };
 

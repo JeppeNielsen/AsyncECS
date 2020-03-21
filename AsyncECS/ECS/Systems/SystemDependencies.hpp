@@ -8,11 +8,20 @@
 
 #pragma once
 #include "TupleHelper.hpp"
+#include "HasMethodHelper.hpp"
 
 namespace AsyncECS {
 
+namespace Internal {
+    HAS_METHOD(IsSystemDependencies)
+}
+
 template<typename ...T>
 struct SystemDependencies {
+
+    static bool IsSystemDependencies() {
+        return true;
+    }
 
     template<typename B>
     static constexpr B GetDependencies() {
@@ -41,7 +50,5 @@ struct SystemDependencies {
         return std::tuple<T*...> {};
     }
 };
-
-using NoSystemDependencies = SystemDependencies<>;
 
 }

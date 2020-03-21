@@ -9,8 +9,13 @@
 #pragma once
 #include "ComponentContainer.hpp"
 #include "TupleHelper.hpp"
+#include "HasMethodHelper.hpp"
 
 namespace AsyncECS {
+    namespace Internal {
+        HAS_METHOD(SetComponents)
+    }
+
     template<typename ...T>
     struct ComponentView {
         using Components = std::tuple<ComponentContainer<std::remove_const_t<T>>*...>;
@@ -55,6 +60,4 @@ namespace AsyncECS {
             return TupleHelper::HasType<ComponentType, std::tuple<T...> >::value;
         }
     };
-    
-    using NoComponentView = ComponentView<>;
 }

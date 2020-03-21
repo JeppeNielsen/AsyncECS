@@ -9,7 +9,8 @@
 #include "TestTaskRunner.hpp"
 #include "LogicTests.hpp"
 
-int main() {
+int main_logic() {
     Game::Tests::LogicTests logicTests;
     logicTests.Run();
+    return 0;
 }

@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameObject.hpp"
+#include "IScene.hpp"
 #include "Registry.hpp"
 #include "SystemDependencies.hpp"
 #include "SystemTypes.hpp"
@@ -26,11 +26,13 @@
 #include "SystemTask.hpp"
 #include "TaskRunner.hpp"
 #include <ostream>
+#include "SceneModifier.hpp"
+#include "HasMethodHelper.hpp"
 
 namespace AsyncECS {
     
 template<typename Registry, typename Systems>
-class Scene {
+class Scene : public IScene {
 private:
     using Components = decltype(Registry::components);
     
@@ -74,23 +76,35 @@ private:
                     const auto targetTaskIndex = TupleHelper::Index<InnerSystemType, decltype(systems)>::value;
                     if (taskIndex == targetTaskIndex) return;
                     
-                    if (innerSystem.template HasComponentType<const ComponentType>() ||
-                        innerSystem.template HasComponentViewType<const ComponentType>()) {
-                        connections[taskIndex].insert(targetTaskIndex);
-                    }
-                    
-                    if (innerSystem.template HasComponentType<ComponentType>() ||
-                        innerSystem.template HasComponentViewType<ComponentType>()) {
-                        connections[taskIndex].insert(targetTaskIndex);
+                    if constexpr (AsyncECS::Internal::has_SetComponents<InnerSystemType, void(Components&)>::value) {
+                       if (innerSystem.template HasComponentType<const ComponentType>() ||
+                           innerSystem.template HasComponentViewType<const ComponentType>()) {
+                           connections[taskIndex].insert(targetTaskIndex);
+                       }
+                       
+                       if (innerSystem.template HasComponentType<ComponentType>() ||
+                           innerSystem.template HasComponentViewType<ComponentType>()) {
+                           connections[taskIndex].insert(targetTaskIndex);
+                       }
+                    } else {
+                        if (innerSystem.template HasComponentType<const ComponentType>()) {
+                            connections[taskIndex].insert(targetTaskIndex);
+                        }
+                        
+                        if (innerSystem.template HasComponentType<ComponentType>()) {
+                            connections[taskIndex].insert(targetTaskIndex);
+                        }
                     }
                 });
             });
             
-            TupleHelper::Iterate(system.GetDependencyTypes(), [this, taskIndex, &connections](auto type) {
-                using DependencySystemType = std::remove_pointer_t<decltype(type)>;
-                const auto targetTaskIndex = TupleHelper::Index<DependencySystemType, decltype(systems)>::value;
-                connections[targetTaskIndex].insert(taskIndex);
-            });
+            if constexpr (AsyncECS::Internal::has_IsSystemDependencies<SystemType, void()>::value) {
+                TupleHelper::Iterate(system.GetDependencyTypes(), [this, taskIndex, &connections](auto type) {
+                    using DependencySystemType = std::remove_pointer_t<decltype(type)>;
+                    const auto targetTaskIndex = TupleHelper::Index<DependencySystemType, decltype(systems)>::value;
+                    connections[targetTaskIndex].insert(taskIndex);
+                });
+            }
         });
         
         for(auto [taskIndex, targets] : connections) {
@@ -114,24 +128,38 @@ private:
 
 public:
     Scene(Registry& registry) : registry(registry){
+    
+        using ThisType = std::remove_pointer_t<decltype(this)>;
+    
         TupleHelper::Iterate(systems, [&registry, this](auto& system) {
-          auto this_system = std::make_tuple(&system);
-          auto dependencies = system.GetDependenciesReferences(systems);
-          auto initializer = std::tuple_cat(this_system, dependencies);
-          std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
-          system.SetComponents(registry.components);
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            
+            if constexpr (AsyncECS::Internal::has_IsSystemDependencies<SystemType, void()>::value) {
+                auto this_system = std::make_tuple(&system);
+                auto dependencies = system.GetDependenciesReferences(systems);
+                auto initializer = std::tuple_cat(this_system, dependencies);
+                std::apply(&std::remove_reference_t<decltype(system)>::Initialize, initializer);
+            }
+            
+            if constexpr (AsyncECS::Internal::has_SetComponents<SystemType, void(Components&)>::value) {
+               system.SetComponents(registry.components);
+            }
+            
+            if constexpr (AsyncECS::Internal::has_InitializeSceneModifier<SystemType, void(IScene&, Components&)>::value) {
+                system.InitializeSceneModifier(*this, registry.components);
+            }
         });
         CreateTasks();
         ConnectTasks();
     }
 
-    GameObject CreateGameObject() {
+    GameObject CreateGameObject() override {
         auto gameObject = registry.gameObjects.Create();
         gameObjects.Add(gameObject);
         return gameObject;
     }
     
-    void Remove(const GameObject gameObject) {
+    void RemoveGameObject(const GameObject gameObject) override {
         assert(registry.IsGameObjectValid(gameObject));
         TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
             using ComponentContainerType = std::remove_reference_t<decltype(component)>;
@@ -182,6 +210,16 @@ public:
         return componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Contains(gameObject);
     }
     
+    void AddGameObjectToComponentContainer(const GameObject gameObject, const int index) override {
+        assert(registry.IsGameObjectValid(gameObject));
+        componentObjects[index].Add(gameObject);
+    }
+    
+    void RemoveGameObjectFromComponentContainer(const GameObject gameObject, const int index) override {
+        assert(registry.IsGameObjectValid(gameObject));
+        componentObjects[index].Remove(gameObject);
+    }
+    
     template<typename System>
     System& GetSystem() {
         return std::get<System>(systems);
@@ -197,6 +235,15 @@ public:
         
         while(taskRunner.Update());
         registry.ResetChanged();
+        
+        using ThisType = std::remove_pointer_t<decltype(this)>;
+        
+        TupleHelper::Iterate(systems, [this](auto& system) {
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            if constexpr (AsyncECS::Internal::has_InitializeSceneModifier<SystemType, void(IScene&, Components&)>::value) {
+                system.UpdateFromScene(*this);
+            }
+        });
     }
     
     

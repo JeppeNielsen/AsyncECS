@@ -11,6 +11,7 @@
 #include "GameObjectCollection.hpp"
 #include "ComponentContainer.hpp"
 #include "SystemDependencies.hpp"
+#include "SceneModifier.hpp"
 
 namespace AsyncECS {
 

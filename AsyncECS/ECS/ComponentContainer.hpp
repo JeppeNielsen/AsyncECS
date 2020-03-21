@@ -37,6 +37,7 @@ struct ComponentContainer {
         indicies[objectIndex] = (std::uint32_t)elements.size();
         references.push_back(1);
         gameObjects.Add(gameObject);
+        SetChanged(gameObject);
     }
     
     void Create(const GameObject gameObject) {
@@ -101,7 +102,7 @@ struct ComponentContainer {
                     }
                 }
             } else {
-                auto lastObjectIndex = gameObjects.objects.back();
+                auto lastObjectIndex = gameObjects.objects.back() & GameObjectIndexMask;
                 indicies[lastObjectIndex] = index;
             }
         }

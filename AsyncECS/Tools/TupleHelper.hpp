@@ -60,10 +60,8 @@ namespace TupleHelper {
       using type = Out;
     };
 
-
     template <class T>
     using UniqueTypes = typename filter<std::tuple<>, T>::type;
-    
     
     template <class T, class Tuple>
     struct Index;
@@ -77,7 +75,6 @@ namespace TupleHelper {
     struct Index<T, std::tuple<U, Types...>> {
         static const std::size_t value = 1 + Index<T, std::tuple<Types...>>::value;
     };
-    
     
     template <typename T, typename Tuple>
     struct HasType;

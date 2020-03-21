@@ -106,6 +106,9 @@
 		72F2E800240329960041B56A /* HierarchicalTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchicalTests.hpp; sourceTree = "<group>"; };
 		72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyWorldTransformSystem.cpp; sourceTree = "<group>"; };
 		72F2E80324046F260041B56A /* HierarchyWorldTransformSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HierarchyWorldTransformSystem.hpp; sourceTree = "<group>"; };
+		72F2E805240DA4A90041B56A /* SceneModifier.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneModifier.hpp; sourceTree = "<group>"; };
+		72F2E806240EF8DB0041B56A /* IScene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = IScene.hpp; sourceTree = "<group>"; };
+		72F2E80724201A4C0041B56A /* HasMethodHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HasMethodHelper.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,6 +211,7 @@
 		728D8779234D2350003EA2C6 /* ECS */ = {
 			isa = PBXGroup;
 			children = (
+				72F2E805240DA4A90041B56A /* SceneModifier.hpp */,
 				72F2E7F42401B4070041B56A /* Systems */,
 				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
 				728D8772234D1BE9003EA2C6 /* GameObject.hpp */,
@@ -220,6 +224,7 @@
 				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
 				72676563238889C20080412E /* SystemTask.cpp */,
 				72676564238889C20080412E /* SystemTask.hpp */,
+				72F2E806240EF8DB0041B56A /* IScene.hpp */,
 			);
 			path = ECS;
 			sourceTree = "<group>";
@@ -233,6 +238,7 @@
 				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
 				726765662388A1680080412E /* TaskRunner.cpp */,
 				726765672388A1680080412E /* TaskRunner.hpp */,
+				72F2E80724201A4C0041B56A /* HasMethodHelper.hpp */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
