@@ -19,8 +19,8 @@ namespace Internal {
 template<typename ...T>
 struct SystemDependencies {
 
-    static bool IsSystemDependencies() {
-        return true;
+    void IsSystemDependencies() {
+       
     }
 
     template<typename B>
@@ -34,7 +34,11 @@ struct SystemDependencies {
     
     template<typename B>
     static constexpr auto GetDependenciesRecursiveInternal() {
-        return std::tuple_cat(B::GetDependenciesRecursive(), std::tuple<B>{});
+        if constexpr (AsyncECS::Internal::has_IsSystemDependencies<B, void()>::value) {
+            return std::tuple_cat(B::GetDependenciesRecursive(), std::tuple<B>{});
+        } else {
+            return std::tuple<B>{};
+        }
     }
     
     static constexpr auto GetDependenciesRecursive() {
