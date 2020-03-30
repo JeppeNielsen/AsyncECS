@@ -161,6 +161,13 @@ public:
     
     void RemoveGameObject(const GameObject gameObject) override {
         assert(registry.IsGameObjectValid(gameObject));
+        TupleHelper::Iterate(systems, [gameObject, this](auto& system) {
+            using SystemType = std::remove_reference_t<decltype(system)>;
+            if constexpr (Internal::has_GameObjectRemoved<SystemType, void(GameObject)>::value) {
+                system.GameObjectRemoved(gameObject);
+            }
+        });
+        
         TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
             using ComponentContainerType = std::remove_reference_t<decltype(component)>;
             using ComponentType = typename ComponentContainerType::Type;

@@ -34,3 +34,16 @@ void HierarchySystem::Update(GameObject gameObject, Hierarchy& hierarchy) {
     
     hierarchy.previousParent = currentParent;
 }
+
+void HierarchySystem::GameObjectRemoved(GameObject gameObject) {
+    GetComponents(gameObject, [gameObject, this](Hierarchy& hierarchy) {
+        if (hierarchy.parent != GameObjectNull) {
+            GetComponents(hierarchy.parent, [gameObject, this](Hierarchy& parentHierarchy) {
+                auto it = std::find(parentHierarchy.children.begin(), parentHierarchy.children.end(), gameObject);
+                parentHierarchy.children.erase(it);
+            });
+            hierarchy.parent = GameObjectNull;
+            hierarchy.previousParent = GameObjectNull;
+        }
+    });
+}

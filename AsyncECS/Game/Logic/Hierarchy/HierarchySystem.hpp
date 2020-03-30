@@ -18,5 +18,6 @@ namespace Game {
         
         void Initialize();
         void Update(AsyncECS::GameObject gameObject, Hierarchy& hierarchy);
+        void GameObjectRemoved(AsyncECS::GameObject gameObject);
     };
 }

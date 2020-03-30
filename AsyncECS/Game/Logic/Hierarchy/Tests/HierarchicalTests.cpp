@@ -11,23 +11,25 @@
 #include "Scene.hpp"
 
 using namespace Game::Tests;
+using namespace AsyncECS;
 
 void HierarchicalTests::Run() {
+
+    using Components = ComponentTypes<Hierarchy>;
+    using Systems = SystemTypes<HierarchySystem>;
+    using Registry = Registry<Components>;
+    using Scene = Scene<Registry, Systems>;
 
     RunTest("Hierarchy ctor gives default values",[]() {
         Hierarchy h;
         
-        return h.previousParent == AsyncECS::GameObjectNull &&
-                h.parent == AsyncECS::GameObjectNull &&
+        return h.previousParent == GameObjectNull &&
+                h.parent == GameObjectNull &&
                 h.children.size() == 0;
     });
     
     RunTest("Parent children contains child",[]() {
         
-        using Components = AsyncECS::ComponentTypes<Hierarchy>;
-        using Systems = AsyncECS::SystemTypes<HierarchySystem>;
-        using Registry = AsyncECS::Registry<Components>;
-        using Scene = AsyncECS::Scene<Registry, Systems>;
         Registry registry;
         Scene scene(registry);
         
@@ -44,6 +46,59 @@ void HierarchicalTests::Run() {
         auto& childrenInParent = scene.GetComponent<Hierarchy>(parent).children;
         
         return std::find(childrenInParent.begin(), childrenInParent.end(), child) != childrenInParent.end();
+    });
+    
+    RunTest("Child removed from parent's children list on reparent",[]() {
+        
+        Registry registry;
+        Scene scene(registry);
+        
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(parent);
+        
+        auto child = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(child);
+        
+        scene.GetComponent<Hierarchy>(child).parent = parent;
+        
+        scene.Update();
+        
+        auto& childrenInParent = scene.GetComponent<Hierarchy>(parent).children;
+        bool wasInParent = std::find(childrenInParent.begin(), childrenInParent.end(), child) != childrenInParent.end();
+        
+        scene.GetComponent<Hierarchy>(child).parent = GameObjectNull;
+        
+        scene.Update();
+        
+        return wasInParent &&
+                std::find(childrenInParent.begin(), childrenInParent.end(), child) == childrenInParent.end();
+        
+    });
+    
+    RunTest("Child removed from parent's children list on removal",[]() {
+        
+        Registry registry;
+        Scene scene(registry);
+        
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(parent);
+        
+        auto child = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(child);
+        
+        scene.GetComponent<Hierarchy>(child).parent = parent;
+        
+        scene.Update();
+        
+        auto& childrenInParent = scene.GetComponent<Hierarchy>(parent).children;
+        bool wasInParent = std::find(childrenInParent.begin(), childrenInParent.end(), child) != childrenInParent.end();
+        
+        scene.RemoveGameObject(child);
+    
+        scene.Update();
+        
+        return wasInParent &&
+                std::find(childrenInParent.begin(), childrenInParent.end(), child) == childrenInParent.end();
     });
     
 }

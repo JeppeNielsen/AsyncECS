@@ -12,8 +12,13 @@
 #include "ComponentContainer.hpp"
 #include "SystemDependencies.hpp"
 #include "SceneModifier.hpp"
+#include "HasMethodHelper.hpp"
 
 namespace AsyncECS {
+
+namespace Internal {
+    HAS_METHOD(GameObjectRemoved);
+}
 
 template<typename...T>
 struct SystemBase {
