@@ -27,16 +27,17 @@ struct MovementSystem : System<Position, const Velocity> {
 
 int main() {
     using Components = ComponentTypes<Position, Velocity>;
+    using Registry = Registry<Components>;
     using Systems = SystemTypes<MovementSystem>;
-    using RegistryType = Registry<Components>;
+    using Scene = Scene<Registry, Systems>;
     
-    RegistryType registry;
-    Scene<RegistryType, Systems> scene(registry);
+    Registry registry;
+    Scene scene(registry);
     
     auto gameObject = scene.CreateGameObject();
     scene.AddComponent<Position>(gameObject, 0.0f, 0.0f);
     scene.AddComponent<Velocity>(gameObject, 1.0f, 2.0f);
-    
+
     scene.Update();
     
     auto& p = scene.GetComponent<Position>(gameObject);
