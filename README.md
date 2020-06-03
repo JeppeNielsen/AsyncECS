@@ -18,7 +18,6 @@ struct Velocity {
 };
 
 struct MovementSystem : System<Position, const Velocity> {
-    void Initialize() { }
     void Update(Position& position, const Velocity& velocity) {
         position.x += velocity.x;
         position.y += velocity.y;
