@@ -166,18 +166,18 @@ void SpatialTests::Run() {
          
         const int numChildren = 100;
         
-         Registry registry;
-         Scene scene(registry);
-         
-         const Vector2 parentPositionStart = {10,10};
-         const Vector2 parentPositionEnd = {20,20};
-         const Vector2 childPosition = {20,20};
-         
-         auto parent = scene.CreateGameObject();
-         scene.AddComponent<LocalTransform>(parent);
-         scene.AddComponent<WorldTransform>(parent);
-         scene.AddComponent<Hierarchy>(parent);
-         scene.GetComponent<LocalTransform>(parent).position = parentPositionStart;
+        Registry registry;
+        Scene scene(registry);
+
+        const Vector2 parentPositionStart = {10,10};
+        const Vector2 parentPositionEnd = {20,20};
+        const Vector2 childPosition = {20,20};
+
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<LocalTransform>(parent);
+        scene.AddComponent<WorldTransform>(parent);
+        scene.AddComponent<Hierarchy>(parent);
+        scene.GetComponent<LocalTransform>(parent).position = parentPositionStart;
          
         std::vector<AsyncECS::GameObject> children;
         
@@ -196,13 +196,15 @@ void SpatialTests::Run() {
         
         auto targetWorld = Matrix3x3::CreateTranslation(parentPositionStart + childPosition);
         
-        int anyNotAligned = false;
+        bool anyNotAligned = false;
         for(auto child : children) {
             auto childWorld = scene.GetComponent<WorldTransform>(child).world;
             if (childWorld!=targetWorld) {
                 anyNotAligned = true;
             }
         }
+        
+        scene.WriteGraph(std::cout);
         
         return !anyNotAligned;
     });
