@@ -142,9 +142,10 @@ struct ComponentContainer {
         return (const T&)elements[indicies[gameObject & GameObjectIndexMask]];
     }
     
-    std::vector<std::uint32_t> indicies;
-    std::vector<T> elements;
     std::vector<std::uint16_t> references;
+    std::vector<T> elements;
+    std::vector<std::uint32_t> indicies;
+    
     GameObjectCollection changedThisFrame;
     GameObjectCollection gameObjects;
     
