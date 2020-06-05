@@ -168,6 +168,8 @@ public:
             }
         });
         
+        UpdateSceneModifiers();
+        
         TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
             using ComponentContainerType = std::remove_reference_t<decltype(component)>;
             using ComponentType = typename ComponentContainerType::Type;
@@ -242,7 +244,10 @@ public:
         
         while(taskRunner.Update());
         registry.ResetChanged();
-        
+        UpdateSceneModifiers();
+    }
+    
+    void UpdateSceneModifiers() {
         using ThisType = std::remove_pointer_t<decltype(this)>;
         
         TupleHelper::Iterate(systems, [this](auto& system) {
