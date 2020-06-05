@@ -10,9 +10,11 @@
 		720BC26B236C7864009F163B /* TestBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC269236C7864009F163B /* TestBase.cpp */; };
 		720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26C236C7889009F163B /* TestComponentContainer.cpp */; };
 		720BC271236C7AC4009F163B /* AllTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720BC26F236C7AC4009F163B /* AllTests.cpp */; };
+		72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72538B32247F099700D2DA71 /* SimpleVelocity.cpp */; };
 		72676565238889C20080412E /* SystemTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72676563238889C20080412E /* SystemTask.cpp */; };
 		726765682388A1680080412E /* TaskRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726765662388A1680080412E /* TaskRunner.cpp */; };
 		726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726BDD3D2404F8B100204F45 /* Hierarchy.cpp */; };
+		7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7282A40924804B99003DB7B9 /* StressTest.cpp */; };
 		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
 		72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7E23FDA43800735591 /* Matrix3x3.cpp */; };
@@ -53,6 +55,7 @@
 		720BC26F236C7AC4009F163B /* AllTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AllTests.cpp; sourceTree = "<group>"; };
 		720BC270236C7AC4009F163B /* AllTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AllTests.hpp; sourceTree = "<group>"; };
 		72332DBA233A90F3007DBD21 /* AsyncECS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncECS; sourceTree = BUILT_PRODUCTS_DIR; };
+		72538B32247F099700D2DA71 /* SimpleVelocity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleVelocity.cpp; sourceTree = "<group>"; };
 		72676562238567540080412E /* ClassNameHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClassNameHelper.hpp; sourceTree = "<group>"; };
 		72676563238889C20080412E /* SystemTask.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SystemTask.cpp; sourceTree = "<group>"; };
 		72676564238889C20080412E /* SystemTask.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemTask.hpp; sourceTree = "<group>"; };
@@ -60,6 +63,8 @@
 		726765672388A1680080412E /* TaskRunner.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TaskRunner.hpp; sourceTree = "<group>"; };
 		726BDD3D2404F8B100204F45 /* Hierarchy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
 		726BDD3E2404F8B100204F45 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
+		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
+		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
 		72859C7823FDA31600735591 /* Vector2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector2.hpp; sourceTree = "<group>"; };
 		72859C7A23FDA38C00735591 /* LocalTransform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalTransform.cpp; sourceTree = "<group>"; };
@@ -159,6 +164,8 @@
 				72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */,
 				72ED8726236CE59200CB9E86 /* Simple.cpp */,
 				72F2E7D923FDA9A40041B56A /* RunLogicTests.cpp */,
+				72538B32247F099700D2DA71 /* SimpleVelocity.cpp */,
+				7282A40924804B99003DB7B9 /* StressTest.cpp */,
 			);
 			path = AsyncECS;
 			sourceTree = "<group>";
@@ -170,7 +177,6 @@
 				72859C7B23FDA38C00735591 /* LocalTransform.hpp */,
 				72859C8423FDA6B100735591 /* Tests */,
 				72F2E7DB23FDCFEA0041B56A /* WorldTransform.cpp */,
-				72F2E7DC23FDCFEA0041B56A /* WorldTransform.hpp */,
 				72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */,
 				72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */,
 				72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */,
@@ -225,6 +231,7 @@
 				72676563238889C20080412E /* SystemTask.cpp */,
 				72676564238889C20080412E /* SystemTask.hpp */,
 				72F2E806240EF8DB0041B56A /* IScene.hpp */,
+				7282A40B24804BC1003DB7B9 /* ECS.hpp */,
 			);
 			path = ECS;
 			sourceTree = "<group>";
@@ -233,6 +240,7 @@
 			isa = PBXGroup;
 			children = (
 				72676562238567540080412E /* ClassNameHelper.hpp */,
+				72F2E7DC23FDCFEA0041B56A /* WorldTransform.hpp */,
 				72B483CC233D485800E44E78 /* Timer.cpp */,
 				72B483CD233D485800E44E78 /* Timer.hpp */,
 				72B483CA233BEDA200E44E78 /* TupleHelper.hpp */,
@@ -375,6 +383,7 @@
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
 				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
+				7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */,
 				72859C7923FDA31600735591 /* Vector2.cpp in Sources */,
 				726765682388A1680080412E /* TaskRunner.cpp in Sources */,
 				72F2E7FD2402D0F20041B56A /* HierarchySystem.cpp in Sources */,
@@ -386,6 +395,7 @@
 				72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */,
 				72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */,
 				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
+				72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */,
 				72676565238889C20080412E /* SystemTask.cpp in Sources */,
 				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,
 				72ED8727236CE59200CB9E86 /* Simple.cpp in Sources */,
