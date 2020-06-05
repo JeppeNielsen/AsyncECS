@@ -204,8 +204,6 @@ void SpatialTests::Run() {
             }
         }
         
-        scene.WriteGraph(std::cout);
-        
         return !anyNotAligned;
     });
     
