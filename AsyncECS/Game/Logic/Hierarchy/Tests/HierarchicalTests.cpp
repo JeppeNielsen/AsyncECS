@@ -101,4 +101,55 @@ void HierarchicalTests::Run() {
                 std::find(childrenInParent.begin(), childrenInParent.end(), child) == childrenInParent.end();
     });
     
+    RunTest("Child removed from parent's children list on removal, even when parent is removed also",[]() {
+        
+        Registry registry;
+        Scene scene(registry);
+        
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(parent);
+        
+        auto child = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(child);
+        
+        scene.GetComponent<Hierarchy>(child).parent = parent;
+        
+        scene.Update();
+        
+        auto& childrenInParent = scene.GetComponent<Hierarchy>(parent).children;
+        bool wasInParent = std::find(childrenInParent.begin(), childrenInParent.end(), child) != childrenInParent.end();
+        
+        scene.RemoveGameObject(child);
+        scene.RemoveGameObject(parent);
+        
+        scene.Update();
+        
+        return wasInParent &&
+                std::find(childrenInParent.begin(), childrenInParent.end(), child) == childrenInParent.end();
+    });
+    
+    RunTest("Parent removed will also remove child",[]() {
+        Registry registry;
+        Scene scene(registry);
+
+        auto parent = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(parent);
+
+        auto child = scene.CreateGameObject();
+        scene.AddComponent<Hierarchy>(child);
+
+        scene.GetComponent<Hierarchy>(child).parent = parent;
+
+        scene.Update();
+
+        scene.RemoveGameObject(parent);
+
+        bool isParentValid = registry.IsGameObjectValid(parent);
+        bool isChildValid = registry.IsGameObjectValid(child);
+
+        return
+        !isParentValid &&
+        !isChildValid;
+    });
+    
 }
