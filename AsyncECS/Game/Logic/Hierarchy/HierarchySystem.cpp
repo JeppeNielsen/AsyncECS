@@ -45,5 +45,10 @@ void HierarchySystem::GameObjectRemoved(GameObject gameObject) {
             hierarchy.parent = GameObjectNull;
             hierarchy.previousParent = GameObjectNull;
         }
+        Modify([&hierarchy] (auto& m) {
+            for (auto child : hierarchy.children) {
+                m.RemoveGameObject(child);
+            }
+        });
     });
 }
