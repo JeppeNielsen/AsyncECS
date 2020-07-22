@@ -16,8 +16,7 @@ namespace Game {
     struct HierarchyWorldTransformSystem :
         AsyncECS::SystemChanged<const LocalTransform, const Hierarchy, WorldTransform>,
         AsyncECS::ComponentView<const LocalTransform, const Hierarchy, WorldTransform> {
-        
-        void Initialize();
+
         void Changed(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform);
         void Update(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform);
     

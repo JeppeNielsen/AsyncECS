@@ -63,6 +63,7 @@
 		726765672388A1680080412E /* TaskRunner.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TaskRunner.hpp; sourceTree = "<group>"; };
 		726BDD3D2404F8B100204F45 /* Hierarchy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
 		726BDD3E2404F8B100204F45 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
+		727A15CA2496ADFE00CB7208 /* WorldTransform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTransform.hpp; sourceTree = "<group>"; };
 		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
 		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
@@ -173,14 +174,15 @@
 		72859C7523FDA2E900735591 /* Spatial */ = {
 			isa = PBXGroup;
 			children = (
-				72859C7A23FDA38C00735591 /* LocalTransform.cpp */,
-				72859C7B23FDA38C00735591 /* LocalTransform.hpp */,
 				72859C8423FDA6B100735591 /* Tests */,
-				72F2E7DB23FDCFEA0041B56A /* WorldTransform.cpp */,
-				72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */,
-				72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */,
 				72F2E80224046F260041B56A /* HierarchyWorldTransformSystem.cpp */,
 				72F2E80324046F260041B56A /* HierarchyWorldTransformSystem.hpp */,
+				72859C7A23FDA38C00735591 /* LocalTransform.cpp */,
+				72859C7B23FDA38C00735591 /* LocalTransform.hpp */,
+				72F2E7DB23FDCFEA0041B56A /* WorldTransform.cpp */,
+				727A15CA2496ADFE00CB7208 /* WorldTransform.hpp */,
+				72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */,
+				72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */,
 			);
 			path = Spatial;
 			sourceTree = "<group>";
@@ -269,8 +271,8 @@
 		72E7963A23EF542900820B01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72F2E7DE23FDD79E0041B56A /* Hierarchy */,
 				72F2E7D823FDA9120041B56A /* Tests */,
+				72F2E7DE23FDD79E0041B56A /* Hierarchy */,
 				72859C7523FDA2E900735591 /* Spatial */,
 			);
 			path = Logic;

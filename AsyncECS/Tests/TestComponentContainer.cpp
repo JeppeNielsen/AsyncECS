@@ -44,6 +44,13 @@ void TestComponentContainer::Run() {
         return &container.Get(go1) == &container.Get(go2);
     });
     
+    RunTest("Create add to changedThisFrame",[] () {
+        ComponentContainer<Position> container;
+        GameObject go1 = 0;
+        container.Create(go1);
+        return container.changedThisFrame.objects.size() == 1;
+    });
+    
     RunTest("Get, adds to changedThisFrame",[] () {
         ComponentContainer<Position> container;
         GameObject go1 = 0;
@@ -65,8 +72,20 @@ void TestComponentContainer::Run() {
         ComponentContainer<Position> container;
         GameObject go1 = 0;
         container.Create(go1);
+        container.changedThisFrame.Clear();
         container.GetConst(go1);
         return container.changedThisFrame.objects.size() == 0;
+    });
+    
+    RunTest("Reference also adds to changedThisFrame",[] () {
+        ComponentContainer<Position> container;
+        GameObject go1 = 0;
+        GameObject go2 = 1;
+        
+        container.Create(go1);
+        container.Reference(go2, go1);
+        
+        return container.changedThisFrame.objects.size() == 2;
     });
     
     RunTest("Get also adds changedThisFrame for references",[] () {
@@ -76,6 +95,8 @@ void TestComponentContainer::Run() {
         
         container.Create(go1);
         container.Reference(go2, go1);
+        
+        container.changedThisFrame.Clear();
         
         container.Get(go1);
         

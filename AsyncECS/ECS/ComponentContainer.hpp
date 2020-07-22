@@ -72,6 +72,7 @@ struct ComponentContainer {
         indicies[objectIndex] = referenceIndex;
         ++references[referenceIndex];
         gameObjects.Add(gameObject);
+        SetChanged(gameObject);
     }
     
     void Remove(const GameObject gameObject) {

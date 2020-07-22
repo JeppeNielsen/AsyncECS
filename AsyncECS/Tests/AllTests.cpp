@@ -16,18 +16,18 @@ using namespace Tests;
 void AllTests::Run() {
 
     {
-        std::cout << "ComponentContainer : " << std::endl;
+        std::cout << "\nComponentContainer : " << std::endl;
         TestComponentContainer test;
         test.Run();
     }
     {
-        std::cout << "GameObjectDatabase : " << std::endl;
+        std::cout << "\nGameObjectDatabase : " << std::endl;
         TestGameObjectDatabase test;
         test.Run();
     }
     
     {
-        std::cout << "TaskRunner : " << std::endl;
+        std::cout << "\nTaskRunner : " << std::endl;
         TestTaskRunner test;
         test.Run();
     }

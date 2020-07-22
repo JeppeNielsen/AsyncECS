@@ -17,7 +17,6 @@ namespace Game {
         AsyncECS::SceneModifier<Hierarchy>,
         AsyncECS::ComponentView<Hierarchy> {
         
-        void Initialize();
         void Update(AsyncECS::GameObject gameObject, Hierarchy& hierarchy);
         void GameObjectRemoved(AsyncECS::GameObject gameObject);
     };

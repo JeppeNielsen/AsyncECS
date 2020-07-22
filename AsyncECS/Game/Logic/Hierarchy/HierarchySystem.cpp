@@ -11,10 +11,6 @@
 using namespace Game;
 using namespace AsyncECS;
 
-void HierarchySystem::Initialize() {
-
-}
-
 void HierarchySystem::Update(GameObject gameObject, Hierarchy& hierarchy) {
     auto previousParent = hierarchy.previousParent;
     auto currentParent = hierarchy.parent;

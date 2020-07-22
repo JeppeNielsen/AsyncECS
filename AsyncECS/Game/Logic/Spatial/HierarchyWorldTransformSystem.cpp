@@ -10,12 +10,6 @@
 
 using namespace Game;
 
-using namespace Game;
-
-void HierarchyWorldTransformSystem::Initialize() {
-
-}
-
 void HierarchyWorldTransformSystem::Changed(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform) {
     
 }

@@ -243,7 +243,7 @@ public:
         }
         
         while(taskRunner.Update());
-        registry.ResetChanged();
+        registry.ResetChanged(); // should be moved out of Scene, because there might be multiple Scenes.
         UpdateSceneModifiers();
     }
     
