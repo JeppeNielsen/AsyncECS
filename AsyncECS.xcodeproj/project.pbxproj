@@ -19,6 +19,11 @@
 		7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085724CDFB10002DC6E0 /* WorldBoundingBox.cpp */; };
 		7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085A24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp */; };
 		7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */; };
+		7280086324CE0E4F002DC6E0 /* QuadTreeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086124CE0E4F002DC6E0 /* QuadTreeSystem.cpp */; };
+		7280086624CE1533002DC6E0 /* QuadTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086424CE1533002DC6E0 /* QuadTree.cpp */; };
+		7280086924CE178E002DC6E0 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086724CE178D002DC6E0 /* BoundingBox.cpp */; };
+		7280086C24CE19B8002DC6E0 /* QuadTreeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086A24CE19B8002DC6E0 /* QuadTreeNode.cpp */; };
+		7280086F24CE229F002DC6E0 /* QuadTreeSystemTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086D24CE229F002DC6E0 /* QuadTreeSystemTests.cpp */; };
 		7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7282A40924804B99003DB7B9 /* StressTest.cpp */; };
 		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
@@ -79,6 +84,16 @@
 		7280085B24CDFB95002DC6E0 /* WorldBoundingBoxSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WorldBoundingBoxSystem.hpp; sourceTree = "<group>"; };
 		7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBoxTests.cpp; sourceTree = "<group>"; };
 		7280085F24CDFCF3002DC6E0 /* BoundingBoxTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingBoxTests.hpp; sourceTree = "<group>"; };
+		7280086124CE0E4F002DC6E0 /* QuadTreeSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeSystem.cpp; sourceTree = "<group>"; };
+		7280086224CE0E4F002DC6E0 /* QuadTreeSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTreeSystem.hpp; sourceTree = "<group>"; };
+		7280086424CE1533002DC6E0 /* QuadTree.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTree.cpp; sourceTree = "<group>"; };
+		7280086524CE1533002DC6E0 /* QuadTree.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTree.hpp; sourceTree = "<group>"; };
+		7280086724CE178D002DC6E0 /* BoundingBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
+		7280086824CE178D002DC6E0 /* BoundingBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingBox.hpp; sourceTree = "<group>"; };
+		7280086A24CE19B8002DC6E0 /* QuadTreeNode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeNode.cpp; sourceTree = "<group>"; };
+		7280086B24CE19B8002DC6E0 /* QuadTreeNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTreeNode.hpp; sourceTree = "<group>"; };
+		7280086D24CE229F002DC6E0 /* QuadTreeSystemTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeSystemTests.cpp; sourceTree = "<group>"; };
+		7280086E24CE229F002DC6E0 /* QuadTreeSystemTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTreeSystemTests.hpp; sourceTree = "<group>"; };
 		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
 		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
@@ -196,6 +211,8 @@
 				7280085824CDFB10002DC6E0 /* WorldBoundingBox.hpp */,
 				7280085A24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp */,
 				7280085B24CDFB95002DC6E0 /* WorldBoundingBoxSystem.hpp */,
+				7280086124CE0E4F002DC6E0 /* QuadTreeSystem.cpp */,
+				7280086224CE0E4F002DC6E0 /* QuadTreeSystem.hpp */,
 			);
 			path = Spatial;
 			sourceTree = "<group>";
@@ -205,6 +222,8 @@
 			children = (
 				7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */,
 				7280085F24CDFCF3002DC6E0 /* BoundingBoxTests.hpp */,
+				7280086D24CE229F002DC6E0 /* QuadTreeSystemTests.cpp */,
+				7280086E24CE229F002DC6E0 /* QuadTreeSystemTests.hpp */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -234,6 +253,12 @@
 				72859C7823FDA31600735591 /* Vector2.hpp */,
 				7280085424CDF720002DC6E0 /* Rect.cpp */,
 				7280085524CDF720002DC6E0 /* Rect.hpp */,
+				7280086424CE1533002DC6E0 /* QuadTree.cpp */,
+				7280086524CE1533002DC6E0 /* QuadTree.hpp */,
+				7280086724CE178D002DC6E0 /* BoundingBox.cpp */,
+				7280086824CE178D002DC6E0 /* BoundingBox.hpp */,
+				7280086A24CE19B8002DC6E0 /* QuadTreeNode.cpp */,
+				7280086B24CE19B8002DC6E0 /* QuadTreeNode.hpp */,
 			);
 			path = Math;
 			sourceTree = "<group>";
@@ -422,8 +447,10 @@
 				72F2E801240329960041B56A /* HierarchicalTests.cpp in Sources */,
 				72F2E7DA23FDA9A40041B56A /* RunLogicTests.cpp in Sources */,
 				72F2E7DD23FDCFEA0041B56A /* WorldTransform.cpp in Sources */,
+				7280086324CE0E4F002DC6E0 /* QuadTreeSystem.cpp in Sources */,
 				726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */,
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
+				7280086C24CE19B8002DC6E0 /* QuadTreeNode.cpp in Sources */,
 				7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
 				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
@@ -435,13 +462,16 @@
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				72F2E7F3240088C60041B56A /* WorldTransformSystem.cpp in Sources */,
 				72F2E7D723FDA90B0041B56A /* LogicTests.cpp in Sources */,
+				7280086624CE1533002DC6E0 /* QuadTree.cpp in Sources */,
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
+				7280086924CE178E002DC6E0 /* BoundingBox.cpp in Sources */,
 				72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */,
 				72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */,
 				7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */,
 				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
 				7280085624CDF720002DC6E0 /* Rect.cpp in Sources */,
 				7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */,
+				7280086F24CE229F002DC6E0 /* QuadTreeSystemTests.cpp in Sources */,
 				72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */,
 				72676565238889C20080412E /* SystemTask.cpp in Sources */,
 				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,

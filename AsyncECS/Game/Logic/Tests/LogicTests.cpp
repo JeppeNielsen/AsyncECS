@@ -10,6 +10,7 @@
 #include "SpatialTests.hpp"
 #include "HierarchicalTests.hpp"
 #include "BoundingBoxTests.hpp"
+#include "QuadTreeSystemTests.hpp"
 #include <iostream>
 
 using namespace Game::Tests;
@@ -23,4 +24,7 @@ void LogicTests::Run() {
     std::cout << "\n";
     BoundingBoxTests boundingBoxTests;
     boundingBoxTests.Run();
+    std::cout << "\n";
+    QuadTreeSystemTests quadTreeSystemTests;
+    quadTreeSystemTests.Run();
 }

@@ -7,10 +7,10 @@
 //
 
 #pragma once
-#include "Rect.hpp"
+#include "BoundingBox.hpp"
 
 namespace Game {
     struct LocalBoundingBox {
-        Rect bounds;
+         BoundingBox bounds;
     };
 }
