@@ -9,6 +9,7 @@
 #include "LogicTests.hpp"
 #include "SpatialTests.hpp"
 #include "HierarchicalTests.hpp"
+#include "BoundingBoxTests.hpp"
 #include <iostream>
 
 using namespace Game::Tests;
@@ -16,7 +17,10 @@ using namespace Game::Tests;
 void LogicTests::Run() {
     HierarchicalTests hierarchicalTests;
     hierarchicalTests.Run();
-    std::cout << std::endl;
+    std::cout << "\n";
     SpatialTests spatialTests;
     spatialTests.Run();
+    std::cout << "\n";
+    BoundingBoxTests boundingBoxTests;
+    boundingBoxTests.Run();
 }

@@ -14,6 +14,11 @@
 		72676565238889C20080412E /* SystemTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72676563238889C20080412E /* SystemTask.cpp */; };
 		726765682388A1680080412E /* TaskRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726765662388A1680080412E /* TaskRunner.cpp */; };
 		726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726BDD3D2404F8B100204F45 /* Hierarchy.cpp */; };
+		7280085324CDF5BF002DC6E0 /* LocalBoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085124CDF5BF002DC6E0 /* LocalBoundingBox.cpp */; };
+		7280085624CDF720002DC6E0 /* Rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085424CDF720002DC6E0 /* Rect.cpp */; };
+		7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085724CDFB10002DC6E0 /* WorldBoundingBox.cpp */; };
+		7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085A24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp */; };
+		7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */; };
 		7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7282A40924804B99003DB7B9 /* StressTest.cpp */; };
 		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
@@ -64,6 +69,16 @@
 		726BDD3D2404F8B100204F45 /* Hierarchy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
 		726BDD3E2404F8B100204F45 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
 		727A15CA2496ADFE00CB7208 /* WorldTransform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTransform.hpp; sourceTree = "<group>"; };
+		7280085124CDF5BF002DC6E0 /* LocalBoundingBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalBoundingBox.cpp; sourceTree = "<group>"; };
+		7280085224CDF5BF002DC6E0 /* LocalBoundingBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalBoundingBox.hpp; sourceTree = "<group>"; };
+		7280085424CDF720002DC6E0 /* Rect.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Rect.cpp; sourceTree = "<group>"; };
+		7280085524CDF720002DC6E0 /* Rect.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Rect.hpp; sourceTree = "<group>"; };
+		7280085724CDFB10002DC6E0 /* WorldBoundingBox.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WorldBoundingBox.cpp; sourceTree = "<group>"; };
+		7280085824CDFB10002DC6E0 /* WorldBoundingBox.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WorldBoundingBox.hpp; sourceTree = "<group>"; };
+		7280085A24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WorldBoundingBoxSystem.cpp; sourceTree = "<group>"; };
+		7280085B24CDFB95002DC6E0 /* WorldBoundingBoxSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WorldBoundingBoxSystem.hpp; sourceTree = "<group>"; };
+		7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBoxTests.cpp; sourceTree = "<group>"; };
+		7280085F24CDFCF3002DC6E0 /* BoundingBoxTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BoundingBoxTests.hpp; sourceTree = "<group>"; };
 		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
 		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
@@ -171,7 +186,30 @@
 			path = AsyncECS;
 			sourceTree = "<group>";
 		};
-		72859C7523FDA2E900735591 /* Spatial */ = {
+		7280085024CDF4EF002DC6E0 /* Spatial */ = {
+			isa = PBXGroup;
+			children = (
+				7280085D24CDFCA4002DC6E0 /* Tests */,
+				7280085124CDF5BF002DC6E0 /* LocalBoundingBox.cpp */,
+				7280085224CDF5BF002DC6E0 /* LocalBoundingBox.hpp */,
+				7280085724CDFB10002DC6E0 /* WorldBoundingBox.cpp */,
+				7280085824CDFB10002DC6E0 /* WorldBoundingBox.hpp */,
+				7280085A24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp */,
+				7280085B24CDFB95002DC6E0 /* WorldBoundingBoxSystem.hpp */,
+			);
+			path = Spatial;
+			sourceTree = "<group>";
+		};
+		7280085D24CDFCA4002DC6E0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7280085E24CDFCF3002DC6E0 /* BoundingBoxTests.cpp */,
+				7280085F24CDFCF3002DC6E0 /* BoundingBoxTests.hpp */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		72859C7523FDA2E900735591 /* Transform */ = {
 			isa = PBXGroup;
 			children = (
 				72859C8423FDA6B100735591 /* Tests */,
@@ -184,7 +222,7 @@
 				72F2E7F2240088C60041B56A /* WorldTransformSystem.cpp */,
 				72F2E7F1240088C50041B56A /* WorldTransformSystem.hpp */,
 			);
-			path = Spatial;
+			path = Transform;
 			sourceTree = "<group>";
 		};
 		72859C7623FDA2FC00735591 /* Math */ = {
@@ -194,6 +232,8 @@
 				72859C7F23FDA43900735591 /* Matrix3x3.hpp */,
 				72859C7723FDA31600735591 /* Vector2.cpp */,
 				72859C7823FDA31600735591 /* Vector2.hpp */,
+				7280085424CDF720002DC6E0 /* Rect.cpp */,
+				7280085524CDF720002DC6E0 /* Rect.hpp */,
 			);
 			path = Math;
 			sourceTree = "<group>";
@@ -271,9 +311,10 @@
 		72E7963A23EF542900820B01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72F2E7D823FDA9120041B56A /* Tests */,
 				72F2E7DE23FDD79E0041B56A /* Hierarchy */,
-				72859C7523FDA2E900735591 /* Spatial */,
+				7280085024CDF4EF002DC6E0 /* Spatial */,
+				72F2E7D823FDA9120041B56A /* Tests */,
+				72859C7523FDA2E900735591 /* Transform */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -383,6 +424,7 @@
 				72F2E7DD23FDCFEA0041B56A /* WorldTransform.cpp in Sources */,
 				726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */,
 				72B483CE233D485800E44E78 /* Timer.cpp in Sources */,
+				7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
 				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
 				7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */,
@@ -396,11 +438,15 @@
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
 				72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */,
 				72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */,
+				7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */,
 				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
+				7280085624CDF720002DC6E0 /* Rect.cpp in Sources */,
+				7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */,
 				72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */,
 				72676565238889C20080412E /* SystemTask.cpp in Sources */,
 				720BC271236C7AC4009F163B /* AllTests.cpp in Sources */,
 				72ED8727236CE59200CB9E86 /* Simple.cpp in Sources */,
+				7280085324CDF5BF002DC6E0 /* LocalBoundingBox.cpp in Sources */,
 				728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */,
 				72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */,
 				72F2E7F0240080690041B56A /* TestTaskRunner.cpp in Sources */,
