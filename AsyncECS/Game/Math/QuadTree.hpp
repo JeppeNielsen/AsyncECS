@@ -37,20 +37,18 @@ namespace Game {
                     list.push_back(node->data);
                 }
             }
-            if (!children) return;
+            if (children.empty()) {
+                return;
+            }
             for (int i=0; i<4; i++) {
                 children[i].Get(boundingBox, list);
             }
         }
         
-        Quadtree() : children(nullptr), parent(nullptr) { }
+        Quadtree() : parent(nullptr) { }
 
-        Quadtree(const BoundingBox& box) : children(nullptr), parent(nullptr) {
+        Quadtree(const BoundingBox& box) : parent(nullptr) {
             SetBoundingBox(box);
-        }
-
-        ~Quadtree() {
-            if (children) delete[] children;
         }
 
         void SetBoundingBox(const BoundingBox& box) {
@@ -105,7 +103,6 @@ namespace Game {
         }
 
         void Move(Node& node) {
-            
             if (node.node->box.Contains(node.box)) {
                 return;
             } else {
@@ -115,8 +112,8 @@ namespace Game {
         }
 
         void Split() {
-            if (children) return;
-            children = new Quadtree[4];
+            if (!children.empty()) return;
+            children.resize(4);
 
             Vector2 size = box.extends * 0.5f;
             Vector2 offset = size * 0.5f;
@@ -134,7 +131,7 @@ namespace Game {
         const static unsigned MaxObjectsInNode = 32;
         BoundingBox box;
         Quadtree* parent;
-        Quadtree* children;
+        std::vector<Quadtree> children;
         Nodes nodes;
     };
 }

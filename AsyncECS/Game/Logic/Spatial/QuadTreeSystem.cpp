@@ -12,7 +12,7 @@ using namespace Game;
 using namespace AsyncECS;
 
 QuadTreeSystem::QuadTreeSystem() {
-    quadTree.SetBoundingBox({{0,0}, {1000,1000}});
+    quadTree.SetBoundingBox({{0,0}, {100000,100000}});
     defaultNode.node = nullptr;
 }
 
@@ -24,7 +24,6 @@ void QuadTreeSystem::Update(GameObject gameObject, const Game::WorldBoundingBox&
     
     auto& node = nodes[gameObject];
     node.data = gameObject;
-    
     node.box = worldBoundingBox.bounds;
     
     if (!node.node) {

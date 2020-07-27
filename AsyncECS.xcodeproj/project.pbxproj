@@ -24,6 +24,9 @@
 		7280086924CE178E002DC6E0 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086724CE178D002DC6E0 /* BoundingBox.cpp */; };
 		7280086C24CE19B8002DC6E0 /* QuadTreeNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086A24CE19B8002DC6E0 /* QuadTreeNode.cpp */; };
 		7280086F24CE229F002DC6E0 /* QuadTreeSystemTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280086D24CE229F002DC6E0 /* QuadTreeSystemTests.cpp */; };
+		7280087324CF6C6D002DC6E0 /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280087124CF6C6D002DC6E0 /* Camera.cpp */; };
+		7280087624CF6CEB002DC6E0 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280087424CF6CEB002DC6E0 /* RenderSystem.cpp */; };
+		7280087A24CF6D9B002DC6E0 /* RenderSystemTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7280087824CF6D9B002DC6E0 /* RenderSystemTests.cpp */; };
 		7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7282A40924804B99003DB7B9 /* StressTest.cpp */; };
 		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
@@ -94,6 +97,12 @@
 		7280086B24CE19B8002DC6E0 /* QuadTreeNode.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTreeNode.hpp; sourceTree = "<group>"; };
 		7280086D24CE229F002DC6E0 /* QuadTreeSystemTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = QuadTreeSystemTests.cpp; sourceTree = "<group>"; };
 		7280086E24CE229F002DC6E0 /* QuadTreeSystemTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = QuadTreeSystemTests.hpp; sourceTree = "<group>"; };
+		7280087124CF6C6D002DC6E0 /* Camera.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
+		7280087224CF6C6D002DC6E0 /* Camera.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Camera.hpp; sourceTree = "<group>"; };
+		7280087424CF6CEB002DC6E0 /* RenderSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystem.cpp; sourceTree = "<group>"; };
+		7280087524CF6CEB002DC6E0 /* RenderSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RenderSystem.hpp; sourceTree = "<group>"; };
+		7280087824CF6D9B002DC6E0 /* RenderSystemTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystemTests.cpp; sourceTree = "<group>"; };
+		7280087924CF6D9B002DC6E0 /* RenderSystemTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RenderSystemTests.hpp; sourceTree = "<group>"; };
 		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
 		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
 		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
@@ -228,6 +237,27 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		7280087024CF6C5A002DC6E0 /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				7280087724CF6D87002DC6E0 /* Tests */,
+				7280087124CF6C6D002DC6E0 /* Camera.cpp */,
+				7280087224CF6C6D002DC6E0 /* Camera.hpp */,
+				7280087424CF6CEB002DC6E0 /* RenderSystem.cpp */,
+				7280087524CF6CEB002DC6E0 /* RenderSystem.hpp */,
+			);
+			path = Rendering;
+			sourceTree = "<group>";
+		};
+		7280087724CF6D87002DC6E0 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7280087824CF6D9B002DC6E0 /* RenderSystemTests.cpp */,
+				7280087924CF6D9B002DC6E0 /* RenderSystemTests.hpp */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		72859C7523FDA2E900735591 /* Transform */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,6 +366,7 @@
 		72E7963A23EF542900820B01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7280087024CF6C5A002DC6E0 /* Rendering */,
 				72F2E7DE23FDD79E0041B56A /* Hierarchy */,
 				7280085024CDF4EF002DC6E0 /* Spatial */,
 				72F2E7D823FDA9120041B56A /* Tests */,
@@ -454,6 +485,7 @@
 				7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
 				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
+				7280087A24CF6D9B002DC6E0 /* RenderSystemTests.cpp in Sources */,
 				7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */,
 				72859C7923FDA31600735591 /* Vector2.cpp in Sources */,
 				726765682388A1680080412E /* TaskRunner.cpp in Sources */,
@@ -469,6 +501,8 @@
 				72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */,
 				7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */,
 				72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */,
+				7280087324CF6C6D002DC6E0 /* Camera.cpp in Sources */,
+				7280087624CF6CEB002DC6E0 /* RenderSystem.cpp in Sources */,
 				7280085624CDF720002DC6E0 /* Rect.cpp in Sources */,
 				7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */,
 				7280086F24CE229F002DC6E0 /* QuadTreeSystemTests.cpp in Sources */,

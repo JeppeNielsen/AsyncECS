@@ -10,6 +10,7 @@
 #include "ECS.hpp"
 #include "WorldBoundingBox.hpp"
 #include "QuadTree.hpp"
+#include <deque>
 
 namespace Game {
     struct QuadTreeSystem : AsyncECS::SystemChangedGameObject<const WorldBoundingBox>{
@@ -22,7 +23,7 @@ namespace Game {
         
         Quadtree<AsyncECS::GameObject> quadTree;
         
-        std::vector<QuadtreeNode<AsyncECS::GameObject>> nodes;
+        std::deque<QuadtreeNode<AsyncECS::GameObject>> nodes;
         
         QuadtreeNode<AsyncECS::GameObject> defaultNode;
         
