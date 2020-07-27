@@ -25,5 +25,7 @@ namespace Game {
         std::vector<QuadtreeNode<AsyncECS::GameObject>> nodes;
         
         QuadtreeNode<AsyncECS::GameObject> defaultNode;
+        
+        void Query(const BoundingBox& box, std::vector<AsyncECS::GameObject>& gameObjects) const;
     };
 }

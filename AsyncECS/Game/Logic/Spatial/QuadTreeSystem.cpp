@@ -44,3 +44,6 @@ void QuadTreeSystem::GameObjectRemoved(AsyncECS::GameObject gameObject) {
     quadTree.Remove(node);
 }
 
+void QuadTreeSystem::Query(const BoundingBox &box, std::vector<AsyncECS::GameObject> &gameObjects) const {
+    quadTree.Get(box, gameObjects);
+}

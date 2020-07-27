@@ -24,31 +24,28 @@ namespace Game {
                 list.push_back((T)nodes->operator[](i)->data);
             }
             if (!children) return;
-            for(int i=0; i<8; i++) children[i].GetRecursive(list);
+            for(int i=0; i<4; i++) children[i].GetRecursive(list);
         }
         
-        void Get(const BoundingBox& boundingBox, std::vector<T>& list) {
-            if (!nodes) return;
-            
+        void Get(const BoundingBox& boundingBox, std::vector<T>& list) const {
             if (!box.Intersects(boundingBox)) {
                 return;
             }
-            else {
-                for(size_t i = 0, size=nodes->size(); i<size; i++) {
-                    Node* node = nodes->operator[](i);
-                    
-                    if (box.Intersects(node->box)) list.push_back((T)node->data);
+
+            for(auto node : nodes) {
+                if (node->box.Intersects(boundingBox)) {
+                    list.push_back(node->data);
                 }
-                if (!children) return;
-                for (int i=0; i<4; i++) {
-                    children[i].Get(boundingBox, list);
-                }
+            }
+            if (!children) return;
+            for (int i=0; i<4; i++) {
+                children[i].Get(boundingBox, list);
             }
         }
         
         Quadtree() : children(nullptr), parent(nullptr) { }
 
-        Quadtree(const BoundingBox& box) {
+        Quadtree(const BoundingBox& box) : children(nullptr), parent(nullptr) {
             SetBoundingBox(box);
         }
 
@@ -72,7 +69,7 @@ namespace Game {
                 if (nodes.size()>=MaxObjectsInNode) {
                     Split();
                     bool insertedIntoChildren = false;
-                    for (int i=0; i<8; i++) {
+                    for (int i=0; i<4; i++) {
                         insertedIntoChildren = children[i].Insert(node);
                         if (insertedIntoChildren) break;
                     }
