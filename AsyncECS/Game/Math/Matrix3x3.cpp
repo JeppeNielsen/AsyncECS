@@ -53,6 +53,14 @@ void Matrix3x3::Translation(const Vector2& translation) {
 	m[2][0] = translation.x; m[2][1] = translation.y; m[2][2] = 1;
 }
 
+void Matrix3x3::TRS(const Vector2& translation, float angle, const Vector2& scale) {
+    float Sin = sinf(angle) * scale.x;
+    float Cos = cosf(angle) * scale.y;
+    m[0][0] = Cos; m[0][1] = Sin; m[0][2] = 0;
+    m[1][0] = -Sin; m[1][1] = Cos; m[1][2] = 0;
+    m[2][0] = translation.x; m[2][1] = translation.y; m[2][2] = 1;
+}
+
 Vector2 Matrix3x3::Position() const {
 	return Vector2(m[2][0], m[2][1]);
 }

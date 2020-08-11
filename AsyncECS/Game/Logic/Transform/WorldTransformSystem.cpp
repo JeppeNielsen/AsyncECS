@@ -23,22 +23,21 @@ void WorldTransformSystem::Update(const LocalTransform& localTransform, const Hi
         return;
     }
     worldTransform.isDirty = false;
+    
+    Matrix3x3 local;
+    local.TRS(localTransform.position, localTransform.rotation, localTransform.scale);
+    
     if (hierarchy.parent != AsyncECS::GameObjectNull) {
         WorldTransform* parentTransform;
         GetComponents(hierarchy.parent, [this, &parentTransform](const LocalTransform& parentLocalTransform, const Hierarchy& parentHierarchy, WorldTransform& parentWorldTransform) {
             Update(parentLocalTransform, parentHierarchy, parentWorldTransform);
             parentTransform = &parentWorldTransform;
         });
-        worldTransform.world =
-        parentTransform->world *
-        Matrix3x3::CreateTranslation(localTransform.position) *
-        Matrix3x3::CreateRotation(localTransform.rotation) *
-        Matrix3x3::CreateScale(localTransform.scale);
+       
+        worldTransform.world =local *
+        parentTransform->world;
     } else {
-        worldTransform.world =
-        Matrix3x3::CreateTranslation(localTransform.position) *
-        Matrix3x3::CreateRotation(localTransform.rotation) *
-        Matrix3x3::CreateScale(localTransform.scale);
+        worldTransform.world = local;
     }
     worldTransform.worldInverse = worldTransform.world.Invert();
 }

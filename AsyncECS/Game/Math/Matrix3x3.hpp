@@ -13,6 +13,7 @@ namespace Game {
 			void Scale(const Vector2& scale);
 			void Rotation(float angle);
 			void Translation(const Vector2& translation);
+            void TRS(const Vector2& translation, float angle, const Vector2& scale);
 
 			Matrix3x3();
 			~Matrix3x3();

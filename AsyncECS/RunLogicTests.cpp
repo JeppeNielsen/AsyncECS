@@ -11,7 +11,7 @@
 #include "TestTaskRunner.hpp"
 #include "LogicTests.hpp"
 
-int main() {
+int main_tests() {
     AllTests allTests;
     allTests.Run();
     std::cout << "\nLogic Tests: \n";
@@ -19,3 +19,4 @@ int main() {
     logicTests.Run();
     return 0;
 }
+    

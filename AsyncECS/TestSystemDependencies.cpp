@@ -280,12 +280,12 @@ int main_complex() {
     scene.AddComponent<Position>(cameraGo, 100.0f, 100.0f);
     
     {
-        Timer timer;
+        Game::Timer timer;
         scene.Update();
         std::cout << timer.Stop() << std::endl;
     }
     {
-        Timer timer;
+        Game::Timer timer;
         scene.Update();
         std::cout << timer.Stop() << std::endl;
     }

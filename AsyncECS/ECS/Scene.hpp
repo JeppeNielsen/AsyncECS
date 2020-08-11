@@ -191,6 +191,15 @@ public:
     }
     
     template<typename T>
+    void ReferenceComponent(const GameObject gameObject, const GameObject referenceObject) {
+        static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
+        assert(registry.IsGameObjectValid(gameObject));
+        assert(registry.IsGameObjectValid(referenceObject));
+        componentObjects[TupleHelper::Index<ComponentContainer<T>, Components>::value].Add(gameObject);
+        std::get<ComponentContainer<T>>(registry.components).Reference(gameObject, referenceObject);
+    }
+    
+    template<typename T>
     void RemoveComponent(const GameObject gameObject) {
         static_assert(TupleHelper::HasType<ComponentContainer<T>, Components>::value, "Component type not found");
         assert("GameObject has been removed" && registry.IsGameObjectValid(gameObject));

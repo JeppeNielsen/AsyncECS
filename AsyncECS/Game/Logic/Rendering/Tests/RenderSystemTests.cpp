@@ -14,7 +14,7 @@ using namespace Game::Tests;
 
 void RenderSystemTests::Run() {
 
-    using ComponentTypes = AsyncECS::ComponentTypes<WorldBoundingBox, WorldTransform, Camera>;
+    using ComponentTypes = AsyncECS::ComponentTypes<WorldBoundingBox, WorldTransform, Camera, Mesh>;
     using Registry = AsyncECS::Registry<ComponentTypes>;
     using Systems = AsyncECS::SystemTypes<QuadTreeSystem, RenderSystem>;
     using Scene = AsyncECS::Scene<Registry, Systems>;
