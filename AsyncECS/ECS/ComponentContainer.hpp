@@ -37,7 +37,10 @@ struct ComponentContainer {
         indicies[objectIndex] = (std::uint32_t)elements.size();
         references.push_back(1);
         gameObjects.Add(gameObject);
-        SetChanged(gameObject);
+        
+        if (!changedThisFrame.Contains(gameObject)) {
+            changedThisFrame.Add(gameObject);
+        }
     }
     
     void Create(const GameObject gameObject) {
@@ -72,7 +75,9 @@ struct ComponentContainer {
         indicies[objectIndex] = referenceIndex;
         ++references[referenceIndex];
         gameObjects.Add(gameObject);
-        SetChanged(gameObject);
+        if (!changedThisFrame.Contains(gameObject)) {
+            changedThisFrame.Add(gameObject);
+        }
     }
     
     void Remove(const GameObject gameObject) {
