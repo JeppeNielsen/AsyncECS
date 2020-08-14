@@ -21,13 +21,22 @@ namespace AsyncECS {
             std::function<void()> work;
             std::function<void()> finished;
             std::future<void> future;
+            std::atomic<bool> isFinished;
            
-            Task(std::function<void()> finished, std::function<void()> work) : finished(finished) {
-                future = std::async(std::launch::async, work);
+            Task(std::function<void()> finished, std::function<void()> work) : finished(std::move(finished)), work(std::move(work)) {
+                isFinished = false;
+                future = std::async(std::launch::async, [this]() {
+                    this->work();
+                    isFinished = true;
+                });
             }
             
             bool HasFinished() {
-                return future.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
+                //future.wait();
+                return isFinished;
+                
+                //return true;
+            //    return future.wait_for(std::chrono::seconds(0)) == std::future_status::ready;
             }
         };
         
