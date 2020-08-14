@@ -55,8 +55,11 @@ private:
             using SystemType = std::remove_reference_t<decltype(system)>;
             const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
             systemTasks[taskIndex].name = ClassNameHelper::GetName<SystemType>();
-            systemTasks[taskIndex].work = [this, &components, &system] () {
+            systemTasks[taskIndex].work = [this, &components, &system, taskIndex] () {
+                Game::Timer timer;
+                timer.Start();
                 system.template Iterate<Components, decltype(componentObjects), SystemType>(components, componentObjects);
+                systemTasks[taskIndex].lastTime = timer.Stop();
             };
         });
     }
@@ -119,7 +122,7 @@ private:
         
         taskRunner.RunTask(task.work, [this, &task] () {
             task.isDone = true;
-            //std::cout << task.name << " - done"<<std::endl;
+            std::cout << task.name << " : " << (task.lastTime * 1000.0f) <<std::endl;
             for(auto outgoingTask : task.outgoing) {
                 RunTask(*outgoingTask);
             }
@@ -244,6 +247,8 @@ public:
     }
         
     void Update() {
+        Game::Timer timer;
+        timer.Start();
         for(auto& task : systemTasks) {
             task.isDone = false;
             if (task.incoming.empty()) {
@@ -254,6 +259,7 @@ public:
         while(taskRunner.Update());
         registry.ResetChanged(); // should be moved out of Scene, because there might be multiple Scenes.
         UpdateSceneModifiers();
+        std::cout << "Scene::Update: "<< timer.Stop() * 1000 << "\n";
     }
     
     void UpdateSceneModifiers() {

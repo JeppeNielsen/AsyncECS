@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include "Timer.hpp"
 
 namespace AsyncECS {
     struct SystemTask {
@@ -26,6 +27,7 @@ namespace AsyncECS {
         
         bool IsReady();
         
+        float lastTime;
         
     };
 }
