@@ -35,8 +35,8 @@ void BoundingBoxTests::Run() {
         scene.AddComponent<LocalBoundingBox>(go);
         scene.AddComponent<WorldBoundingBox>(go);
         
-        scene.GetComponent<WorldTransform>(go).world = Matrix3x3::CreateScale(2.0f);
-        scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0}, {10,10}};
+        //scene.GetComponent<WorldTransform>(go).world = glm::trans::CreateScale(2.0f);
+        //scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0}, {10,10}};
         
         scene.Update();
         
@@ -53,8 +53,8 @@ void BoundingBoxTests::Run() {
         scene.AddComponent<LocalBoundingBox>(go);
         scene.AddComponent<WorldBoundingBox>(go);
         
-        scene.GetComponent<WorldTransform>(go).world = Matrix3x3::CreateRotation(ToRadians(45));
-        scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0}, {10,10}};
+        //scene.GetComponent<WorldTransform>(go).world = Matrix3x3::CreateRotation(ToRadians(45));
+        //scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0}, {10,10}};
         
         scene.Update();
         

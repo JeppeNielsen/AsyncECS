@@ -14,6 +14,7 @@
 #include "Mesh.hpp"
 #include "VertexRenderer.hpp"
 #include "Shader.hpp"
+#include "TaskRunner.hpp"
 
 namespace Game {
 struct RenderSystem :
@@ -23,17 +24,27 @@ AsyncECS::ComponentView<const WorldTransform, const Mesh>
 {
     void Initialize(QuadTreeSystem& quadTreeSystem);
     void Update(const WorldTransform& transform, const Camera& camera);
-    void Render(const AsyncECS::GameObject gameObject);
+    
     
     void RenderScene();
     
     VertexRenderer<Vertex> vertexRenderer;
     Shader<Vertex> shader;
-    int vertexIndex;
-    int triangleIndex;
+
     QuadTreeSystem* quadTreeSystem;
     
     WorldTransform cameraTransform;
     Camera camera;
+    
+    using Meshes = std::vector<Mesh>;
+    
+    Meshes worldSpaceMeshes;
+    
+    void CalculateWorldSpaceMesh(const std::vector<AsyncECS::GameObject>& objects, const int startIndex, const int count, Mesh& worldSpaceMesh);
+    
+    void CalculateWorldSpaceMesh(const AsyncECS::GameObject gameObject, Mesh& worldSpaceMesh);
+    
+    AsyncECS::TaskRunner taskRunner;
+    
 };
 }

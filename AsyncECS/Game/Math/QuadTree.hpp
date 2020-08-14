@@ -115,13 +115,13 @@ namespace Game {
             if (!children.empty()) return;
             children.resize(4);
 
-            Vector2 size = box.extends * 0.5f;
-            Vector2 offset = size * 0.5f;
+            glm::vec2 size = box.extends * 0.5f;
+            glm::vec2 offset = size * 0.5f;
 
-            children[0].box = BoundingBox(box.center + Vector2(-offset.x, -offset.y), size);
-            children[1].box = BoundingBox(box.center + Vector2(-offset.x, offset.y), size);
-            children[2].box = BoundingBox(box.center + Vector2(offset.x, offset.y), size);
-            children[3].box = BoundingBox(box.center + Vector2(offset.x, -offset.y), size);
+            children[0].box = BoundingBox(box.center + glm::vec2(-offset.x, -offset.y), size);
+            children[1].box = BoundingBox(box.center + glm::vec2(-offset.x, offset.y), size);
+            children[2].box = BoundingBox(box.center + glm::vec2(offset.x, offset.y), size);
+            children[3].box = BoundingBox(box.center + glm::vec2(offset.x, -offset.y), size);
 
             for (int i=0; i<4; i++) {
                 children[i].parent = this;

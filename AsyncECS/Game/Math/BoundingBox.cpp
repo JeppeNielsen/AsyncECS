@@ -7,9 +7,10 @@
 //
 
 #include "BoundingBox.hpp"
-#include "Matrix3x3.hpp"
+#include <glm/mat3x3.hpp>
 
 using namespace Game;
+using namespace glm;
 
 BoundingBox::BoundingBox() {
 }
@@ -23,13 +24,13 @@ BoundingBox::BoundingBox(const BoundingBox& other) {
     extends = other.extends;
 }
 
-BoundingBox::BoundingBox(const Vector2& center, const Vector2& extends) {
+BoundingBox::BoundingBox(const vec2& center, const vec2& extends) {
     this->center = center;
     this->extends = extends;
 }
 
 bool BoundingBox::Intersects(const BoundingBox& other) const {
-    const Vector2 v = other.center - center;
+    const vec2 v = other.center - center;
     if (fabs(v.x)>(extends.x + other.extends.x)) return false;
     if (fabs(v.y)>(extends.y + other.extends.y)) return false;
     return true;
@@ -53,11 +54,11 @@ bool BoundingBox::operator !=(const BoundingBox &other) {
 
 bool BoundingBox::Contains(const BoundingBox& other) const {
     
-    Vector2 min1 = center - extends * 0.5f;
-    Vector2 max1 = center + extends * 0.5f;
+    vec2 min1 = center - extends * 0.5f;
+    vec2 max1 = center + extends * 0.5f;
 
-    Vector2 min2 = other.center - other.extends * 0.5f;
-    Vector2 max2 = other.center + other.extends * 0.5f;
+    vec2 min2 = other.center - other.extends * 0.5f;
+    vec2 max2 = other.center + other.extends * 0.5f;
 
     if (min2.x<min1.x) return false;
     if (max2.x>max1.x) return false;
@@ -68,17 +69,19 @@ bool BoundingBox::Contains(const BoundingBox& other) const {
     return true;
 };
 
-BoundingBox BoundingBox::CreateWorldAligned(const Matrix3x3& matrix) const {
+BoundingBox BoundingBox::CreateWorldAligned(const mat3x3& matrix) const {
     BoundingBox boundingBox;
     
-    Vector2 halfExtends = extends * 0.5f;
-
-    boundingBox.center = matrix.TransformPoint(center);
+    vec2 halfExtends = extends * 0.5f;
     
-    Vector2 extends;
+    vec3 pos3d = {center.x, center.y , 0.0f};
 
-    extends.x = (fabsf(matrix.m[0][0]) * halfExtends.x + fabsf(matrix.m[0][1]) * halfExtends.y);
-    extends.y = (fabsf(matrix.m[1][0]) * halfExtends.x + fabsf(matrix.m[1][1]) * halfExtends.y);
+    boundingBox.center = matrix * pos3d; //matrix.TransformPoint(center);
+    
+    vec2 extends;
+
+    extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[0][1]) * halfExtends.y);
+    extends.y = (fabsf(matrix[1][0]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y);
     
     boundingBox.extends = extends * 2.0f;
 

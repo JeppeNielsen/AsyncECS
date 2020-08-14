@@ -7,12 +7,12 @@
 //
 
 #pragma once
-#include "Matrix3x3.hpp"
+#include <glm/mat3x3.hpp>
 
 namespace Game {
     struct WorldTransform {
-        Matrix3x3 world;
-        Matrix3x3 worldInverse;
+        glm::mat3x3 world;
+        glm::mat3x3 worldInverse;
         bool isDirty = true;
     };
 }

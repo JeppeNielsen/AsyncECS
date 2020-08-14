@@ -13,7 +13,7 @@
 namespace Game {
     struct Mesh {
         using Vertices = std::vector<Vertex>;
-        using Triangles = std::vector<u_short>;
+        using Triangles = std::vector<GLshort>;
         
         Vertices vertices;
         Triangles triangles;

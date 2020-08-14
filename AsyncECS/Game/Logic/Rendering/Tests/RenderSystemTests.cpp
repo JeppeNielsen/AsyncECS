@@ -26,19 +26,17 @@ void RenderSystemTests::Run() {
         
         auto cameraGameObject = scene.CreateGameObject();
         scene.AddComponent<WorldTransform>(cameraGameObject);
-        scene.AddComponent<Camera>(cameraGameObject, Vector2(1024,768));
+        scene.AddComponent<Camera>(cameraGameObject, glm::vec2(1024,768));
 
-        
-        
         auto renderObject1 = scene.CreateGameObject();
-        scene.AddComponent<WorldBoundingBox>(renderObject1, BoundingBox(0, Vector2(256,256)));
+        scene.AddComponent<WorldBoundingBox>(renderObject1, BoundingBox({0,0}, glm::vec2(256,256)));
     
         auto renderObject2 = scene.CreateGameObject();
-        scene.AddComponent<WorldBoundingBox>(renderObject2, BoundingBox({3000,20}, Vector2(256,256)));
+        scene.AddComponent<WorldBoundingBox>(renderObject2, BoundingBox({3000,20}, glm::vec2(256,256)));
     
         scene.Update();
         
-        scene.GetComponent<WorldBoundingBox>(renderObject2).bounds.center = 0.0f;
+        scene.GetComponent<WorldBoundingBox>(renderObject2).bounds.center = {0.0f,0.0f};
         
         scene.Update();
         

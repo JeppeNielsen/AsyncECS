@@ -7,14 +7,13 @@
 //
 
 #pragma once
-#include "Vector2.hpp"
-#include "Matrix3x3.hpp"
+#include <glm/vec2.hpp>
 
 namespace Game {
     struct LocalTransform {
         LocalTransform();
-        Vector2 position;
+        glm::vec2 position;
         float rotation;
-        Vector2 scale;
+        glm::vec2 scale;
     };
 }

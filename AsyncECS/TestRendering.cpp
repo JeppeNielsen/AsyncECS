@@ -13,6 +13,7 @@
 #include "WorldBoundingBoxSystem.hpp"
 #include "WorldTransformSystem.hpp"
 #include "HierarchySystem.hpp"
+#include <glm/gtx/matrix_transform_2d.hpp>
 
 using namespace Game;
 
@@ -65,17 +66,20 @@ struct State : IState {
         scene = std::make_shared<Scene>(registry);
         
         auto cameraGO = scene->CreateGameObject();
-        scene->AddComponent<WorldTransform>(cameraGO, Matrix3x3::CreateTranslation({0,0}));
-        scene->AddComponent<Camera>(cameraGO, Vector2(4,4));
+        scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat3x3(1.0f), glm::vec2(0.0f,0.0f)));
+        scene->AddComponent<Camera>(cameraGO, glm::vec2(5,5));
         scene->AddComponent<LocalTransform>(cameraGO);
         scene->AddComponent<Hierarchy>(cameraGO);
         //scene->AddComponent<Rotator>(cameraGO, -0.5f);
         
         meshObject = CreateMesh();
         
-        auto quad1 = CreateQuad({0,0}, 1.0f);
-        CreateQuad({3,0}, 2.0f, quad1);
-        
+        auto quad1 = CreateQuad({0,0}, {1.0f,1.0f}, true);
+        for (int x=0; x<118; x++) {
+            for (int y=0; y<118; y++) {
+                CreateQuad({x*0.075f,y*0.075f}, {0.07f,0.07f}, false, x * y % 2 == 0 ? quad1 : AsyncECS::GameObjectNull);
+            }
+        }
     }
     
     AsyncECS::GameObject CreateMesh() {
@@ -101,7 +105,7 @@ struct State : IState {
         return quadGO;
     }
     
-    AsyncECS::GameObject CreateQuad(const Vector2& pos, const Vector2& scale, AsyncECS::GameObject parent = AsyncECS::GameObjectNull) {
+    AsyncECS::GameObject CreateQuad(const glm::vec2& pos, const glm::vec2& scale, bool rotate, AsyncECS::GameObject parent = AsyncECS::GameObjectNull) {
         
         auto quadGO = scene->CreateGameObject();
         
@@ -124,8 +128,10 @@ struct State : IState {
         scene->AddComponent<LocalBoundingBox>(quadGO, boundingBox);
         scene->AddComponent<WorldBoundingBox>(quadGO);
         
-        scene->AddComponent<Rotator>(quadGO, 1.0f);
-        
+        if (rotate) {
+            scene->AddComponent<Rotator>(quadGO, 1.0f);
+        }
+
         return quadGO;
     }
     
@@ -134,14 +140,25 @@ struct State : IState {
         scene->Update();
         auto mousePos = device.Input.GetTouchPosition(0);
         
-        scene->GetComponent<LocalTransform>(0).position = (( device.Screen.Size() * 0.5f - mousePos) - device.Screen.Size()*0.5f) * 0.01f;
+        glm::vec2 screenSize = {device.Screen.Size().x, device.Screen.Size().y};
+        glm::vec2 mPos = {mousePos.x, mousePos.y};
+        
+        scene->GetComponent<LocalTransform>(0).position = ((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
+        
+        std::cout << 1.0f / dt << "\n";
+        
         
     }
     
     void Render() override {
         glClearColor(100/255.0f, 149/255.0f, 237/255.0f, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        Game::Timer timer;
+        timer.Start();
         scene->GetSystem<RenderSystem>().RenderScene();
+        std::cout << "Rendering :  " << timer.Stop() * 1000.0f<<"\n";
+        
     }
 };
 
