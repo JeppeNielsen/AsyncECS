@@ -12,7 +12,7 @@ InputManager::InputManager() : device(0) {
     KeyboardText.Changed.Bind(keyBoardChanged);
 }
 
-Vector2 InputManager::GetTouchPosition(int index) {
+ivec2 InputManager::GetTouchPosition(int index) {
 	return device->GetTouchPosition(index);
 }
 

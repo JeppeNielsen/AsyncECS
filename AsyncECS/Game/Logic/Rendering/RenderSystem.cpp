@@ -24,7 +24,7 @@ void RenderSystem::Initialize(QuadTreeSystem &quadTreeSystem) {
             varying vec4 vColor;
             void main() {
                vColor = Color;
-                gl_Position = Position * ViewProjection;
+                gl_Position = ViewProjection * Position;
             }
         )
         ,
@@ -82,32 +82,27 @@ void RenderSystem::Update(const WorldTransform &transform, const Camera &camera)
 
 void RenderSystem::RenderScene() {
     
-    Matrix4x4 projection;
-    projection.InitOrthographic(0, camera.ViewSize.y * 2, camera.ViewSize.x * 2, 0, -0.1f, 10.0f);
+    
+    mat4x4 projection = ortho(0.0f, camera.ViewSize.x * 2.0f, 0.0f, camera.ViewSize.y * 2.0f, -0.1f, 10.0f);
     
     glm::mat3x3 cameraInverse = cameraTransform.worldInverse;
-    Matrix4x4 inverse = Matrix4x4::IDENTITY;
+    mat4x4 inverse = mat4x4(1.0f);
     for (int x=0; x<2; x++) {
         for(int y=0; y<2; y++ ) {
-            inverse.m[x][y] = cameraInverse[x][y];
+            inverse[x][y] = cameraInverse[x][y];
         }
     }
-    inverse.SetTranslation({cameraInverse[2][0], cameraInverse[2][1],0});
+    inverse[3][0] = cameraInverse[2][0];
+    inverse[3][1] = cameraInverse[2][1];
     
-    Matrix4x4 viewProjection = projection.Multiply(inverse);
-    
+    mat4x4 viewProjection = projection * inverse;
     
     shader.Use();
-    shader.SetViewProjection(viewProjection.GetGlMatrix());
-    
-    
-    
-   // vertexRenderer.RenderVertices(vertices, 0, vertices.size(), triangles, 0, triangles.size());
+    shader.SetViewProjection(glm::value_ptr(viewProjection));
     
     for(auto& worldSpaceMesh : worldSpaceMeshes) {
         vertexRenderer.RenderVertices(worldSpaceMesh.vertices, 0, worldSpaceMesh.vertices.size(), worldSpaceMesh.triangles, 0, worldSpaceMesh.triangles.size());
     }
-    
 }
 
 void RenderSystem::CalculateWorldSpaceMesh(const std::vector<GameObject> &objects, const int startIndex, const int endIndex, Mesh &worldSpaceMesh) {
@@ -124,9 +119,9 @@ void RenderSystem::CalculateWorldSpaceMesh(const AsyncECS::GameObject gameObject
             auto& source = mesh.vertices[i];
             Vertex dest;
             
-            const glm::vec3 pos3d = {source.Position.x, source.Position.y,1.0f};
+            const glm::vec3 pos3d = vec3(source.Position, 1.0f);
+            dest.Position = worldTransform.world * pos3d;
             
-            dest.Position = worldTransform.world * pos3d;//worldTransform.world.TransformPoint(source.Position);
             dest.TextureCoords = source.TextureCoords;
             dest.Color = source.Color;
             

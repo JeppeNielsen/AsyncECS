@@ -67,7 +67,7 @@ struct State : IState {
         
         auto cameraGO = scene->CreateGameObject();
         scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat3x3(1.0f), glm::vec2(0.0f,0.0f)));
-        scene->AddComponent<Camera>(cameraGO, glm::vec2(5,5));
+        scene->AddComponent<Camera>(cameraGO, glm::vec2(10,10));
         scene->AddComponent<LocalTransform>(cameraGO);
         scene->AddComponent<Hierarchy>(cameraGO);
         //scene->AddComponent<Rotator>(cameraGO, -0.5f);
@@ -77,7 +77,7 @@ struct State : IState {
         auto quad1 = CreateQuad({0,0}, {1.0f,1.0f}, true);
         for (int x=0; x<118; x++) {
             for (int y=0; y<118; y++) {
-                CreateQuad({x*0.075f,y*0.075f}, {0.07f,0.07f}, false, x * y % 2 == 0 ? quad1 : AsyncECS::GameObjectNull);
+                CreateQuad({x*0.075f,y*0.075f}, {0.07f,0.07f}, x*y % 2==0, true ? quad1 : AsyncECS::GameObjectNull);
             }
         }
     }
@@ -100,7 +100,7 @@ struct State : IState {
         mesh.triangles.push_back(2);
         mesh.triangles.push_back(3);
         
-        scene->AddComponent<Colorizer>(quadGO, 1.0f, 1.0f);
+        scene->AddComponent<Colorizer>(quadGO, 1.0f, 4.0f);
         
         return quadGO;
     }

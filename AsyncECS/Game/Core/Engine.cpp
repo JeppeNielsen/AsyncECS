@@ -36,7 +36,7 @@ void Engine::MainLoop() {
     
     data.ScreenSize =
     [&, this] (int width, int height) {
-        state->device.Screen.Size = Vector2(width, height);
+        state->device.Screen.Size = ivec2(width, height);
     };
     
     data.ScreenScalingFactor =

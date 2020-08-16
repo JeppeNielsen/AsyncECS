@@ -7,13 +7,13 @@
 //
 
 #pragma once
-#include "Vector2.hpp"
+#include <glm/vec2.hpp>
 #include "Property.hpp"
 
 namespace Game {
     class Screen {
     public:
-        Property<Vector2> Size;
+        Property<glm::ivec2> Size;
         Property<float> ScalingFactor;
         
         static Screen* MainScreen;

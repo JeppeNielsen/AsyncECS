@@ -4,7 +4,7 @@ using namespace Game;
 InputDevice::InputDevice()
 : KeyboardActive(false), KeyboardText(""), updating(false)
 {
-    zero = 0;
+    zero = {0,0};
 }
 
 InputDevice::~InputDevice()
@@ -20,16 +20,16 @@ void InputDevice::Initialize(int maxTouches) {
 	previousTouches = currentTouches;
 }
 
-void InputDevice::SetTouchPosition(int index, const Vector2& position) {
+void InputDevice::SetTouchPosition(int index, const ivec2& position) {
 	currentTouches[index].Position = position;
 }
 
-const Vector2& InputDevice::GetTouchPosition(int index) {
+const ivec2& InputDevice::GetTouchPosition(int index) {
 	if (index<0 || index>=maxTouches) return zero;
 	return currentTouches[index].Position;
 }
 
-void InputDevice::SetTouch(int index, bool isDown, const Vector2& position) {
+void InputDevice::SetTouch(int index, bool isDown, const ivec2& position) {
 	Touch& touch = currentTouches[index];
 	touch.IsDown = isDown;
 	touch.Position = position;

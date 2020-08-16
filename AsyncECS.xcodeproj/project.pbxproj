@@ -42,14 +42,9 @@
 		728008C124D74B0A002DC6E0 /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008BF24D74B0A002DC6E0 /* Vertex.cpp */; };
 		728008C224D74B0A002DC6E0 /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008C024D74B0A002DC6E0 /* Shader.cpp */; };
 		728008C524D74C2B002DC6E0 /* Color.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008C424D74C2B002DC6E0 /* Color.cpp */; };
-		728008C824D750A6002DC6E0 /* Matrix4x4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008C724D750A6002DC6E0 /* Matrix4x4.cpp */; };
-		728008CD24D751A9002DC6E0 /* Quaternion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008C924D751A9002DC6E0 /* Quaternion.cpp */; };
-		728008CE24D751A9002DC6E0 /* Vector3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008CB24D751A9002DC6E0 /* Vector3.cpp */; };
 		728008D124D75A7A002DC6E0 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728008CF24D75A7A002DC6E0 /* Mesh.cpp */; };
 		7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7282A40924804B99003DB7B9 /* StressTest.cpp */; };
-		72859C7923FDA31600735591 /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7723FDA31600735591 /* Vector2.cpp */; };
 		72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7A23FDA38C00735591 /* LocalTransform.cpp */; };
-		72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C7E23FDA43800735591 /* Matrix3x3.cpp */; };
 		72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C8523FDA6C200735591 /* SpatialTests.cpp */; };
 		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
 		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
@@ -86,6 +81,7 @@
 		720B405424E7213500BE0F4A /* mat2x3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mat2x3.hpp; sourceTree = "<group>"; };
 		720B405524E7213500BE0F4A /* mat4x2.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mat4x2.hpp; sourceTree = "<group>"; };
 		720B405624E7213500BE0F4A /* mat4x3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mat4x3.hpp; sourceTree = "<group>"; };
+		720B405824E7303600BE0F4A /* Math.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Math.hpp; sourceTree = "<group>"; };
 		720BC269236C7864009F163B /* TestBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestBase.cpp; sourceTree = "<group>"; };
 		720BC26A236C7864009F163B /* TestBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TestBase.hpp; sourceTree = "<group>"; };
 		720BC26C236C7889009F163B /* TestComponentContainer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestComponentContainer.cpp; sourceTree = "<group>"; };
@@ -160,23 +156,13 @@
 		728008C024D74B0A002DC6E0 /* Shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shader.cpp; sourceTree = "<group>"; };
 		728008C324D74C2B002DC6E0 /* Color.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Color.hpp; sourceTree = "<group>"; };
 		728008C424D74C2B002DC6E0 /* Color.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Color.cpp; sourceTree = "<group>"; };
-		728008C624D750A6002DC6E0 /* Matrix4x4.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Matrix4x4.hpp; sourceTree = "<group>"; };
-		728008C724D750A6002DC6E0 /* Matrix4x4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix4x4.cpp; sourceTree = "<group>"; };
-		728008C924D751A9002DC6E0 /* Quaternion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Quaternion.cpp; sourceTree = "<group>"; };
-		728008CA24D751A9002DC6E0 /* Vector3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vector3.hpp; sourceTree = "<group>"; };
-		728008CB24D751A9002DC6E0 /* Vector3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vector3.cpp; sourceTree = "<group>"; };
-		728008CC24D751A9002DC6E0 /* Quaternion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Quaternion.hpp; sourceTree = "<group>"; };
 		728008CF24D75A7A002DC6E0 /* Mesh.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		728008D024D75A7A002DC6E0 /* Mesh.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Mesh.hpp; sourceTree = "<group>"; };
 		728008D224E12041002DC6E0 /* VertexRenderer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VertexRenderer.hpp; sourceTree = "<group>"; };
 		7282A40924804B99003DB7B9 /* StressTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StressTest.cpp; sourceTree = "<group>"; };
 		7282A40B24804BC1003DB7B9 /* ECS.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ECS.hpp; sourceTree = "<group>"; };
-		72859C7723FDA31600735591 /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
-		72859C7823FDA31600735591 /* Vector2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Vector2.hpp; sourceTree = "<group>"; };
 		72859C7A23FDA38C00735591 /* LocalTransform.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LocalTransform.cpp; sourceTree = "<group>"; };
 		72859C7B23FDA38C00735591 /* LocalTransform.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LocalTransform.hpp; sourceTree = "<group>"; };
-		72859C7E23FDA43800735591 /* Matrix3x3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Matrix3x3.cpp; sourceTree = "<group>"; };
-		72859C7F23FDA43900735591 /* Matrix3x3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Matrix3x3.hpp; sourceTree = "<group>"; };
 		72859C8523FDA6C200735591 /* SpatialTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SpatialTests.cpp; sourceTree = "<group>"; };
 		72859C8623FDA6C200735591 /* SpatialTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpatialTests.hpp; sourceTree = "<group>"; };
 		728D876D234D1969003EA2C6 /* Registry.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Registry.hpp; sourceTree = "<group>"; };
@@ -843,22 +829,13 @@
 			children = (
 				7280086724CE178D002DC6E0 /* BoundingBox.cpp */,
 				7280086824CE178D002DC6E0 /* BoundingBox.hpp */,
-				72859C7E23FDA43800735591 /* Matrix3x3.cpp */,
-				72859C7F23FDA43900735591 /* Matrix3x3.hpp */,
-				728008C724D750A6002DC6E0 /* Matrix4x4.cpp */,
-				728008C624D750A6002DC6E0 /* Matrix4x4.hpp */,
 				7280086424CE1533002DC6E0 /* QuadTree.cpp */,
 				7280086524CE1533002DC6E0 /* QuadTree.hpp */,
 				7280086A24CE19B8002DC6E0 /* QuadTreeNode.cpp */,
 				7280086B24CE19B8002DC6E0 /* QuadTreeNode.hpp */,
-				728008C924D751A9002DC6E0 /* Quaternion.cpp */,
-				728008CC24D751A9002DC6E0 /* Quaternion.hpp */,
 				7280085424CDF720002DC6E0 /* Rect.cpp */,
 				7280085524CDF720002DC6E0 /* Rect.hpp */,
-				72859C7723FDA31600735591 /* Vector2.cpp */,
-				72859C7823FDA31600735591 /* Vector2.hpp */,
-				728008CB24D751A9002DC6E0 /* Vector3.cpp */,
-				728008CA24D751A9002DC6E0 /* Vector3.hpp */,
+				720B405824E7303600BE0F4A /* Math.hpp */,
 			);
 			path = Math;
 			sourceTree = "<group>";
@@ -1528,9 +1505,6 @@
 				7280087A24CF6D9B002DC6E0 /* RenderSystemTests.cpp in Sources */,
 				728008D124D75A7A002DC6E0 /* Mesh.cpp in Sources */,
 				7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */,
-				728008C824D750A6002DC6E0 /* Matrix4x4.cpp in Sources */,
-				72859C7923FDA31600735591 /* Vector2.cpp in Sources */,
-				728008CD24D751A9002DC6E0 /* Quaternion.cpp in Sources */,
 				7280089C24D36617002DC6E0 /* InputDevice.cpp in Sources */,
 				72F2E7FD2402D0F20041B56A /* HierarchySystem.cpp in Sources */,
 				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
@@ -1541,7 +1515,6 @@
 				728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */,
 				7280086924CE178E002DC6E0 /* BoundingBox.cpp in Sources */,
 				72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */,
-				72859C8023FDA43900735591 /* Matrix3x3.cpp in Sources */,
 				72D08E6824E5DD00004ECE95 /* glm.cpp in Sources */,
 				728008AB24D36BD6002DC6E0 /* TestRendering.cpp in Sources */,
 				7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */,
@@ -1556,7 +1529,6 @@
 				7280089924D36617002DC6E0 /* Screen.cpp in Sources */,
 				728008B724D37956002DC6E0 /* Timer.cpp in Sources */,
 				7280089D24D36617002DC6E0 /* Engine.cpp in Sources */,
-				728008CE24D751A9002DC6E0 /* Vector3.cpp in Sources */,
 				7280088A24D3660E002DC6E0 /* Window.mm in Sources */,
 				72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */,
 				72676565238889C20080412E /* SystemTask.cpp in Sources */,

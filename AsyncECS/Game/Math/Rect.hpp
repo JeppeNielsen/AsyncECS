@@ -7,14 +7,13 @@
 //
 
 #pragma once
-#include "Vector2.hpp"
-#include "Matrix3x3.hpp"
 #include <math.h>
+#include "Math.hpp"
 
 namespace Game {
     struct Rect {
-        Vector2 min;
-        Vector2 max;
+        vec2 min;
+        vec2 max;
         
         inline bool Overlaps(const Rect& other) const {
             return max.x > other.min.x ||
@@ -31,30 +30,32 @@ namespace Game {
             return (min!=other.min || max!=other.max);
         }
         
-        inline Vector2 Position() const {
+        inline vec2 Position() const {
             return min;
         }
         
-        inline Vector2 Size() const {
+        inline vec2 Size() const {
             return max - min;
         }
         
-        inline Vector2 Center() const {
+        inline vec2 Center() const {
             return (min + max) * 0.5f;
         }
         
-        Rect CreateWorldAligned(const Matrix3x3& matrix) const {
+        Rect CreateWorldAligned(const mat3x3& matrix) const {
             
             Rect rect;
             
-            Vector2 extends = max - min;
+            vec2 extends = max - min;
             
-            Vector2 halfExtends = extends * 0.5f;
+            vec2 halfExtends = extends * 0.5f;
+            
+            vec3 minVec3 = vec3(min, 1.0f);
 
-            rect.min = matrix.TransformPoint(min);
+            rect.min = matrix * minVec3; //matrix.TransformPoint(min);
             
-            extends.x = (fabsf(matrix.m[0][0]) * halfExtends.x + fabsf(matrix.m[0][1]) * halfExtends.y);
-            extends.y = (fabsf(matrix.m[1][0]) * halfExtends.x + fabsf(matrix.m[1][1]) * halfExtends.y);
+            extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[0][1]) * halfExtends.y);
+            extends.y = (fabsf(matrix[1][0]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y);
             
             rect.max = min + extends * 2.0f;
             

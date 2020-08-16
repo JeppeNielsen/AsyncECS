@@ -7,8 +7,7 @@
 //
 
 #pragma once
-#include "Vector2.hpp"
-#include <glm/vec2.hpp>
+#include "Math.hpp"
 
 namespace Game {
 struct Camera {

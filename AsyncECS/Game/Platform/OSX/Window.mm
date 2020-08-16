@@ -96,26 +96,26 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 - (void) mouseDown:(NSEvent*)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
-    engineWindow->inputDevice.SetTouch(0, true, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(0, true, ivec2(location.x, location.y));
 }
 
 -(void) mouseUp:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
-    engineWindow->inputDevice.SetTouch(0, false, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(0, false, ivec2(location.x, location.y));
 }
 
 -(void) mouseDragged:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
     //OSXWindowCreator::Instance()->Move(0, location.x, location.y);
-    engineWindow->inputDevice.SetTouchPosition(0, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouchPosition(0, ivec2(location.x, location.y));
 }
 
 -(void)mouseMoved:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
     
-    engineWindow->inputDevice.SetTouch(0, false, Vector2(location.x, location.y));
-    engineWindow->inputDevice.SetTouch(1, false, Vector2(location.x, location.y));
-    engineWindow->inputDevice.SetTouch(2, false, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(0, false, ivec2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(1, false, ivec2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(2, false, ivec2(location.x, location.y));
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent {
@@ -128,37 +128,37 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
-    engineWindow->inputDevice.SetTouch(1, true, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(1, true, ivec2(location.x, location.y));
 }
 
 -(void)rightMouseUp:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
-    engineWindow->inputDevice.SetTouch(1, false, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouch(1, false, ivec2(location.x, location.y));
 }
 
 -(void)rightMouseDragged:(NSEvent *)theEvent {
     NSPoint location = [self convertLocation:theEvent.locationInWindow];
-    engineWindow->inputDevice.SetTouchPosition(1, Vector2(location.x, location.y));
+    engineWindow->inputDevice.SetTouchPosition(1, ivec2(location.x, location.y));
 }
 
 -(void)otherMouseDown:(NSEvent *)theEvent {
     if (theEvent.type == NSOtherMouseDown) {
         NSPoint location = [self convertLocation:theEvent.locationInWindow];
-        engineWindow->inputDevice.SetTouch(2, true, Vector2(location.x, location.y));
+        engineWindow->inputDevice.SetTouch(2, true, ivec2(location.x, location.y));
     }
 }
 
 -(void)otherMouseUp:(NSEvent *)theEvent {
     if (theEvent.type == NSOtherMouseUp) {
         NSPoint location = [self convertLocation:theEvent.locationInWindow];
-        engineWindow->inputDevice.SetTouch(2, false, Vector2(location.x, location.y));
+        engineWindow->inputDevice.SetTouch(2, false, ivec2(location.x, location.y));
     }
 }
 
 -(void)otherMouseDragged:(NSEvent *)theEvent {
     if (theEvent.type == NSOtherMouseDragged) {
         NSPoint location = [self convertLocation:theEvent.locationInWindow];
-        engineWindow->inputDevice.SetTouchPosition(2, Vector2(location.x, location.y));
+        engineWindow->inputDevice.SetTouchPosition(2, ivec2(location.x, location.y));
     }
 }
 

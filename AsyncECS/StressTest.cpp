@@ -7,7 +7,7 @@
 //
 
 #include "ECS.hpp"
-#include "Vector2.hpp"
+#include "Math.hpp"
 #include "Timer.hpp"
 #include <iostream>
 
@@ -21,11 +21,11 @@ int ConcurrentCounter::Count = 0;
 
 
 struct Position {
-    Vector2 position;
+    vec2 position;
 };
 
 struct Velocity {
-    Vector2 velocity;
+    vec2 velocity;
 };
 
 struct Rotation {
@@ -59,7 +59,7 @@ struct BounceSystem : System<Bouncer, const Velocity> {
     void Update(Bouncer& bouncer, const Velocity& velocity) {
         
         for (int i=0; i<1000; i++) {
-            bouncer.position += velocity.velocity.Length();
+            bouncer.position += length(velocity.velocity);
         }
     }
 };
@@ -79,7 +79,7 @@ int main_stress() {
     for (int i=0; i<100000; ++i) {
         auto gameObject1 = scene.CreateGameObject();
         scene.AddComponent<Position>(gameObject1);
-        scene.AddComponent<Velocity>(gameObject1, Vector2(i,3));
+        scene.AddComponent<Velocity>(gameObject1, vec2(i,3));
         
         scene.AddComponent<Rotation>(gameObject1);
         scene.AddComponent<AngularRotation>(gameObject1, (float)i);

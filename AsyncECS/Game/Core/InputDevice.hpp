@@ -1,10 +1,10 @@
 #pragma once
-#include "Vector2.hpp"
 #include <vector>
 #include "InputManager.hpp"
 #include <map>
 #include <string>
 #include "Property.hpp"
+#include "Math.hpp"
 
 namespace Game {
     class InputDevice  {
@@ -17,13 +17,13 @@ namespace Game {
 		struct Touch {
 			Touch() : IsDown(false), Position(0), swallowedDepth(-1) {}
 			bool IsDown;
-			Vector2 Position;
+			ivec2 Position;
             int swallowedDepth;
         };
 
-		void SetTouchPosition(int index, const Vector2& position);
-		void SetTouch(int index, bool isDown, const Vector2& position);
-		const Vector2& GetTouchPosition(int index);
+		void SetTouchPosition(int index, const ivec2& position);
+		void SetTouch(int index, bool isDown, const ivec2& position);
+		const ivec2& GetTouchPosition(int index);
 
 		void StartFrame();
         void EndFrame();
@@ -64,7 +64,7 @@ namespace Game {
 
 		int maxTouches;
         
-        Vector2 zero;
+        ivec2 zero;
         
         bool updating;
         

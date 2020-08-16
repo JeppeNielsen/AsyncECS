@@ -11,7 +11,7 @@
 #include <vector>
 #include "Vertex.hpp"
 #include "GameObject.hpp"
-#include "Matrix4x4.hpp"
+#include "Math.hpp"
 #include <algorithm>
 
 namespace Game {

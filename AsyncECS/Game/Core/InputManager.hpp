@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "Event.hpp"
-#include "Vector2.hpp"
+#include "Math.hpp"
 #include "Property.hpp"
 
 namespace Game {
@@ -16,9 +16,9 @@ namespace Game {
     };
     
 	struct TouchEvent {
-		TouchEvent(int index, Vector2 position) :Index(index), Position(position) {}
+		TouchEvent(int index, ivec2 position) :Index(index), Position(position) {}
 		int Index;
-		Vector2 Position;
+		ivec2 Position;
 	};
     
     struct ButtonEvent {
@@ -38,7 +38,7 @@ namespace Game {
 		Event<TouchEvent> TouchDown;
 		Event<TouchEvent> TouchUp;
 
-		Vector2 GetTouchPosition(int index);
+		ivec2 GetTouchPosition(int index);
         
         Property<bool> KeyboardActive;
         Property<std::string> KeyboardText;
