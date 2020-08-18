@@ -18,6 +18,7 @@ namespace AsyncECS {
 
 namespace Internal {
     HAS_METHOD(GameObjectRemoved);
+    HAS_METHOD(EnableConcurrency);
 }
 
 template<typename...T>

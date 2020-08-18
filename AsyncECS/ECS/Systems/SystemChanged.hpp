@@ -25,39 +25,67 @@ struct SystemChanged : SystemBase<T...> {
         const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
         
-        const int chunkSize = 50000;
         
-        //std::cout << ClassNameHelper::GetName<SystemType>() << ".changedObjects.size() == "<< changedGameObjects.size() << std::endl;
-        
-        for (int i=0; i<changedGameObjects.size(); i+=chunkSize) {
-            int fromIndex = i;
-            int toIndex = std::min((int)changedGameObjects.size(),  fromIndex + chunkSize);
+        if constexpr (Internal::has_EnableConcurrency<SystemType, int()>::value) {
             
-            taskRunner.RunTask([this, &components, &changedGameObjects, &gameObjectsInSystem, this_system, fromIndex, toIndex]() {
-                for(int i = fromIndex; i<toIndex; ++i) {
-                    const auto gameObject = changedGameObjects[i];
-                    if (!gameObjectsInSystem.Contains(gameObject)) {
-                        continue;
+            const int chunkSize = ((SystemType*)this)->EnableConcurrency();
+            
+            //std::cout << ClassNameHelper::GetName<SystemType>() << ".changedObjects.size() == "<< changedGameObjects.size() << std::endl;
+            
+            for (int i=0; i<changedGameObjects.size(); i+=chunkSize) {
+                int fromIndex = i;
+                int toIndex = std::min((int)changedGameObjects.size(),  fromIndex + chunkSize);
+                
+                taskRunner.RunTask([this, &components, &changedGameObjects, &gameObjectsInSystem, this_system, fromIndex, toIndex]() {
+                    for(int i = fromIndex; i<toIndex; ++i) {
+                        const auto gameObject = changedGameObjects[i];
+                        if (!gameObjectsInSystem.Contains(gameObject)) {
+                            continue;
+                        }
+                        const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                        const auto iterator = std::tuple_cat(this_system, componentValues);
+                        
+                        std::apply(&SystemType::Changed, iterator);
                     }
-                    const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
-                    const auto iterator = std::tuple_cat(this_system, componentValues);
-                    
-                    std::apply(&SystemType::Changed, iterator);
-                }
-                for(int i = fromIndex; i<toIndex; ++i) {
-                    const auto gameObject = changedGameObjects[i];
-                    if (!gameObjectsInSystem.Contains(gameObject)) {
-                        continue;
+                    for(int i = fromIndex; i<toIndex; ++i) {
+                        const auto gameObject = changedGameObjects[i];
+                        if (!gameObjectsInSystem.Contains(gameObject)) {
+                            continue;
+                        }
+                        const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                        const auto iterator = std::tuple_cat(this_system, componentValues);
+                        
+                        std::apply(&SystemType::Update, iterator);
                     }
-                    const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
-                    const auto iterator = std::tuple_cat(this_system, componentValues);
-                    
-                    std::apply(&SystemType::Update, iterator);
+                });
+            }
+            
+            while (taskRunner.Update());
+                
+        } else {
+            
+            for(int i = 0; i<changedGameObjects.size(); ++i) {
+                const auto gameObject = changedGameObjects[i];
+                if (!gameObjectsInSystem.Contains(gameObject)) {
+                    continue;
                 }
-            });
+                const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                const auto iterator = std::tuple_cat(this_system, componentValues);
+                
+                std::apply(&SystemType::Changed, iterator);
+            }
+            for(int i = 0; i<changedGameObjects.size(); ++i) {
+                const auto gameObject = changedGameObjects[i];
+                if (!gameObjectsInSystem.Contains(gameObject)) {
+                    continue;
+                }
+                const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
+                const auto iterator = std::tuple_cat(this_system, componentValues);
+                
+                std::apply(&SystemType::Update, iterator);
+            }
+            
         }
-        
-        while (taskRunner.Update());
         
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
