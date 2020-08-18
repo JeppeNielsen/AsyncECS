@@ -46,5 +46,5 @@ void WorldTransformSystem::Update(const LocalTransform& localTransform, const Hi
     } else {
         worldTransform.world = local;
     }
-    worldTransform.worldInverse = glm::inverse(worldTransform.world); //worldTransform.world.Invert();
+    worldTransform.worldInverse = glm::inverse(worldTransform.world);
 }
