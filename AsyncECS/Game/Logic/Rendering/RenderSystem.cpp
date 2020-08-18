@@ -82,10 +82,9 @@ void RenderSystem::Update(const WorldTransform &transform, const Camera &camera)
 
 void RenderSystem::RenderScene() {
     
+    const mat4x4 projection = ortho(0.0f, camera.ViewSize.x * 2.0f, 0.0f, camera.ViewSize.y * 2.0f, -0.1f, 10.0f);
     
-    mat4x4 projection = ortho(0.0f, camera.ViewSize.x * 2.0f, 0.0f, camera.ViewSize.y * 2.0f, -0.1f, 10.0f);
-    
-    glm::mat3x3 cameraInverse = cameraTransform.worldInverse;
+    const glm::mat3x3 cameraInverse = cameraTransform.worldInverse;
     mat4x4 inverse = mat4x4(1.0f);
     for (int x=0; x<2; x++) {
         for(int y=0; y<2; y++ ) {
@@ -95,7 +94,7 @@ void RenderSystem::RenderScene() {
     inverse[3][0] = cameraInverse[2][0];
     inverse[3][1] = cameraInverse[2][1];
     
-    mat4x4 viewProjection = projection * inverse;
+    const mat4x4 viewProjection = projection * inverse;
     
     shader.Use();
     shader.SetViewProjection(glm::value_ptr(viewProjection));
