@@ -22,5 +22,7 @@ namespace Game {
         void Update(const WorldTransform& worldTransform,
                     const LocalBoundingBox& localBoundingBox,
                     WorldBoundingBox& worldBoundingBox);
+        
+        constexpr int EnableConcurrency() { return 5000; }
     };
 }

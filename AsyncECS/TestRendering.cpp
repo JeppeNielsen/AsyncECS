@@ -25,6 +25,8 @@ struct RotatorSystem : AsyncECS::System<LocalTransform, const Rotator> {
     void Update(LocalTransform& local, const Rotator& rotator) {
         local.rotation += rotator.speed * 0.016f;
     }
+    
+    constexpr int EnableConcurrency() { return 5000; }
 };
 
 struct Colorizer {
@@ -39,7 +41,6 @@ struct ColorizerSystem : AsyncECS::System<Mesh, Colorizer> {
         for (int i=0; i<mesh.vertices.size(); ++i) {
             mesh.vertices[i].Color = Color::HslToRgb(colorizer.hue + dHue * i, 1.0, 1.0, 1.0);
         }
-        
     }
 };
 
@@ -80,6 +81,8 @@ struct State : IState {
                 CreateQuad({x*0.075f,y*0.075f}, {0.07f,0.07f}, x*y % 2==0, true ? quad1 : AsyncECS::GameObjectNull);
             }
         }
+        
+        scene->WriteGraph(std::cout);
     }
     
     AsyncECS::GameObject CreateMesh() {

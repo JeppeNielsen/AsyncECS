@@ -16,10 +16,6 @@
 using namespace AsyncECS;
 using namespace Game;
 
-
-int ConcurrentCounter::Count = 0;
-
-
 struct Position {
     vec2 position;
 };
@@ -92,10 +88,8 @@ int main_stress() {
         
     for (int i=0; i<10; i++) {
         Timer timer;
-        ConcurrentCounter::Count = 0;
         scene.Update();
         auto time = timer.Stop();
-        std::cout << "Time : " << time<<" Num concurrent : "<< ConcurrentCounter::Count << "\n";
     }
     
     scene.WriteGraph(std::cout);

@@ -23,5 +23,6 @@ namespace Game {
         void Changed(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform);
         void Update(const LocalTransform& localTransform, const Hierarchy& hierarchy, WorldTransform& worldTransform);
     
+        constexpr int EnableConcurrency() { return 4000; }
     };
 }
