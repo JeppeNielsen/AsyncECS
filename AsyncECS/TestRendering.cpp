@@ -18,15 +18,12 @@
 using namespace Game;
 
 struct Rotator {
-    float angle;
     float speed;
 };
 
-struct RotatorSystem : AsyncECS::System<LocalTransform, Rotator> {
-    void Update(LocalTransform& local, Rotator& rotator) {
-        rotator.angle += 0.1f;
-        //local.rotation *= glm::angleAxis(rotator.speed * 0.016f*100, vec3(0.0f,0.0f,1.0f));
-        local.rotation = glm::angleAxis(glm::radians(rotator.angle), vec3(0,0,1));
+struct RotatorSystem : AsyncECS::System<LocalTransform, const Rotator> {
+    void Update(LocalTransform& local, const Rotator& rotator) {
+        local.rotation *= glm::angleAxis(glm::radians(rotator.speed), vec3(0,0,1));;
     }
     
     constexpr int EnableConcurrency() { return 5000; }
@@ -79,7 +76,7 @@ struct State : IState {
         
         meshObject = CreateMesh();
         
-        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, false);
+        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, true);
         //auto quad2 = CreateQuad({1.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
             
         for (int x=0; x<10; x++) {
@@ -138,7 +135,6 @@ struct State : IState {
         
         LocalTransform local;
         local.position = pos;
-        local.rotation = quat();
         local.scale = scale;
         
         scene->AddComponent<LocalTransform>(quadGO, local);
