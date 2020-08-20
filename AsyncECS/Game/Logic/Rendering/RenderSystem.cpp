@@ -37,54 +37,6 @@ void RenderSystem::Initialize(OctreeSystem& octreeSystem) {
     
 }
 
-void InitOrthographic(mat4x4& _m, float left, float top, float right, float bottom, float nearValue, float farValue)
-{
-    
-  /*
-    m[0][0]  = 2.0f/(right-left);
-    m[1][0]  = 0;
-    m[2][0]  = 0;
-    m[3][0]  = 0;
-    
-    m[0][1]  = 0;
-    m[1][1]  = 2.0f/(top-bottom);
-    m[2][1]  = 0;
-    m[3][1]  = 0;
-    
-    m[0][2]  = 0;
-    m[1][2]  = 0;
-    m[2][2]  = -2.0f/(far-near);
-    m[3][2]  = 0;
-    
-    m[0][3]  = -((right+left)/(right-left));
-    m[1][3]  = -((top+bottom)/(top-bottom));
-    m[2][3]  = -((far+near)/(far-near));
-    m[3][3]  = 1;
-    */
-    
-
-     _m[0][0] = 2.0f/(right-left);
-     _m[1][0] = 0;
-     _m[2][0] = 0;
-     _m[3][0] = -((right+left)/(right-left));
-     
-     _m[0][1]  = 0;
-     _m[1][1]  = 2.0f/(top-bottom);
-     _m[2][1]  = 0;
-     _m[3][1]  = -((top+bottom)/(top-bottom));
-     
-     _m[0][2]  = 0;
-     _m[1][2]  = 0;
-     _m[2][2] = -2.0f/(farValue-nearValue);
-     _m[3][2] = -((farValue+nearValue)/(farValue-nearValue));
-     
-     _m[0][3] = 0;
-     _m[1][3] = 0;
-     _m[2][3] = 0;
-     _m[3][3] = 1;
-     
-}
-
 void RenderSystem::Update(const WorldTransform &transform, const Camera &camera) {
     
     const mat4x4 viewProjection = transform.worldInverse * camera.GetProjection();
