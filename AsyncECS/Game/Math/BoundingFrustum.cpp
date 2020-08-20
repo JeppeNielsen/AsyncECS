@@ -7,40 +7,40 @@ BoundingFrustum::BoundingFrustum() { }
 
 void BoundingFrustum::SetFromViewProjection(const mat4x4& viewProjection) {
     
-	planes[0].normal.x = viewProjection[3][0] + viewProjection[0][0];
-	planes[0].normal.y = viewProjection[3][1] + viewProjection[0][1];
-	planes[0].normal.z = viewProjection[3][2] + viewProjection[0][2];
-	planes[0].d =		 viewProjection[3][3] + viewProjection[0][3];
+	planes[0].normal.x = viewProjection[0][3] + viewProjection[0][0];
+	planes[0].normal.y = viewProjection[1][3] + viewProjection[1][0];
+	planes[0].normal.z = viewProjection[2][3] + viewProjection[2][0];
+	planes[0].d =		 viewProjection[3][3] + viewProjection[3][0];
     
 	// Right plane
-	planes[1].normal.x = viewProjection[3][0] - viewProjection[0][0];
-	planes[1].normal.y = viewProjection[3][1] - viewProjection[0][1];
-	planes[1].normal.z = viewProjection[3][2] - viewProjection[0][2];
-	planes[1].d =		 viewProjection[3][3] - viewProjection[0][3];
+	planes[1].normal.x = viewProjection[0][3] - viewProjection[0][0];
+	planes[1].normal.y = viewProjection[1][3] - viewProjection[1][0];
+	planes[1].normal.z = viewProjection[2][3] - viewProjection[2][0];
+	planes[1].d =		 viewProjection[3][3] - viewProjection[3][0];
     
 	// Top plane
-	planes[2].normal.x = viewProjection[3][0] - viewProjection[1][0];
-	planes[2].normal.y = viewProjection[3][1] - viewProjection[1][1];
-	planes[2].normal.z = viewProjection[3][2] - viewProjection[1][2];
-	planes[2].d =	     viewProjection[3][3] - viewProjection[1][3];
+	planes[2].normal.x = viewProjection[0][3] - viewProjection[0][1];
+	planes[2].normal.y = viewProjection[1][3] - viewProjection[1][1];
+	planes[2].normal.z = viewProjection[2][3] - viewProjection[2][1];
+	planes[2].d =	     viewProjection[3][3] - viewProjection[3][1];
     
 	// Bottom plane
-	planes[3].normal.x = viewProjection[3][0] + viewProjection[1][0];
-	planes[3].normal.y = viewProjection[3][1] + viewProjection[1][1];
-	planes[3].normal.z = viewProjection[3][2] + viewProjection[1][2];
-	planes[3].d =		 viewProjection[3][3] + viewProjection[1][3];
+	planes[3].normal.x = viewProjection[0][3] + viewProjection[0][1];
+	planes[3].normal.y = viewProjection[1][3] + viewProjection[1][1];
+	planes[3].normal.z = viewProjection[2][3] + viewProjection[2][1];
+	planes[3].d =		 viewProjection[3][3] + viewProjection[3][1];
     
 	// Near plane
-	planes[4].normal.x = viewProjection[3][0] + viewProjection[2][0];
-	planes[4].normal.y = viewProjection[3][1] + viewProjection[2][1];
-	planes[4].normal.z = viewProjection[3][2] + viewProjection[2][2];
-	planes[4].d =		 viewProjection[3][3] + viewProjection[2][3];
+	planes[4].normal.x = viewProjection[0][3] + viewProjection[0][2];
+	planes[4].normal.y = viewProjection[1][3] + viewProjection[1][2];
+	planes[4].normal.z = viewProjection[2][3] + viewProjection[2][2];
+	planes[4].d =		 viewProjection[3][3] + viewProjection[3][2];
     
 	// Far plane
-	planes[5].normal.x = viewProjection[3][0] - viewProjection[2][0];
-	planes[5].normal.y = viewProjection[3][1] - viewProjection[2][1];
-	planes[5].normal.z = viewProjection[3][2] - viewProjection[2][2];
-	planes[5].d =		 viewProjection[3][3] - viewProjection[2][3];
+	planes[5].normal.x = viewProjection[0][3] - viewProjection[0][2];
+	planes[5].normal.y = viewProjection[1][3]- viewProjection[1][2];
+	planes[5].normal.z = viewProjection[2][3] - viewProjection[2][2];
+	planes[5].d =		 viewProjection[3][3] - viewProjection[3][2];
     
 	for (int i=0; i<6; i++) planes[i].Normalize();
 }

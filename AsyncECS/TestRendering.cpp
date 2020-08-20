@@ -172,7 +172,7 @@ struct State : IState {
         
         //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
-        vec2 pos = mPos * 0.001f;
+        vec2 pos = mPos * 0.005f;
         scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
         
         std::cout <<"fps: " << 1.0f / dt<< "\n";
