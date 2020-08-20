@@ -69,18 +69,18 @@ struct State : IState {
         
         auto cameraGO = scene->CreateGameObject();
         scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat4x4(1.0f), glm::vec3(0.0f,0.0f,0.0f)));
-        scene->AddComponent<Camera>(cameraGO, glm::vec2(5,5), -0.1f, 10.0f);
+        scene->AddComponent<Camera>(cameraGO, glm::vec2(8,8), -0.1f, 10.0f);
         scene->AddComponent<LocalTransform>(cameraGO);
         scene->AddComponent<Hierarchy>(cameraGO);
         //scene->AddComponent<Rotator>(cameraGO, -0.5f);
         
         meshObject = CreateMesh();
         
-        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, true);
-        //auto quad2 = CreateQuad({1.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
+        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, false);
+        //auto quad2 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
             
-        for (int x=0; x<10; x++) {
-            for (int y=0; y<10; y++) {
+        for (int x=0; x<200; x++) {
+            for (int y=0; y<200; y++) {
                 CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
             }
         }
@@ -168,7 +168,7 @@ struct State : IState {
         
         //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
-        vec2 pos = mPos * 0.005f;
+        vec2 pos = mPos * 0.025f;
         scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
         
         std::cout <<"fps: " << 1.0f / dt<< "\n";
