@@ -20,5 +20,5 @@ void WorldBoundingBoxSystem::Update(const WorldTransform& worldTransform,
             const LocalBoundingBox& localBoundingBox,
              WorldBoundingBox& worldBoundingBox) {
     
-    worldBoundingBox.bounds = localBoundingBox.bounds.CreateWorldAligned(worldTransform.world);
+    localBoundingBox.bounds.CreateWorldAligned(worldTransform.world, worldBoundingBox.bounds);
 }

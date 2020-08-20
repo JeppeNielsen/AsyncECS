@@ -40,7 +40,7 @@ void BoundingBoxTests::Run() {
         
         scene.Update();
         
-        const BoundingBox target = {{0,0},{20,20}};
+        const BoundingBox target = {{0,0,0},{20,20,20}};
         return scene.GetComponent<WorldBoundingBox>(go).bounds == target;
     });
     
@@ -58,7 +58,7 @@ void BoundingBoxTests::Run() {
         
         scene.Update();
         
-        const BoundingBox target = {{0,0},{sqrt(2.0f) * 10.0f, sqrt(2.0f) * 10.0f}};
+        const BoundingBox target = {{0,0,0},{sqrt(2.0f) * 10.0f, sqrt(2.0f) * 10.0f, sqrt(2.0f) * 10.0f}};
         
         auto bounds = scene.GetComponent<WorldBoundingBox>(go).bounds;
         

@@ -9,6 +9,7 @@
 #pragma once
 #include <stdio.h>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include "Color.hpp"
 #include "OpenGL.hpp"
 #include <map>
@@ -75,7 +76,7 @@ struct ShaderVariableType {
 };
 
 struct Vertex {
-    glm::vec2 Position;
+    glm::vec3 Position;
     glm::vec2 TextureCoords;
     Color Color;
 

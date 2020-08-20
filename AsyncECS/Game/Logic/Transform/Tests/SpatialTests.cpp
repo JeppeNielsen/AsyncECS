@@ -24,9 +24,9 @@ void SpatialTests::Run() {
     RunTest("LocalTransform ctor gives default values",[]() {
         LocalTransform t;
         
-        return t.position == glm::vec2(0,0) &&
-                t.rotation == 0 &&
-                t.scale == glm::vec2(1,1);
+        return t.position == glm::vec3(0,0,0) &&
+                t.rotation == quat(0,0,0,1) &&
+                t.scale == glm::vec3(1,1,1);
     });
     
     RunTest("LocalTransform applied to WorldTransform",[]() {
@@ -34,7 +34,7 @@ void SpatialTests::Run() {
         Registry registry;
         Scene scene(registry);
         
-        const glm::vec2 position = {10,10};
+        const glm::vec3 position = {10,10,10};
         
         auto object = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(object);
@@ -54,8 +54,8 @@ void SpatialTests::Run() {
         Registry registry;
         Scene scene(registry);
         
-        const glm::vec2 parentPosition = {10,10};
-        const glm::vec2 childPosition = {20,20};
+        const glm::vec3 parentPosition = {10,10,10};
+        const glm::vec3 childPosition = {20,20,20};
         
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);
@@ -85,8 +85,8 @@ void SpatialTests::Run() {
         Registry registry;
         Scene scene(registry);
         
-        const glm::vec2 parentPosition = {10,10};
-        const glm::vec2 childPosition = {20,20};
+        const glm::vec3 parentPosition = {10,10,10};
+        const glm::vec3 childPosition = {20,20,20};
         
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);
@@ -126,9 +126,9 @@ void SpatialTests::Run() {
          Registry registry;
          Scene scene(registry);
          
-         const glm::vec2 parentPositionStart = {10,10};
-         const glm::vec2 parentPositionEnd = {20,20};
-         const glm::vec2 childPosition = {20,20};
+         const glm::vec3 parentPositionStart = {10,10,10};
+         const glm::vec3 parentPositionEnd = {20,20,20};
+         const glm::vec3 childPosition = {20,20,20};
          
          auto parent = scene.CreateGameObject();
          scene.AddComponent<LocalTransform>(parent);
@@ -172,9 +172,9 @@ void SpatialTests::Run() {
         Registry registry;
         Scene scene(registry);
 
-        const glm::vec2 parentPositionStart = {10,10};
-        const glm::vec2 parentPositionEnd = {20,20};
-        const glm::vec2 childPosition = {20,20};
+        const glm::vec3 parentPositionStart = {10,10,10};
+        const glm::vec3 parentPositionEnd = {20,20,20};
+        const glm::vec3 childPosition = {20,20,20};
 
         auto parent = scene.CreateGameObject();
         scene.AddComponent<LocalTransform>(parent);

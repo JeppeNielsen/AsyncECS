@@ -7,28 +7,27 @@
 //
 
 #pragma once
-#include <glm/vec2.hpp>
-#include <glm/mat3x3.hpp>
+#include "Math.hpp"
 
 namespace Game {
-
     class BoundingBox {
     public:
-        glm::vec2 center;
-        glm::vec2 extends;
-        
         BoundingBox();
         BoundingBox(const BoundingBox& other);
-        BoundingBox(const glm::vec2& center, const glm::vec2& extends);
+        BoundingBox(const glm::vec3& center, const glm::vec3& extends);
         ~BoundingBox();
         
         bool Intersects(const BoundingBox& other) const;
         bool Contains(const BoundingBox& other) const;
-        float Area() const;
+        float Volume() const;
+
+        glm::vec3 center;
+        glm::vec3 extends;
 
         bool operator==(const BoundingBox &other);
         bool operator!=(const BoundingBox &other);
 
-        BoundingBox CreateWorldAligned(const glm::mat3x3& matrix) const;
+        void CreateWorldAligned(const glm::mat4x4& matrix, BoundingBox& boundingBox) const;
     };
 }
+

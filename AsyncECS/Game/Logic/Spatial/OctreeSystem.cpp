@@ -6,17 +6,17 @@
 //  Copyright © 2020 Jeppe Nielsen. All rights reserved.
 //
 
-#include "QuadTreeSystem.hpp"
+#include "OctreeSystem.hpp"
 
 using namespace Game;
 using namespace AsyncECS;
 
-QuadTreeSystem::QuadTreeSystem() {
-    quadTree.SetBoundingBox({{0,0,0}, {100000,100000}});
+OctreeSystem::OctreeSystem() {
+    octree.SetBoundingBox({{0,0,0}, {100000,100000,100000}});
     defaultNode.node = nullptr;
 }
 
-void QuadTreeSystem::Update(GameObject gameObject, const Game::WorldBoundingBox& worldBoundingBox) {
+void OctreeSystem::Update(GameObject gameObject, const Game::WorldBoundingBox& worldBoundingBox) {
 
     if (gameObject >= nodes.size()) {
         nodes.resize(gameObject + 1, defaultNode);
@@ -27,22 +27,23 @@ void QuadTreeSystem::Update(GameObject gameObject, const Game::WorldBoundingBox&
     node.box = worldBoundingBox.bounds;
     
     if (!node.node) {
-        quadTree.Insert(node);
+        octree.Insert(node);
     } else {
-        quadTree.Move(node);
+        octree.Move(node);
     }
 }
 
-void QuadTreeSystem::GameObjectRemoved(AsyncECS::GameObject gameObject) {
+void OctreeSystem::GameObjectRemoved(AsyncECS::GameObject gameObject) {
     
     if (gameObject >= nodes.size()) {
         return;
     }
     
     auto& node = nodes[gameObject];
-    quadTree.Remove(node);
+    octree.Remove(node);
 }
 
-void QuadTreeSystem::Query(const BoundingBox &box, std::vector<AsyncECS::GameObject> &gameObjects) const {
-    quadTree.Get(box, gameObjects);
+void OctreeSystem::Query(const BoundingFrustum& frustum, std::vector<AsyncECS::GameObject> &gameObjects) const {
+    octree.Get(frustum, gameObjects);
+    //octree.GetRecursive(gameObjects);
 }

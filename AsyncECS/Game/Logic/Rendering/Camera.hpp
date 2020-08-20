@@ -10,7 +10,12 @@
 #include "Math.hpp"
 
 namespace Game {
-struct Camera {
-    glm::vec2 ViewSize;
-};
+    struct Camera {
+        glm::vec2 ViewSize;
+        
+        float Near;
+        float Far;
+        
+        mat4x4 GetProjection() const;
+    };
 }

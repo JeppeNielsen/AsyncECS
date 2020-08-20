@@ -12,10 +12,9 @@
 using namespace Game;
 using namespace AsyncECS;
 
-void RenderSystem::Initialize(QuadTreeSystem &quadTreeSystem) {
-    this->quadTreeSystem = &quadTreeSystem;
+void RenderSystem::Initialize(OctreeSystem& octreeSystem) {
+    this->octreeSystem = &octreeSystem;
     
-
     shader.Load(
         SHADER_SOURCE(
             attribute vec4 Position;
@@ -38,15 +37,63 @@ void RenderSystem::Initialize(QuadTreeSystem &quadTreeSystem) {
     
 }
 
+void InitOrthographic(mat4x4& _m, float left, float top, float right, float bottom, float nearValue, float farValue)
+{
+    
+  /*
+    m[0][0]  = 2.0f/(right-left);
+    m[1][0]  = 0;
+    m[2][0]  = 0;
+    m[3][0]  = 0;
+    
+    m[0][1]  = 0;
+    m[1][1]  = 2.0f/(top-bottom);
+    m[2][1]  = 0;
+    m[3][1]  = 0;
+    
+    m[0][2]  = 0;
+    m[1][2]  = 0;
+    m[2][2]  = -2.0f/(far-near);
+    m[3][2]  = 0;
+    
+    m[0][3]  = -((right+left)/(right-left));
+    m[1][3]  = -((top+bottom)/(top-bottom));
+    m[2][3]  = -((far+near)/(far-near));
+    m[3][3]  = 1;
+    */
+    
+
+     _m[0][0] = 2.0f/(right-left);
+     _m[1][0] = 0;
+     _m[2][0] = 0;
+     _m[3][0] = -((right+left)/(right-left));
+     
+     _m[0][1]  = 0;
+     _m[1][1]  = 2.0f/(top-bottom);
+     _m[2][1]  = 0;
+     _m[3][1]  = -((top+bottom)/(top-bottom));
+     
+     _m[0][2]  = 0;
+     _m[1][2]  = 0;
+     _m[2][2] = -2.0f/(farValue-nearValue);
+     _m[3][2] = -((farValue+nearValue)/(farValue-nearValue));
+     
+     _m[0][3] = 0;
+     _m[1][3] = 0;
+     _m[2][3] = 0;
+     _m[3][3] = 1;
+     
+}
+
 void RenderSystem::Update(const WorldTransform &transform, const Camera &camera) {
     
-    BoundingBox boundingBox;
-    boundingBox.center = {0.0f,0.0f};
-    boundingBox.extends = camera.ViewSize * 2.0f;
-    auto cameraBounds = boundingBox.CreateWorldAligned(transform.world);
+    const mat4x4 viewProjection = transform.worldInverse * camera.GetProjection();
+    
+    BoundingFrustum frustum;
+    frustum.SetFromViewProjection(viewProjection);
     
     std::vector<GameObject> objectsInView;
-    quadTreeSystem->Query(cameraBounds, objectsInView);
+    octreeSystem->Query(frustum, objectsInView);
     
     std::cout << "num quads : " << objectsInView.size() << "\n";
     
@@ -82,19 +129,7 @@ void RenderSystem::Update(const WorldTransform &transform, const Camera &camera)
 
 void RenderSystem::RenderScene() {
     
-    const mat4x4 projection = ortho(0.0f, camera.ViewSize.x * 2.0f, 0.0f, camera.ViewSize.y * 2.0f, -0.1f, 10.0f);
-    
-    const glm::mat3x3 cameraInverse = cameraTransform.worldInverse;
-    mat4x4 inverse = mat4x4(1.0f);
-    for (int x=0; x<2; x++) {
-        for(int y=0; y<2; y++ ) {
-            inverse[x][y] = cameraInverse[x][y];
-        }
-    }
-    inverse[3][0] = cameraInverse[2][0];
-    inverse[3][1] = cameraInverse[2][1];
-    
-    const mat4x4 viewProjection = projection * inverse;
+    const mat4x4 viewProjection = cameraTransform.worldInverse * camera.GetProjection();
     
     shader.Use();
     shader.SetViewProjection(glm::value_ptr(viewProjection));
@@ -115,11 +150,11 @@ void RenderSystem::CalculateWorldSpaceMesh(const AsyncECS::GameObject gameObject
         
         GLshort baseTriangleIndex = (GLshort)worldSpaceMesh.vertices.size();
         for(int i=0; i<mesh.vertices.size(); ++i) {
-            auto& source = mesh.vertices[i];
+            const auto& source = mesh.vertices[i];
             Vertex dest;
             
-            const glm::vec3 pos3d = vec3(source.Position, 1.0f);
-            dest.Position = worldTransform.world * pos3d;
+            const glm::vec4 pos4d = vec4(source.Position, 1.0f);
+            dest.Position = worldTransform.world * pos4d;
             
             dest.TextureCoords = source.TextureCoords;
             dest.Color = source.Color;

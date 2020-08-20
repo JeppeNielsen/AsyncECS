@@ -11,7 +11,7 @@
 #include "TestBase.hpp"
 
 namespace Game::Tests {
-    struct QuadTreeSystemTests : ::Tests::TestBase {
+    struct OctreeSystemTests : ::Tests::TestBase {
         void Run() override;
     };
 }

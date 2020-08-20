@@ -10,7 +10,7 @@
 #include "ECS.hpp"
 #include "WorldTransform.hpp"
 #include "Camera.hpp"
-#include "QuadTreeSystem.hpp"
+#include "OctreeSystem.hpp"
 #include "Mesh.hpp"
 #include "VertexRenderer.hpp"
 #include "Shader.hpp"
@@ -19,19 +19,18 @@
 namespace Game {
 struct RenderSystem :
 AsyncECS::System<const WorldTransform, const Camera>,
-AsyncECS::SystemDependencies<QuadTreeSystem>,
+AsyncECS::SystemDependencies<OctreeSystem>,
 AsyncECS::ComponentView<const WorldTransform, const Mesh>
 {
-    void Initialize(QuadTreeSystem& quadTreeSystem);
+    void Initialize(OctreeSystem& octreeSystem);
     void Update(const WorldTransform& transform, const Camera& camera);
-    
     
     void RenderScene();
     
     VertexRenderer<Vertex> vertexRenderer;
     Shader<Vertex> shader;
 
-    QuadTreeSystem* quadTreeSystem;
+    OctreeSystem* octreeSystem;
     
     WorldTransform cameraTransform;
     Camera camera;

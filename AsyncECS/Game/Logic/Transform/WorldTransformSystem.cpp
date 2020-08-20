@@ -7,8 +7,8 @@
 //
 
 #include "WorldTransformSystem.hpp"
-#include <glm/mat3x3.hpp>
-#include <glm/ext/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtx/quaternion.hpp>
 
 using namespace Game;
 using namespace glm;
@@ -29,13 +29,8 @@ void WorldTransformSystem::Update(const LocalTransform& localTransform, const Hi
     }
     worldTransform.isDirty = false;
     
-    mat3x3 local;
-    float Sin = sinf(localTransform.rotation) * localTransform.scale.x;
-    float Cos = cosf(localTransform.rotation) * localTransform.scale.y;
-    local[0][0] = Cos; local[0][1] = Sin; local[0][2] = 0;
-    local[1][0] = -Sin; local[1][1] = Cos; local[1][2] = 0;
-    local[2][0] = localTransform.position.x; local[2][1] = localTransform.position.y; local[2][2] = 1;
-
+    mat4x4 local = glm::scale(glm::translate(glm::toMat4(localTransform.rotation), localTransform.position), localTransform.scale);
+    
     if (hierarchy.parent != AsyncECS::GameObjectNull) {
         WorldTransform* parentTransform;
         GetComponents(hierarchy.parent, [this, &parentTransform](const LocalTransform& parentLocalTransform, const Hierarchy& parentHierarchy, WorldTransform& parentWorldTransform) {

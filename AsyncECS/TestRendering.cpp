@@ -18,12 +18,15 @@
 using namespace Game;
 
 struct Rotator {
+    float angle;
     float speed;
 };
 
-struct RotatorSystem : AsyncECS::System<LocalTransform, const Rotator> {
-    void Update(LocalTransform& local, const Rotator& rotator) {
-        local.rotation += rotator.speed * 0.016f;
+struct RotatorSystem : AsyncECS::System<LocalTransform, Rotator> {
+    void Update(LocalTransform& local, Rotator& rotator) {
+        rotator.angle += 0.1f;
+        //local.rotation *= glm::angleAxis(rotator.speed * 0.016f*100, vec3(0.0f,0.0f,1.0f));
+        local.rotation = glm::angleAxis(glm::radians(rotator.angle), vec3(0,0,1));
     }
     
     constexpr int EnableConcurrency() { return 5000; }
@@ -51,7 +54,7 @@ struct State : IState {
         Colorizer
     >;
     using Systems = AsyncECS::SystemTypes<
-        QuadTreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
+        OctreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
         ColorizerSystem
     >;
     
@@ -61,28 +64,41 @@ struct State : IState {
     Registry registry;
     std::shared_ptr<Scene> scene;
     AsyncECS::GameObject meshObject;
+    ivec2 camPos;
     
     void Initialize() override {
         
         scene = std::make_shared<Scene>(registry);
         
         auto cameraGO = scene->CreateGameObject();
-        scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat3x3(1.0f), glm::vec2(0.0f,0.0f)));
-        scene->AddComponent<Camera>(cameraGO, glm::vec2(10,10));
+        scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat4x4(1.0f), glm::vec3(0.0f,0.0f,0.0f)));
+        scene->AddComponent<Camera>(cameraGO, glm::vec2(5,5), -0.1f, 10.0f);
         scene->AddComponent<LocalTransform>(cameraGO);
         scene->AddComponent<Hierarchy>(cameraGO);
         //scene->AddComponent<Rotator>(cameraGO, -0.5f);
         
         meshObject = CreateMesh();
         
-        auto quad1 = CreateQuad({0,0}, {1.0f,1.0f}, true);
-        for (int x=0; x<118; x++) {
-            for (int y=0; y<118; y++) {
-                CreateQuad({x*0.075f,y*0.075f}, {0.07f,0.07f}, x*y % 2==0, true ? quad1 : AsyncECS::GameObjectNull);
+        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, false);
+        //auto quad2 = CreateQuad({1.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
+            
+        for (int x=0; x<10; x++) {
+            for (int y=0; y<10; y++) {
+                CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
             }
         }
         
         scene->WriteGraph(std::cout);
+        
+        camPos = {0,0};
+        device.Input.ButtonDown.Bind([this](ButtonEvent button) {
+            if (button.Id == "A") {
+                camPos.x+=1;
+            }
+            if (button.Id == "Q") {
+                camPos.y+=1;
+            }
+        });
     }
     
     AsyncECS::GameObject CreateMesh() {
@@ -90,31 +106,39 @@ struct State : IState {
         scene->AddComponent<Mesh>(quadGO);
         auto& mesh = scene->GetComponent<Mesh>(quadGO);
         
-        mesh.vertices.push_back({ { -0.5f,-0.5f }, {0,0}, Color(1.0f, 0.0f, 0.0f) });
-        mesh.vertices.push_back({ { 0.5f,-0.5f }, {1,0}, Color(1.0f, 0.0f, 0.0f) });
-        mesh.vertices.push_back({ { 0.5f,0.5f }, {1,1}, Color(1.0f, 0.0f, 0.0f) });
-        mesh.vertices.push_back({ { -0.5f,0.5f }, {0,1}, Color(1.0f, 0.0f, 0.0f) });
+        mesh.vertices.push_back({ { -0.5f,-0.5f,0.0f }, {0,0}, Color(1.0f, 0.0f, 0.0f) });
+        mesh.vertices.push_back({ { 0.5f,-0.5f,0.0f }, {1,0}, Color(1.0f, 0.0f, 0.0f) });
+        mesh.vertices.push_back({ { 0.5f,0.5f,0.0f }, {1,1}, Color(1.0f, 0.0f, 0.0f) });
+        mesh.vertices.push_back({ { -0.5f,0.5f,0.0f }, {0,1}, Color(1.0f, 0.0f, 0.0f) });
+        
+        mesh.triangles.push_back(0);
+        mesh.triangles.push_back(2);
+        mesh.triangles.push_back(1);
         
         mesh.triangles.push_back(0);
         mesh.triangles.push_back(1);
         mesh.triangles.push_back(2);
         
         mesh.triangles.push_back(0);
+        mesh.triangles.push_back(3);
+        mesh.triangles.push_back(2);
+        
+        mesh.triangles.push_back(0);
         mesh.triangles.push_back(2);
         mesh.triangles.push_back(3);
         
-        scene->AddComponent<Colorizer>(quadGO, 1.0f, 4.0f);
+        scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
         
         return quadGO;
     }
     
-    AsyncECS::GameObject CreateQuad(const glm::vec2& pos, const glm::vec2& scale, bool rotate, AsyncECS::GameObject parent = AsyncECS::GameObjectNull) {
+    AsyncECS::GameObject CreateQuad(const glm::vec3& pos, const glm::vec3& scale, bool rotate, AsyncECS::GameObject parent = AsyncECS::GameObjectNull) {
         
         auto quadGO = scene->CreateGameObject();
         
         LocalTransform local;
         local.position = pos;
-        local.rotation = 0.0f;
+        local.rotation = quat();
         local.scale = scale;
         
         scene->AddComponent<LocalTransform>(quadGO, local);
@@ -125,8 +149,8 @@ struct State : IState {
         scene->GetComponent<Hierarchy>(quadGO).parent = parent;
         
         BoundingBox boundingBox;
-        boundingBox.center = {0,0};
-        boundingBox.extends = {1,1};
+        boundingBox.center = {0,0,0};
+        boundingBox.extends = {1,1,1};
         
         scene->AddComponent<LocalBoundingBox>(quadGO, boundingBox);
         scene->AddComponent<WorldBoundingBox>(quadGO);
@@ -146,9 +170,12 @@ struct State : IState {
         glm::vec2 screenSize = {device.Screen.Size().x, device.Screen.Size().y};
         glm::vec2 mPos = {mousePos.x, mousePos.y};
         
-        scene->GetComponent<LocalTransform>(0).position = ((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
+        //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
-        std::cout << 1.0f / dt << "\n";
+        vec2 pos = mPos * 0.001f;
+        scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
+        
+        std::cout <<"fps: " << 1.0f / dt<< "\n";
         
         
     }

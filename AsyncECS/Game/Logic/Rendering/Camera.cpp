@@ -7,3 +7,10 @@
 //
 
 #include "Camera.hpp"
+
+
+using namespace Game;
+
+mat4x4 Camera::GetProjection() const {
+   return ortho(ViewSize.x, -ViewSize.x, ViewSize.y, -ViewSize.y, Near, Far);
+}

@@ -10,6 +10,6 @@
 
 using namespace Game;
 
-LocalTransform::LocalTransform() : position({0,0}), rotation(0), scale({1,1}) {
+LocalTransform::LocalTransform() : position({0.0f,0.0f,0.0f}), rotation({0,0,0,1}), scale({1.0f,1.0f,1.0f}) {
     
 }

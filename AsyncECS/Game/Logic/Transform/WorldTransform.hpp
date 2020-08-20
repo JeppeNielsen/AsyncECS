@@ -11,8 +11,8 @@
 
 namespace Game {
     struct WorldTransform {
-        glm::mat3x3 world;
-        glm::mat3x3 worldInverse;
+        glm::mat4x4 world;
+        glm::mat4x4 worldInverse;
         bool isDirty = true;
     };
 }

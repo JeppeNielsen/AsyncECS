@@ -1,16 +1,6 @@
-//
-//  BoundingBox.cpp
-//  AsyncECS
-//
-//  Created by Jeppe Nielsen on 26/07/2020.
-//  Copyright © 2020 Jeppe Nielsen. All rights reserved.
-//
-
 #include "BoundingBox.hpp"
-#include <glm/mat3x3.hpp>
 
 using namespace Game;
-using namespace glm;
 
 BoundingBox::BoundingBox() {
 }
@@ -24,20 +14,21 @@ BoundingBox::BoundingBox(const BoundingBox& other) {
     extends = other.extends;
 }
 
-BoundingBox::BoundingBox(const vec2& center, const vec2& extends) {
+BoundingBox::BoundingBox(const vec3& center, const vec3& extends) {
     this->center = center;
     this->extends = extends;
 }
 
 bool BoundingBox::Intersects(const BoundingBox& other) const {
-    const vec2 v = other.center - center;
+    const vec3 v = other.center - center;
     if (fabs(v.x)>(extends.x + other.extends.x)) return false;
     if (fabs(v.y)>(extends.y + other.extends.y)) return false;
+    if (fabs(v.z)>(extends.z + other.extends.z)) return false;
     return true;
 }
 
-float BoundingBox::Area() const {
-    return extends.x * extends.y;
+float BoundingBox::Volume() const {
+    return extends.x * extends.y * extends.z;
 }
 
 bool BoundingBox::operator ==(const BoundingBox &other) {
@@ -54,11 +45,11 @@ bool BoundingBox::operator !=(const BoundingBox &other) {
 
 bool BoundingBox::Contains(const BoundingBox& other) const {
     
-    vec2 min1 = center - extends * 0.5f;
-    vec2 max1 = center + extends * 0.5f;
+    vec3 min1 = center - extends * 0.5f;
+    vec3 max1 = center + extends * 0.5f;
 
-    vec2 min2 = other.center - other.extends * 0.5f;
-    vec2 max2 = other.center + other.extends * 0.5f;
+    vec3 min2 = other.center - other.extends * 0.5f;
+    vec3 max2 = other.center + other.extends * 0.5f;
 
     if (min2.x<min1.x) return false;
     if (max2.x>max1.x) return false;
@@ -66,24 +57,24 @@ bool BoundingBox::Contains(const BoundingBox& other) const {
     if (min2.y<min1.y) return false;
     if (max2.y>max1.y) return false;
 
+    if (min2.z<min1.z) return false;
+    if (max2.z>max1.z) return false;
+
     return true;
 };
 
-BoundingBox BoundingBox::CreateWorldAligned(const mat3x3& matrix) const {
-    BoundingBox boundingBox;
-    
-    vec2 halfExtends = extends * 0.5f;
-    
-    vec3 pos3d = {center.x, center.y , 0.0f};
+void BoundingBox::CreateWorldAligned(const mat4x4& matrix, BoundingBox& boundingBox) const {
+    vec3 halfExtends = extends * 0.5f;
 
-    boundingBox.center = matrix * pos3d; //matrix.TransformPoint(center);
+    boundingBox.center = matrix * vec4(center, 1.0f); //matrix.TransformPosition(center);
     
-    vec2 extends;
+    //float fInvW = 1.0f / ( fabsf(matrix.m[3][0]) * halfExtends.x + fabsf(matrix.m[3][1]) * halfExtends.y + fabsf(matrix.m[3][2]) * halfExtends.z + fabsf(matrix.m[3][3]) );
+    
+    vec3 extends;
 
-    extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[0][1]) * halfExtends.y);
-    extends.y = (fabsf(matrix[1][0]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y);
-    
+    extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[0][1]) * halfExtends.y + fabsf(matrix[0][2]) * halfExtends.z);// * fInvW;
+    extends.y = (fabsf(matrix[1][0]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y + fabsf(matrix[1][2]) * halfExtends.z);// * fInvW;
+    extends.z = (fabsf(matrix[2][0]) * halfExtends.x + fabsf(matrix[2][1]) * halfExtends.y + fabsf(matrix[2][2]) * halfExtends.z);// * fInvW;
+
     boundingBox.extends = extends * 2.0f;
-
-    return boundingBox;
 }

@@ -6,10 +6,10 @@
 //  Copyright © 2020 Jeppe Nielsen. All rights reserved.
 //
 
-#include "QuadTreeSystemTests.hpp"
+#include "OctreeSystemTests.hpp"
 #include "ECS.hpp"
 #include "WorldBoundingBox.hpp"
-#include "QuadTreeSystem.hpp"
+#include "OctreeSystem.hpp"
 #include <math.h>
 
 #define ToRadians(degrees) (0.01745329251994329576923690768489 * degrees)
@@ -17,26 +17,26 @@
 using namespace Game::Tests;
 using namespace Game;
 
-void QuadTreeSystemTests::Run() {
+void OctreeSystemTests::Run() {
  
     using ComponentTypes = AsyncECS::ComponentTypes<WorldBoundingBox>;
     using Registry = AsyncECS::Registry<ComponentTypes>;
-    using Systems = AsyncECS::SystemTypes<QuadTreeSystem>;
+    using Systems = AsyncECS::SystemTypes<OctreeSystem>;
     using Scene = AsyncECS::Scene<Registry, Systems>;
 
-    RunTest("Quad tree insert", [] () {
+    RunTest("Octree tree insert", [] () {
         Registry registry;
         Scene scene(registry);
         
         auto go = scene.CreateGameObject();
         scene.AddComponent<WorldBoundingBox>(go);
-        scene.GetComponent<WorldBoundingBox>(go).bounds = {{0,0}, {10,10}};
+        scene.GetComponent<WorldBoundingBox>(go).bounds = {{0,0,0}, {10,10,10}};
         
-        auto& system = scene.GetSystem<QuadTreeSystem>();
+        auto& system = scene.GetSystem<OctreeSystem>();
         
         scene.Update();
         
-        return system.quadTree.nodes[0]->data == go;
+        return system.octree.nodes->operator[](0)->data == go;
     });
     
     RunTest("Quad tree removal", [] () {
@@ -45,15 +45,15 @@ void QuadTreeSystemTests::Run() {
         
         auto go = scene.CreateGameObject();
         scene.AddComponent<WorldBoundingBox>(go);
-        scene.GetComponent<WorldBoundingBox>(go).bounds = {{0,0}, {10,10}};
+        scene.GetComponent<WorldBoundingBox>(go).bounds = {{0,0,0}, {10,10,10}};
         
         scene.Update();
         
         scene.RemoveGameObject(go);
         
-        auto& system = scene.GetSystem<QuadTreeSystem>();
+        auto& system = scene.GetSystem<OctreeSystem>();
         
-        return system.quadTree.nodes.size() == 0;
+        return system.octree.nodes->size() == 0;
     });
     
 }
