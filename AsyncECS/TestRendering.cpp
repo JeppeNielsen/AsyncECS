@@ -109,21 +109,13 @@ struct State : IState {
         mesh.vertices.push_back({ { -0.5f,0.5f,0.0f }, {0,1}, Color(1.0f, 0.0f, 0.0f) });
         
         mesh.triangles.push_back(0);
-        mesh.triangles.push_back(2);
         mesh.triangles.push_back(1);
-        
-        mesh.triangles.push_back(0);
-        mesh.triangles.push_back(1);
-        mesh.triangles.push_back(2);
-        
-        mesh.triangles.push_back(0);
-        mesh.triangles.push_back(3);
         mesh.triangles.push_back(2);
         
         mesh.triangles.push_back(0);
         mesh.triangles.push_back(2);
         mesh.triangles.push_back(3);
-        
+
         scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
         
         return quadGO;
