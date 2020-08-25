@@ -49,6 +49,10 @@
 		72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72859C8523FDA6C200735591 /* SpatialTests.cpp */; };
 		728D8770234D1A22003EA2C6 /* GameObjectCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */; };
 		728D8778234D2192003EA2C6 /* GameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */; };
+		72AC00FC24F04E9E00A38B9C /* Pickable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AC00FA24F04E9E00A38B9C /* Pickable.cpp */; };
+		72AC00FF24F0501900A38B9C /* PickableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AC00FD24F0501900A38B9C /* PickableSystem.cpp */; };
+		72AC010324F062A800A38B9C /* Input.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AC010124F062A800A38B9C /* Input.cpp */; };
+		72AC010624F0634500A38B9C /* InputSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AC010424F0634500A38B9C /* InputSystem.cpp */; };
 		72B483C8233A992700E44E78 /* TestSystemDependencies.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */; };
 		72D08E6824E5DD00004ECE95 /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D08DAB24E5DCFF004ECE95 /* glm.cpp */; };
 		72ED8724236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */; };
@@ -177,6 +181,14 @@
 		728D8775234D1E15003EA2C6 /* Scene.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Scene.hpp; sourceTree = "<group>"; };
 		728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectDatabase.cpp; sourceTree = "<group>"; };
 		728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObjectDatabase.hpp; sourceTree = "<group>"; };
+		72AC00FA24F04E9E00A38B9C /* Pickable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Pickable.cpp; sourceTree = "<group>"; };
+		72AC00FB24F04E9E00A38B9C /* Pickable.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Pickable.hpp; sourceTree = "<group>"; };
+		72AC00FD24F0501900A38B9C /* PickableSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PickableSystem.cpp; sourceTree = "<group>"; };
+		72AC00FE24F0501900A38B9C /* PickableSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PickableSystem.hpp; sourceTree = "<group>"; };
+		72AC010124F062A800A38B9C /* Input.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Input.cpp; sourceTree = "<group>"; };
+		72AC010224F062A800A38B9C /* Input.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Input.hpp; sourceTree = "<group>"; };
+		72AC010424F0634500A38B9C /* InputSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = InputSystem.cpp; sourceTree = "<group>"; };
+		72AC010524F0634500A38B9C /* InputSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InputSystem.hpp; sourceTree = "<group>"; };
 		72B483C7233A992700E44E78 /* TestSystemDependencies.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestSystemDependencies.cpp; sourceTree = "<group>"; };
 		72B483C9233BE20900E44E78 /* ComponentContainer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ComponentContainer.hpp; sourceTree = "<group>"; };
 		72D08CBF24E5DCFF004ECE95 /* vec4.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vec4.hpp; sourceTree = "<group>"; };
@@ -592,6 +604,7 @@
 		72D08E6524E5DD00004ECE95 /* rotate_normalized_axis.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = rotate_normalized_axis.hpp; sourceTree = "<group>"; };
 		72D08E6624E5DD00004ECE95 /* projection.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = projection.inl; sourceTree = "<group>"; };
 		72D08E6724E5DD00004ECE95 /* type_aligned.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = type_aligned.hpp; sourceTree = "<group>"; };
+		72D487C324F45381004B813A /* RemoveDependencies.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RemoveDependencies.hpp; sourceTree = "<group>"; };
 		72ED8722236CCC2B00CB9E86 /* TestGameObjectDatabase.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestGameObjectDatabase.cpp; sourceTree = "<group>"; };
 		72ED8723236CCC2B00CB9E86 /* TestGameObjectDatabase.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestGameObjectDatabase.hpp; sourceTree = "<group>"; };
 		72ED8725236CE13600CB9E86 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -761,17 +774,17 @@
 		7280088D24D36617002DC6E0 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				7280088E24D36617002DC6E0 /* Engine.hpp */,
-				7280088F24D36617002DC6E0 /* InputManager.hpp */,
-				7280089024D36617002DC6E0 /* Screen.cpp */,
-				7280089124D36617002DC6E0 /* InputDevice.hpp */,
 				7280089224D36617002DC6E0 /* Device.cpp */,
-				7280089324D36617002DC6E0 /* InputManager.cpp */,
-				7280089424D36617002DC6E0 /* Screen.hpp */,
-				7280089524D36617002DC6E0 /* InputDevice.cpp */,
 				7280089624D36617002DC6E0 /* Device.hpp */,
-				7280089724D36617002DC6E0 /* IState.hpp */,
 				7280089824D36617002DC6E0 /* Engine.cpp */,
+				7280088E24D36617002DC6E0 /* Engine.hpp */,
+				7280089524D36617002DC6E0 /* InputDevice.cpp */,
+				7280089124D36617002DC6E0 /* InputDevice.hpp */,
+				7280089324D36617002DC6E0 /* InputManager.cpp */,
+				7280088F24D36617002DC6E0 /* InputManager.hpp */,
+				7280089724D36617002DC6E0 /* IState.hpp */,
+				7280089024D36617002DC6E0 /* Screen.cpp */,
+				7280089424D36617002DC6E0 /* Screen.hpp */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -918,6 +931,28 @@
 				72F2E7EF240080690041B56A /* TestTaskRunner.hpp */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		72AC00F924F04E2200A38B9C /* Picking */ = {
+			isa = PBXGroup;
+			children = (
+				72AC00FA24F04E9E00A38B9C /* Pickable.cpp */,
+				72AC00FB24F04E9E00A38B9C /* Pickable.hpp */,
+				72AC00FD24F0501900A38B9C /* PickableSystem.cpp */,
+				72AC00FE24F0501900A38B9C /* PickableSystem.hpp */,
+			);
+			path = Picking;
+			sourceTree = "<group>";
+		};
+		72AC010024F060D500A38B9C /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				72AC010124F062A800A38B9C /* Input.cpp */,
+				72AC010224F062A800A38B9C /* Input.hpp */,
+				72AC010424F0634500A38B9C /* InputSystem.cpp */,
+				72AC010524F0634500A38B9C /* InputSystem.hpp */,
+			);
+			path = Input;
 			sourceTree = "<group>";
 		};
 		72D08CBE24E5DCFF004ECE95 /* glm */ = {
@@ -1389,6 +1424,8 @@
 		72E7963A23EF542900820B01 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72AC010024F060D500A38B9C /* Input */,
+				72AC00F924F04E2200A38B9C /* Picking */,
 				7280087024CF6C5A002DC6E0 /* Rendering */,
 				72F2E7DE23FDD79E0041B56A /* Hierarchy */,
 				7280085024CDF4EF002DC6E0 /* Spatial */,
@@ -1422,6 +1459,7 @@
 		72F2E7F42401B4070041B56A /* Systems */ = {
 			isa = PBXGroup;
 			children = (
+				72D487C324F45381004B813A /* RemoveDependencies.hpp */,
 				72F2E7F52401B53B0041B56A /* SystemDependencies.hpp */,
 				72F2E7F62401B8E70041B56A /* SystemTypes.hpp */,
 				72F2E7F72401B9900041B56A /* SystemBase.hpp */,
@@ -1517,6 +1555,7 @@
 				7282A40A24804B99003DB7B9 /* StressTest.cpp in Sources */,
 				7280089C24D36617002DC6E0 /* InputDevice.cpp in Sources */,
 				72F2E7FD2402D0F20041B56A /* HierarchySystem.cpp in Sources */,
+				72AC010324F062A800A38B9C /* Input.cpp in Sources */,
 				720BC26E236C7889009F163B /* TestComponentContainer.cpp in Sources */,
 				720BC26B236C7864009F163B /* TestBase.cpp in Sources */,
 				72F2E7F3240088C60041B56A /* WorldTransformSystem.cpp in Sources */,
@@ -1525,6 +1564,7 @@
 				7280086924CE178E002DC6E0 /* BoundingBox.cpp in Sources */,
 				72859C7C23FDA38C00735591 /* LocalTransform.cpp in Sources */,
 				72D08E6824E5DD00004ECE95 /* glm.cpp in Sources */,
+				72AC00FF24F0501900A38B9C /* PickableSystem.cpp in Sources */,
 				728008AB24D36BD6002DC6E0 /* TestRendering.cpp in Sources */,
 				7280086024CDFCF3002DC6E0 /* BoundingBoxTests.cpp in Sources */,
 				72169EC024EDAF6500B9F627 /* Plane.cpp in Sources */,
@@ -1533,7 +1573,9 @@
 				7280087624CF6CEB002DC6E0 /* RenderSystem.cpp in Sources */,
 				7280085624CDF720002DC6E0 /* Rect.cpp in Sources */,
 				7280089A24D36617002DC6E0 /* Device.cpp in Sources */,
+				72AC010624F0634500A38B9C /* InputSystem.cpp in Sources */,
 				7280085924CDFB10002DC6E0 /* WorldBoundingBox.cpp in Sources */,
+				72AC00FC24F04E9E00A38B9C /* Pickable.cpp in Sources */,
 				728008C224D74B0A002DC6E0 /* Shader.cpp in Sources */,
 				7280086F24CE229F002DC6E0 /* OctreeSystemTests.cpp in Sources */,
 				7280089924D36617002DC6E0 /* Screen.cpp in Sources */,
