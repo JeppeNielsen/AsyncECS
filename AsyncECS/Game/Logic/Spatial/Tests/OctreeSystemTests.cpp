@@ -21,7 +21,7 @@ void OctreeSystemTests::Run() {
  
     using ComponentTypes = AsyncECS::ComponentTypes<WorldBoundingBox>;
     using Registry = AsyncECS::Registry<ComponentTypes>;
-    using Systems = AsyncECS::SystemTypes<OctreeSystem>;
+    using Systems = AsyncECS::SystemTypes<OctreeSystem<>>;
     using Scene = AsyncECS::Scene<Registry, Systems>;
 
     RunTest("Octree tree insert", [] () {
@@ -32,7 +32,7 @@ void OctreeSystemTests::Run() {
         scene.AddComponent<WorldBoundingBox>(go);
         scene.GetComponent<WorldBoundingBox>(go).bounds = {{0,0,0}, {10,10,10}};
         
-        auto& system = scene.GetSystem<OctreeSystem>();
+        auto& system = scene.GetSystem<OctreeSystem<>>();
         
         scene.Update();
         
@@ -51,7 +51,7 @@ void OctreeSystemTests::Run() {
         
         scene.RemoveGameObject(go);
         
-        auto& system = scene.GetSystem<OctreeSystem>();
+        auto& system = scene.GetSystem<OctreeSystem<>>();
         
         return system.octree.nodes->size() == 0;
     });
