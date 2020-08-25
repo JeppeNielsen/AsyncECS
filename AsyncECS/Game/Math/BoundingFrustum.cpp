@@ -55,9 +55,8 @@ int BoundingFrustum::Count = 0;
 BoundingFrustum::Intersection BoundingFrustum::Intersect(const BoundingBox& box) const { 
 	Intersection ret = INSIDE;
 	vec3 vmin, vmax;
-	vec3 halfExtends = box.extends * 0.5f;
-	vec3 mins = box.center - halfExtends;
-	vec3 maxs = box.center + halfExtends;
+	vec3 mins = box.center - box.extends;
+	vec3 maxs = box.center + box.extends;
 
 	Count++;
 
