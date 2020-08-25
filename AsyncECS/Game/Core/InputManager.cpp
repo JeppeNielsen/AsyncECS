@@ -23,3 +23,7 @@ void InputManager::SwallowTouch(int index, int depth) {
 bool InputManager::IsTouchSwallowed(int index, int depth) {
     return device->IsTouchSwallowed(index, depth);
 }
+
+InputDevice& InputManager::Device() const {
+    return *device;
+}

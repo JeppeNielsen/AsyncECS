@@ -48,6 +48,8 @@ namespace Game {
         void SwallowTouch(int index, int depth);
         bool IsTouchSwallowed(int index, int depth);
         
+        InputDevice& Device() const;
+        
 	private:
 		InputDevice* device;
 		friend class InputDevice;

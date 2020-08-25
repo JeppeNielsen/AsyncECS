@@ -16,6 +16,7 @@ void Engine::MainLoop() {
     Window::MainLoopData data;
     data.Initialize =
     [&, this]() {
+        window.inputDevice.UpdateInputManager(state->device.Input);
         state->Initialize();
         timer.Start();
     };

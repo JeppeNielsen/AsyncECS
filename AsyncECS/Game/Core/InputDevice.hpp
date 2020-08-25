@@ -50,7 +50,7 @@ namespace Game {
         void SwallowTouch(int index, int depth);
         bool IsTouchSwallowed(int index, int depth);
         
-	private:
+	public:
 
 		typedef std::vector<Touch> Touches;
 
