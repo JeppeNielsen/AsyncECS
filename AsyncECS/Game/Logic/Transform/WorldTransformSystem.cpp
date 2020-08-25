@@ -29,7 +29,9 @@ void WorldTransformSystem::Update(const LocalTransform& localTransform, const Hi
     }
     worldTransform.isDirty = false;
     
-    mat4x4 local = glm::scale(glm::translate(glm::toMat4(localTransform.rotation), localTransform.position), localTransform.scale);
+    mat4x4 local = glm::scale(glm::translate(mat4x4(1.0f), localTransform.position), localTransform.scale) * glm::toMat4(localTransform.rotation);
+    
+    //mat4x4 local = glm::translate(glm::scale(glm::toMat4(localTransform.rotation), localTransform.scale), localTransform.position);
     
     if (hierarchy.parent != AsyncECS::GameObjectNull) {
         WorldTransform* parentTransform;
