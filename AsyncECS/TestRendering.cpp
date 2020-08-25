@@ -13,9 +13,44 @@
 #include "WorldBoundingBoxSystem.hpp"
 #include "WorldTransformSystem.hpp"
 #include "HierarchySystem.hpp"
-#include <glm/gtx/matrix_transform_2d.hpp>
+#include "InputSystem.hpp"
+#include "PickableSystem.hpp"
+#include "LogicTests.hpp"
 
 using namespace Game;
+
+struct ClickScaler {
+    float amountToScale;
+    
+};
+
+struct ClickScalerSystem : AsyncECS::SystemChanged<const ClickScaler, const Pickable>,
+                            AsyncECS::ComponentView<LocalTransform>
+{
+    
+    void Changed(const ClickScaler& scaler, const Pickable& pickable ) {
+    
+    }
+    
+    void Update(const ClickScaler& scaler, const Pickable& pickable ) {
+        
+        
+        
+        
+        for(auto& click : pickable.clicked) {
+            //std::cout << "Changed" << std::endl;
+            GetComponents(click.object, [&scaler, &click] (LocalTransform& localTransform) {
+                if (click.touch.index == 0) {
+                    localTransform.scale += scaler.amountToScale;
+                } else {
+                     localTransform.scale -= scaler.amountToScale;
+                }
+            });
+        }
+    }
+    
+};
+
 
 struct Rotator {
     float speed;
@@ -23,7 +58,7 @@ struct Rotator {
 
 struct RotatorSystem : AsyncECS::System<LocalTransform, const Rotator> {
     void Update(LocalTransform& local, const Rotator& rotator) {
-        local.rotation *= glm::angleAxis(glm::radians(rotator.speed), vec3(0,0,1));;
+        local.rotation *= glm::angleAxis(glm::radians(rotator.speed), vec3(0,0,1));
     }
     
     constexpr int EnableConcurrency() { return 5000; }
@@ -48,11 +83,11 @@ struct ColorizerSystem : AsyncECS::System<Mesh, Colorizer> {
 struct State : IState {
     using ComponentTypes = AsyncECS::ComponentTypes<
         WorldBoundingBox, LocalBoundingBox, WorldTransform, Camera, Mesh, LocalTransform, Hierarchy, Rotator,
-        Colorizer
+        Colorizer, Input, Pickable, ClickScaler
     >;
     using Systems = AsyncECS::SystemTypes<
-        OctreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
-        ColorizerSystem
+        RenderOctreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
+        ColorizerSystem, InputSystem, PickableSystem, ClickScalerSystem
     >;
     
     using Registry = AsyncECS::Registry<ComponentTypes>;
@@ -65,20 +100,30 @@ struct State : IState {
     
     void Initialize() override {
         
+        Game::Tests::LogicTests logicTests;
+        logicTests.Run();
+        
         scene = std::make_shared<Scene>(registry);
+        scene->GetSystem<InputSystem>().SetDevice(device.Input.Device());
+        scene->GetSystem<PickableSystem>().screenSize = device.Screen.Size;
         
         auto cameraGO = scene->CreateGameObject();
         scene->AddComponent<WorldTransform>(cameraGO, glm::translate(glm::mat4x4(1.0f), glm::vec3(0.0f,0.0f,0.0f)));
         scene->AddComponent<Camera>(cameraGO, glm::vec2(8,8), -0.1f, 10.0f);
         scene->AddComponent<LocalTransform>(cameraGO);
         scene->AddComponent<Hierarchy>(cameraGO);
+        scene->AddComponent<Input>(cameraGO);
+        
         //scene->AddComponent<Rotator>(cameraGO, -0.5f);
         
         meshObject = CreateMesh();
         
-        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,0.0f}, false);
+        auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,1.0f}, false);
+        
+        
         //auto quad2 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
             
+        
         for (int x=0; x<200; x++) {
             for (int y=0; y<200; y++) {
                 CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
@@ -116,7 +161,7 @@ struct State : IState {
         mesh.triangles.push_back(2);
         mesh.triangles.push_back(3);
 
-        scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
+        //scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
         
         return quadGO;
     }
@@ -138,7 +183,7 @@ struct State : IState {
         
         BoundingBox boundingBox;
         boundingBox.center = {0,0,0};
-        boundingBox.extends = {1,1,1};
+        boundingBox.extends = {0.5f,0.5f,0.5f};
         
         scene->AddComponent<LocalBoundingBox>(quadGO, boundingBox);
         scene->AddComponent<WorldBoundingBox>(quadGO);
@@ -146,6 +191,9 @@ struct State : IState {
         if (rotate) {
             scene->AddComponent<Rotator>(quadGO, 1.0f);
         }
+        
+        scene->AddComponent<Pickable>(quadGO);
+        scene->AddComponent<ClickScaler>(quadGO, 0.1f);
 
         return quadGO;
     }
@@ -160,10 +208,10 @@ struct State : IState {
         
         //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
-        vec2 pos = mPos * 0.025f;
+        vec2 pos = mPos * 0.005f;
         scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
         
-        std::cout <<"fps: " << 1.0f / dt<< "\n";
+        //std::cout <<"fps: " << 1.0f / dt<< "\n";
         
         
     }
@@ -175,7 +223,7 @@ struct State : IState {
         Game::Timer timer;
         timer.Start();
         scene->GetSystem<RenderSystem>().RenderScene();
-        std::cout << "Rendering :  " << timer.Stop() * 1000.0f<<"\n";
+        //std::cout << "Rendering :  " << timer.Stop() * 1000.0f<<"\n";
         
     }
 };
