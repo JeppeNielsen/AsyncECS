@@ -14,11 +14,30 @@
 namespace AsyncECS {
     namespace Internal {
         HAS_METHOD(SetComponents)
+        HAS_METHOD(IsComponentView)
     }
 
     template<typename ...T>
     struct ComponentView {
         using Components = std::tuple<ComponentContainer<std::remove_const_t<T>>*...>;
+        
+        template<typename O>
+        constexpr std::tuple<O*> GetComponentType(const O* ptr) const {
+            return std::make_tuple((O*)nullptr);
+        }
+        
+        template<typename O>
+        constexpr std::tuple<O*> GetComponentType(O* ptr) const {
+            return std::make_tuple((O*)1);
+        }
+
+        constexpr std::tuple<T*...> GetComponentViewTypes() {
+            return std::tuple_cat(GetComponentType((T*)nullptr)...);
+        }
+        
+        void IsComponentView() {
+            
+        }
         
         Components componentsPtrs;
         template<typename Components>

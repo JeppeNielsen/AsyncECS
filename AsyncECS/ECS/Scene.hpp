@@ -12,7 +12,6 @@
 #include "SystemDependencies.hpp"
 #include "SystemTypes.hpp"
 #include "System.hpp"
-#include "System.hpp"
 #include "SystemChanged.hpp"
 #include "SystemChangedGameObject.hpp"
 #include "ComponentView.hpp"
@@ -28,6 +27,7 @@
 #include <ostream>
 #include "SceneModifier.hpp"
 #include "HasMethodHelper.hpp"
+#include "RemoveDependencies.hpp"
 
 namespace AsyncECS {
     
@@ -68,6 +68,7 @@ private:
         std::map<int, std::set<int>> connections;
         TupleHelper::Iterate(systems, [this, &connections](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
+            
             const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
             
             TupleHelper::Iterate(system.GetComponentTypes(), [this, taskIndex, &connections](auto type) {
@@ -76,20 +77,42 @@ private:
                 
                 TupleHelper::Iterate(systems, [this, taskIndex, &connections](auto& innerSystem) {
                     using InnerSystemType = std::remove_reference_t<decltype(innerSystem)>;
+                    
                     const auto targetTaskIndex = TupleHelper::Index<InnerSystemType, decltype(systems)>::value;
                     if (taskIndex == targetTaskIndex) return;
                     
-                    if constexpr (AsyncECS::Internal::has_SetComponents<InnerSystemType, void(Components&)>::value) {
-                       if (innerSystem.template HasComponentType<const ComponentType>() ||
-                           innerSystem.template HasComponentViewType<const ComponentType>()) {
+                    if (innerSystem.template HasComponentType<const ComponentType>()) {
+                        connections[taskIndex].insert(targetTaskIndex);
+                    }
+                    
+                    if (innerSystem.template HasComponentType<ComponentType>()) {
+                        connections[taskIndex].insert(targetTaskIndex);
+                    }
+                    
+                    if constexpr (AsyncECS::Internal::has_IsComponentView<InnerSystemType, void()>::value) {
+                       if (innerSystem.template HasComponentViewType<const ComponentType>()) {
                            connections[taskIndex].insert(targetTaskIndex);
                        }
                        
-                       if (innerSystem.template HasComponentType<ComponentType>() ||
-                           innerSystem.template HasComponentViewType<ComponentType>()) {
+                       if (innerSystem.template HasComponentViewType<ComponentType>()) {
                            connections[taskIndex].insert(targetTaskIndex);
                        }
-                    } else {
+                    }
+                });
+            });
+            
+            
+            if constexpr (AsyncECS::Internal::has_IsComponentView<SystemType, void()>::value) {
+                TupleHelper::Iterate(system.GetComponentViewTypes(), [this, taskIndex, &connections](auto type) {
+                    if (!type) return; //only write types, ie non const components
+                    using ComponentType = std::remove_pointer_t<decltype(type)>;
+                    
+                    TupleHelper::Iterate(systems, [this, taskIndex, &connections](auto& innerSystem) {
+                        using InnerSystemType = std::remove_reference_t<decltype(innerSystem)>;
+                        
+                        const auto targetTaskIndex = TupleHelper::Index<InnerSystemType, decltype(systems)>::value;
+                        if (taskIndex == targetTaskIndex) return;
+                        
                         if (innerSystem.template HasComponentType<const ComponentType>()) {
                             connections[taskIndex].insert(targetTaskIndex);
                         }
@@ -97,15 +120,46 @@ private:
                         if (innerSystem.template HasComponentType<ComponentType>()) {
                             connections[taskIndex].insert(targetTaskIndex);
                         }
-                    }
+                        
+                        if constexpr (AsyncECS::Internal::has_IsComponentView<InnerSystemType, void()>::value) {
+                           if (innerSystem.template HasComponentViewType<const ComponentType>()) {
+                               connections[taskIndex].insert(targetTaskIndex);
+                           }
+                           
+                           if (innerSystem.template HasComponentViewType<ComponentType>()) {
+                               connections[taskIndex].insert(targetTaskIndex);
+                           }
+                        }
+                    
+                    });
                 });
-            });
+            }
             
             if constexpr (AsyncECS::Internal::has_IsSystemDependencies<SystemType, void()>::value) {
                 TupleHelper::Iterate(system.GetDependencyTypes(), [this, taskIndex, &connections](auto type) {
                     using DependencySystemType = std::remove_pointer_t<decltype(type)>;
                     const auto targetTaskIndex = TupleHelper::Index<DependencySystemType, decltype(systems)>::value;
                     connections[targetTaskIndex].insert(taskIndex);
+                });
+            }
+        });
+        
+        TupleHelper::Iterate(systems, [this, &connections](auto& system) {
+            using SystemType = std::remove_reference_t<decltype(system)>;
+        
+            if constexpr (AsyncECS::Internal::has_IsRemoveDependencies<SystemType, void()>::value) {
+            
+                const auto taskIndex = TupleHelper::Index<SystemType, decltype(systems)>::value;
+                
+                TupleHelper::Iterate(system.GetDependenciesTypesToRemove(), [this, taskIndex, &connections](auto type) {
+                    using DependencySystemType = std::remove_pointer_t<decltype(type)>;
+                    const auto targetTaskIndex = TupleHelper::Index<DependencySystemType, decltype(systems)>::value;
+                    
+                    auto& set = connections[targetTaskIndex];
+                    auto it = std::find(set.begin(), set.end(), taskIndex);
+                    if (it!=set.end()) {
+                        set.erase(it);
+                    }
                 });
             }
         });
@@ -122,7 +176,7 @@ private:
         
         taskRunner.RunTask(task.work, [this, &task] () {
             task.isDone = true;
-            std::cout << task.name << " : " << (task.lastTime * 1000.0f) <<std::endl;
+            //std::cout << task.name << " : " << (task.lastTime * 1000.0f) <<std::endl;
             for(auto outgoingTask : task.outgoing) {
                 RunTask(*outgoingTask);
             }
@@ -259,7 +313,7 @@ public:
         while(taskRunner.Update());
         registry.ResetChanged(); // should be moved out of Scene, because there might be multiple Scenes.
         UpdateSceneModifiers();
-        std::cout << "Scene::Update: "<< timer.Stop() * 1000 << "\n";
+        //std::cout << "Scene::Update: "<< timer.Stop() * 1000 << "\n";
     }
     
     void UpdateSceneModifiers() {
