@@ -24,28 +24,20 @@ struct ClickScaler {
     
 };
 
-struct ClickScalerSystem : AsyncECS::SystemChanged<const ClickScaler, const Pickable>,
-                            AsyncECS::ComponentView<LocalTransform>
-{
+struct ClickScalerSystem : AsyncECS::SystemChanged<const ClickScaler, const Pickable, LocalTransform> {
     
-    void Changed(const ClickScaler& scaler, const Pickable& pickable ) {
+    void Changed(const ClickScaler& scaler, const Pickable& pickable, LocalTransform& localTransform) {
     
     }
     
-    void Update(const ClickScaler& scaler, const Pickable& pickable ) {
-        
-        
-        
+    void Update(const ClickScaler& scaler, const Pickable& pickable, LocalTransform& localTransform ) {
         
         for(auto& click : pickable.clicked) {
-            //std::cout << "Changed" << std::endl;
-            GetComponents(click.object, [&scaler, &click] (LocalTransform& localTransform) {
-                if (click.touch.index == 0) {
-                    localTransform.scale += scaler.amountToScale;
-                } else {
-                     localTransform.scale -= scaler.amountToScale;
-                }
-            });
+            if (click.touch.index == 0) {
+                localTransform.scale += scaler.amountToScale;
+            } else {
+                localTransform.scale -= scaler.amountToScale;
+            }
         }
     }
     
@@ -126,7 +118,11 @@ struct State : IState {
         
         for (int x=0; x<200; x++) {
             for (int y=0; y<200; y++) {
-                CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
+                auto q = CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
+            
+                if (x == 4 && y == 4) {
+                    scene->AddComponent<Rotator>(q, 1.0f);
+                }
             }
         }
         
