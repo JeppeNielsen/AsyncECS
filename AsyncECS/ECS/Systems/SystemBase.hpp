@@ -94,22 +94,27 @@ struct SystemBase {
     }
     
     template<typename Components>
-    constexpr const GameObjectCollection::Objects& GetChangedObjects(const Components& components) const {
+    constexpr const GameObjectCollection::Objects& GetChangedObjects(const Components& components) {
         const int numElements = sizeof...(T);
+        
+        changedObjects.Clear();
         
         const GameObjectCollection::Objects* objects[] { &std::get<ComponentContainer<std::remove_const_t<T>>>(components).changedThisFrame.objects... };
         
-        int max = (int)objects[0]->size();
-        int foundIndex = 0;
-        for(int i = 1; i < numElements; ++i) {
-            int size = (int)objects[i]->size();
-            if (size>max) {
-                foundIndex = i;
-                max = size;
+        for(int i = 0; i<numElements; ++i) {
+            const auto& list = *objects[i];
+            for(auto object : list) {
+                if (!changedObjects.Contains(object)) {
+                    changedObjects.Add(object);
+                }
             }
         }
-        return *objects[foundIndex];
+        
+        return changedObjects.objects;
     }
+    
+    GameObjectCollection changedObjects;
+    
 };
 
 }
