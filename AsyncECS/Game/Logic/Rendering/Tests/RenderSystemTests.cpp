@@ -16,7 +16,7 @@ void RenderSystemTests::Run() {
 
     using ComponentTypes = AsyncECS::ComponentTypes<WorldBoundingBox, WorldTransform, Camera, Mesh>;
     using Registry = AsyncECS::Registry<ComponentTypes>;
-    using Systems = AsyncECS::SystemTypes<OctreeSystem, RenderSystem>;
+    using Systems = AsyncECS::SystemTypes<RenderOctreeSystem, RenderSystem>;
     using Scene = AsyncECS::Scene<Registry, Systems>;
 
     RunTest("Render System ",[]() {

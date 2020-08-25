@@ -12,7 +12,7 @@
 using namespace Game;
 using namespace AsyncECS;
 
-void RenderSystem::Initialize(OctreeSystem& octreeSystem) {
+void RenderSystem::Initialize(RenderOctreeSystem& octreeSystem) {
     this->octreeSystem = &octreeSystem;
     
     shader.Load(
@@ -47,9 +47,9 @@ void RenderSystem::Update(const WorldTransform &transform, const Camera &camera)
     std::vector<GameObject> objectsInView;
     octreeSystem->Query(frustum, objectsInView);
     
-    std::cout << "num quads : " << objectsInView.size() << "\n";
+   // std::cout << "num quads : " << objectsInView.size() << "\n";
     
-    //std::cout << "Num objects in view : "<< objectsInView.size() << "\n";
+    std::cout << "Num objects in view : "<< objectsInView.size() << "\n";
     
     worldSpaceMeshes.clear();
     
