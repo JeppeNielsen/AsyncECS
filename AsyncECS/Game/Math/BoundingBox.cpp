@@ -72,9 +72,9 @@ void BoundingBox::CreateWorldAligned(const mat4x4& matrix, BoundingBox& bounding
     
     vec3 extends;
 
-    extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[0][1]) * halfExtends.y + fabsf(matrix[0][2]) * halfExtends.z);// * fInvW;
-    extends.y = (fabsf(matrix[1][0]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y + fabsf(matrix[1][2]) * halfExtends.z);// * fInvW;
-    extends.z = (fabsf(matrix[2][0]) * halfExtends.x + fabsf(matrix[2][1]) * halfExtends.y + fabsf(matrix[2][2]) * halfExtends.z);// * fInvW;
+    extends.x = (fabsf(matrix[0][0]) * halfExtends.x + fabsf(matrix[1][0]) * halfExtends.y + fabsf(matrix[2][0]) * halfExtends.z);// * fInvW;
+    extends.y = (fabsf(matrix[0][1]) * halfExtends.x + fabsf(matrix[1][1]) * halfExtends.y + fabsf(matrix[2][1]) * halfExtends.z);// * fInvW;
+    extends.z = (fabsf(matrix[0][2]) * halfExtends.x + fabsf(matrix[1][2]) * halfExtends.y + fabsf(matrix[2][2]) * halfExtends.z);// * fInvW;
 
     boundingBox.extends = extends * 2.0f;
 }
