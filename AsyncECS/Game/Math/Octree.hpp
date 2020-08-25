@@ -27,9 +27,11 @@ namespace Game {
                 return;
             } else {
                 for(size_t i = 0, size=nodes->size(); i<size; i++) {
-                    Node* node = nodes->at(i);
+                    Node* node = nodes->operator[](i);
                     
-                    if (frustum.Intersect(node->box)!=BoundingFrustum::OUTSIDE) list.push_back(node->data);
+                    if (frustum.Intersect(node->box)!=BoundingFrustum::OUTSIDE) {
+                        list.push_back(node->data);
+                    }
                     //list.push_back(node);
                 }
                 if (!children) return;
