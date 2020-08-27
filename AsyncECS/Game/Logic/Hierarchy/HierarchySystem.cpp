@@ -34,6 +34,9 @@ void HierarchySystem::Update(GameObject gameObject, Hierarchy& hierarchy) {
 void HierarchySystem::GameObjectRemoved(GameObject gameObject) {
     GetComponents(gameObject, [gameObject, this](Hierarchy& hierarchy) {
         if (hierarchy.parent != GameObjectNull) {
+            if (IsGameObjectRemoved(hierarchy.parent)) {
+                return;
+            }
             GetComponents(hierarchy.parent, [gameObject, this](Hierarchy& parentHierarchy) {
                 auto it = std::find(parentHierarchy.children.begin(), parentHierarchy.children.end(), gameObject);
                 parentHierarchy.children.erase(it);
@@ -41,10 +44,9 @@ void HierarchySystem::GameObjectRemoved(GameObject gameObject) {
             hierarchy.parent = GameObjectNull;
             hierarchy.previousParent = GameObjectNull;
         }
-        Modify([&hierarchy] (auto& m) {
-            for (auto child : hierarchy.children) {
-                m.RemoveGameObject(child);
-            }
-        });
+        
+        for (auto child : hierarchy.children) {
+            RemoveGameObject(child);
+        }
     });
 }
