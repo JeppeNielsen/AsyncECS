@@ -48,6 +48,7 @@ private:
     std::array<GameObjectCollection, Registry::NumComponentsType::value> componentObjects;
     std::array<SystemTask, NumSystems> systemTasks;
     TaskRunner taskRunner;
+    GameObjectCollection objectsScheduledForRemoval;
     
     void CreateTasks() {
         TupleHelper::Iterate(systems, [this](auto& system) {
@@ -218,25 +219,21 @@ public:
     
     void RemoveGameObject(const GameObject gameObject) override {
         assert(registry.IsGameObjectValid(gameObject));
+        if (objectsScheduledForRemoval.Contains(gameObject)) {
+            return;
+        }
+        objectsScheduledForRemoval.Add(gameObject);
         TupleHelper::Iterate(systems, [gameObject, this](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
             if constexpr (Internal::has_GameObjectRemoved<SystemType, void(GameObject)>::value) {
                 system.GameObjectRemoved(gameObject);
             }
         });
-        
-        UpdateSceneModifiers();
-        
-        TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
-            using ComponentContainerType = std::remove_reference_t<decltype(component)>;
-            using ComponentType = typename ComponentContainerType::Type;
-            if (!componentObjects[TupleHelper::Index<ComponentContainerType, Components>::value].Contains(gameObject)) {
-                return;
-            }
-            RemoveComponent<ComponentType>(gameObject);
-        });
-        gameObjects.Remove(gameObject);
-        registry.gameObjects.Remove(gameObject);
+    }
+    
+    bool IsGameObjectRemoved(const GameObject gameObject) const override {
+        return !registry.IsGameObjectValid(gameObject) ||
+            objectsScheduledForRemoval.Contains(gameObject);
     }
     
     template<typename T, typename... Args>
@@ -312,21 +309,38 @@ public:
         
         while(taskRunner.Update());
         registry.ResetChanged(); // should be moved out of Scene, because there might be multiple Scenes.
-        UpdateSceneModifiers();
+        while (UpdateSceneModifiers());
+        RemoveGameObjects();
         //std::cout << "Scene::Update: "<< timer.Stop() * 1000 << "\n";
     }
     
-    void UpdateSceneModifiers() {
+    bool UpdateSceneModifiers() {
+        bool anyChange = false;
         using ThisType = std::remove_pointer_t<decltype(this)>;
-        
-        TupleHelper::Iterate(systems, [this](auto& system) {
+        TupleHelper::Iterate(systems, [this, &anyChange](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
             if constexpr (AsyncECS::Internal::has_InitializeSceneModifier<SystemType, void(IScene&, Components&)>::value) {
-                system.UpdateFromScene(*this);
+                anyChange |= system.UpdateFromScene(*this);
             }
         });
+        return anyChange;
     }
     
+    void RemoveGameObjects() {
+        for(auto gameObject : objectsScheduledForRemoval.objects) {
+            TupleHelper::Iterate(registry.components, [gameObject, this] (auto& component) {
+                using ComponentContainerType = std::remove_reference_t<decltype(component)>;
+                using ComponentType = typename ComponentContainerType::Type;
+                if (!componentObjects[TupleHelper::Index<ComponentContainerType, Components>::value].Contains(gameObject)) {
+                    return;
+                }
+                RemoveComponent<ComponentType>(gameObject);
+            });
+            gameObjects.Remove(gameObject);
+            registry.gameObjects.Remove(gameObject);
+        }
+        objectsScheduledForRemoval.Clear();
+    }
     
     //http://www.webgraphviz.com/
     void WriteGraph(std::ostream& os) {

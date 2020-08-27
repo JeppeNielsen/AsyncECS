@@ -47,11 +47,15 @@ namespace AsyncECS {
         }
         
         template<typename Scene>
-        void UpdateFromScene(Scene& scene) {
-            for(auto action : actions) {
+        bool UpdateFromScene(Scene& scene) {
+            if (actions.empty()) {
+                return false;
+            }
+            for(auto& action : actions) {
                 action(*this);
             }
             actions.clear();
+            return true;
         }
         
         template<typename Registry, typename Systems>
@@ -65,7 +69,11 @@ namespace AsyncECS {
             return scene->CreateGameObject();
         }
         
-        void RemoveGameObject(GameObject gameObject) const {
+        bool IsGameObjectRemoved(const GameObject gameObject) const {
+            return scene->IsGameObjectRemoved(gameObject);
+        }
+        
+        void RemoveGameObject(const GameObject gameObject) const {
             scene->RemoveGameObject(gameObject);
         }
         

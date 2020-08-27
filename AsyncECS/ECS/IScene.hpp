@@ -13,6 +13,7 @@ namespace AsyncECS {
     struct IScene {
         virtual GameObject CreateGameObject() = 0;
         virtual void RemoveGameObject(const GameObject gameObject) = 0;
+        virtual bool IsGameObjectRemoved(const GameObject gameObject) const = 0;
         virtual void AddGameObjectToComponentContainer(const GameObject gameObject, const int index) = 0;
         virtual void RemoveGameObjectFromComponentContainer(const GameObject gameObject, const int index) = 0;
     };
