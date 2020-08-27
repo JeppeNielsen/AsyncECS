@@ -19,6 +19,30 @@
 
 using namespace Game;
 
+struct ClickDeleter {
+    
+};
+
+struct ClickDeleterSystem : AsyncECS::SystemChanged<const ClickDeleter, const Pickable>,
+AsyncECS::SceneModifier<const ClickDeleter> {
+    
+    void Changed(const ClickDeleter& deleter, const Pickable& pickable) {
+        
+    }
+    
+    void Update(const ClickDeleter& deleter, const Pickable& pickable) {
+        
+        if (pickable.clicked.size()>0) {
+            auto& pickEvent = pickable.clicked[0];
+            auto object = pickEvent.object;
+            Modify([object] (Modifier& modifier) {
+                modifier.RemoveGameObject(object);
+            });
+        }
+    }
+};
+
+
 struct ClickScaler {
     float amountToScale;
     
@@ -31,14 +55,15 @@ struct ClickScalerSystem : AsyncECS::SystemChanged<const ClickScaler, const Pick
     }
     
     void Update(const ClickScaler& scaler, const Pickable& pickable, LocalTransform& localTransform ) {
-        
-        for(auto& click : pickable.clicked) {
+        /*
+        for(auto& click : pickable.up) {
             if (click.touch.index == 0) {
                 localTransform.scale += scaler.amountToScale;
             } else {
                 localTransform.scale -= scaler.amountToScale;
             }
         }
+        */
     }
     
 };
@@ -75,11 +100,11 @@ struct ColorizerSystem : AsyncECS::System<Mesh, Colorizer> {
 struct State : IState {
     using ComponentTypes = AsyncECS::ComponentTypes<
         WorldBoundingBox, LocalBoundingBox, WorldTransform, Camera, Mesh, LocalTransform, Hierarchy, Rotator,
-        Colorizer, Input, Pickable, ClickScaler
+        Colorizer, Input, Pickable, ClickScaler, ClickDeleter
     >;
     using Systems = AsyncECS::SystemTypes<
         RenderOctreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
-        ColorizerSystem, InputSystem, PickableSystem, ClickScalerSystem
+        ColorizerSystem, InputSystem, PickableSystem, ClickScalerSystem, ClickDeleterSystem
     >;
     
     using Registry = AsyncECS::Registry<ComponentTypes>;
@@ -92,8 +117,8 @@ struct State : IState {
     
     void Initialize() override {
         
-        Game::Tests::LogicTests logicTests;
-        logicTests.Run();
+        //Game::Tests::LogicTests logicTests;
+        //logicTests.Run();
         
         scene = std::make_shared<Scene>(registry);
         scene->GetSystem<InputSystem>().SetDevice(device.Input.Device());
@@ -116,8 +141,8 @@ struct State : IState {
         //auto quad2 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
             
         
-        for (int x=0; x<200; x++) {
-            for (int y=0; y<200; y++) {
+        for (int x=0; x<10; x++) {
+            for (int y=0; y<10  ; y++) {
                 auto q = CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
             
                 if (x == 4 && y == 4) {
@@ -157,7 +182,7 @@ struct State : IState {
         mesh.triangles.push_back(2);
         mesh.triangles.push_back(3);
 
-        //scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
+        scene->AddComponent<Colorizer>(quadGO, 1.0f, 2.0f);
         
         return quadGO;
     }
@@ -190,6 +215,7 @@ struct State : IState {
         
         scene->AddComponent<Pickable>(quadGO);
         scene->AddComponent<ClickScaler>(quadGO, 0.1f);
+        scene->AddComponent<ClickDeleter>(quadGO);
 
         return quadGO;
     }
@@ -205,7 +231,7 @@ struct State : IState {
         //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
         vec2 pos = mPos * 0.005f;
-        scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
+        //scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
         
         //std::cout <<"fps: " << 1.0f / dt<< "\n";
         
