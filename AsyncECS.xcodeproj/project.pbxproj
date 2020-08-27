@@ -14,6 +14,7 @@
 		72169EC024EDAF6500B9F627 /* Plane.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72169EBC24EDAF6500B9F627 /* Plane.cpp */; };
 		72169EC324EDB0A900B9F627 /* Ray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72169EC124EDB0A900B9F627 /* Ray.cpp */; };
 		72169EC824EDBE4100B9F627 /* OctreeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72169EC624EDBE4100B9F627 /* OctreeSystem.cpp */; };
+		7240BEEB24F83184007B490B /* SceneTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7240BEE924F83184007B490B /* SceneTests.cpp */; };
 		72538B34247F099700D2DA71 /* SimpleVelocity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72538B32247F099700D2DA71 /* SimpleVelocity.cpp */; };
 		72676565238889C20080412E /* SystemTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72676563238889C20080412E /* SystemTask.cpp */; };
 		726BDD3F2404F8B100204F45 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726BDD3D2404F8B100204F45 /* Hierarchy.cpp */; };
@@ -104,6 +105,8 @@
 		72169EC624EDBE4100B9F627 /* OctreeSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OctreeSystem.cpp; sourceTree = "<group>"; };
 		72169EC724EDBE4100B9F627 /* OctreeSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OctreeSystem.hpp; sourceTree = "<group>"; };
 		72332DBA233A90F3007DBD21 /* AsyncECS */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AsyncECS; sourceTree = BUILT_PRODUCTS_DIR; };
+		7240BEE924F83184007B490B /* SceneTests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SceneTests.cpp; sourceTree = "<group>"; };
+		7240BEEA24F83184007B490B /* SceneTests.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SceneTests.hpp; sourceTree = "<group>"; };
 		72538B32247F099700D2DA71 /* SimpleVelocity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleVelocity.cpp; sourceTree = "<group>"; };
 		72676563238889C20080412E /* SystemTask.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SystemTask.cpp; sourceTree = "<group>"; };
 		72676564238889C20080412E /* SystemTask.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SystemTask.hpp; sourceTree = "<group>"; };
@@ -703,6 +706,15 @@
 			path = AsyncECS;
 			sourceTree = "<group>";
 		};
+		7240BEE824F83125007B490B /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				7240BEE924F83184007B490B /* SceneTests.cpp */,
+				7240BEEA24F83184007B490B /* SceneTests.hpp */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
 		7280085024CDF4EF002DC6E0 /* Spatial */ = {
 			isa = PBXGroup;
 			children = (
@@ -887,6 +899,7 @@
 		728D8779234D2350003EA2C6 /* ECS */ = {
 			isa = PBXGroup;
 			children = (
+				7240BEE824F83125007B490B /* Tests */,
 				72F2E805240DA4A90041B56A /* SceneModifier.hpp */,
 				72F2E7F42401B4070041B56A /* Systems */,
 				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
@@ -1549,6 +1562,7 @@
 				7280085C24CDFB95002DC6E0 /* WorldBoundingBoxSystem.cpp in Sources */,
 				72169EC324EDB0A900B9F627 /* Ray.cpp in Sources */,
 				72859C8723FDA6C200735591 /* SpatialTests.cpp in Sources */,
+				7240BEEB24F83184007B490B /* SceneTests.cpp in Sources */,
 				72F2E80424046F260041B56A /* HierarchyWorldTransformSystem.cpp in Sources */,
 				7280087A24CF6D9B002DC6E0 /* RenderSystemTests.cpp in Sources */,
 				728008D124D75A7A002DC6E0 /* Mesh.cpp in Sources */,
