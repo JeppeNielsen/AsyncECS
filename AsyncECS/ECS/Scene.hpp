@@ -309,21 +309,19 @@ public:
         
         while(taskRunner.Update());
         registry.ResetChanged(); // should be moved out of Scene, because there might be multiple Scenes.
-        while (UpdateSceneModifiers());
+        UpdateSceneModifiers();
         RemoveGameObjects();
         //std::cout << "Scene::Update: "<< timer.Stop() * 1000 << "\n";
     }
     
-    bool UpdateSceneModifiers() {
-        bool anyChange = false;
+    void UpdateSceneModifiers() {
         using ThisType = std::remove_pointer_t<decltype(this)>;
-        TupleHelper::Iterate(systems, [this, &anyChange](auto& system) {
+        TupleHelper::Iterate(systems, [this](auto& system) {
             using SystemType = std::remove_reference_t<decltype(system)>;
             if constexpr (AsyncECS::Internal::has_InitializeSceneModifier<SystemType, void(IScene&, Components&)>::value) {
-                anyChange |= system.UpdateFromScene(*this);
+                system.UpdateFromScene(*this);
             }
         });
-        return anyChange;
     }
     
     void RemoveGameObjects() {

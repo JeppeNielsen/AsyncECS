@@ -47,15 +47,11 @@ namespace AsyncECS {
         }
         
         template<typename Scene>
-        bool UpdateFromScene(Scene& scene) {
-            if (actions.empty()) {
-                return false;
-            }
+        void UpdateFromScene(Scene& scene) {
             for(auto& action : actions) {
                 action(*this);
             }
             actions.clear();
-            return true;
         }
         
         template<typename Registry, typename Systems>
