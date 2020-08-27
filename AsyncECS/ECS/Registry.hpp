@@ -42,6 +42,11 @@ struct Registry {
     bool IsGameObjectValid(const GameObject gameObject) const {
         return gameObjects.IsValid(gameObject);
     }
+    
+    int GetGameObjectVersion(const GameObject gameObject) const {
+        return (gameObject >> 20);
+    }
+    
 };
   
 }
