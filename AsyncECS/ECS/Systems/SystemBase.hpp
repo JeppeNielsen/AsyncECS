@@ -97,10 +97,30 @@ struct SystemBase {
     constexpr const GameObjectCollection::Objects& GetChangedObjects(const Components& components) {
         const int numElements = sizeof...(T);
         
+        const GameObjectCollection::Objects* objects[] { &std::get<ComponentContainer<std::remove_const_t<T>>>(components).changedThisFrame.objects...
+        };
+        
+        if (numElements == 1) {
+            return *objects[0];
+        }
+        
+        int singleIndexWithChanges = 0;
+        int numContainersWithChanges = 0;
+        for(int i=0; i<numElements; ++i) {
+            if (objects[i]->size() > 0) {
+                ++numContainersWithChanges;
+                if (numContainersWithChanges > 1) {
+                    break;
+                }
+                singleIndexWithChanges = i;
+            }
+        }
+        
+        if (numContainersWithChanges <= 1) {
+            return *objects[singleIndexWithChanges];
+        }
+        
         changedObjects.Clear();
-        
-        const GameObjectCollection::Objects* objects[] { &std::get<ComponentContainer<std::remove_const_t<T>>>(components).changedThisFrame.objects... };
-        
         for(int i = 0; i<numElements; ++i) {
             const auto& list = *objects[i];
             for(auto object : list) {
