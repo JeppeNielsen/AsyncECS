@@ -132,7 +132,7 @@ namespace Game {
                 nodes.pop_back();
             }
             
-            node.node = 0;
+            node.node = nullptr;
         }
 
         void Move(Node& node) {
