@@ -899,22 +899,22 @@
 		728D8779234D2350003EA2C6 /* ECS */ = {
 			isa = PBXGroup;
 			children = (
-				7240BEE824F83125007B490B /* Tests */,
-				72F2E805240DA4A90041B56A /* SceneModifier.hpp */,
-				72F2E7F42401B4070041B56A /* Systems */,
 				72B483C9233BE20900E44E78 /* ComponentContainer.hpp */,
+				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
+				7282A40B24804BC1003DB7B9 /* ECS.hpp */,
 				728D8772234D1BE9003EA2C6 /* GameObject.hpp */,
 				728D876E234D1A22003EA2C6 /* GameObjectCollection.cpp */,
 				728D876F234D1A22003EA2C6 /* GameObjectCollection.hpp */,
 				728D8776234D2192003EA2C6 /* GameObjectDatabase.cpp */,
 				728D8777234D2192003EA2C6 /* GameObjectDatabase.hpp */,
+				72F2E806240EF8DB0041B56A /* IScene.hpp */,
 				728D876D234D1969003EA2C6 /* Registry.hpp */,
 				728D8775234D1E15003EA2C6 /* Scene.hpp */,
-				72ED872823735D6B00CB9E86 /* ComponentView.hpp */,
+				72F2E805240DA4A90041B56A /* SceneModifier.hpp */,
+				72F2E7F42401B4070041B56A /* Systems */,
 				72676563238889C20080412E /* SystemTask.cpp */,
 				72676564238889C20080412E /* SystemTask.hpp */,
-				72F2E806240EF8DB0041B56A /* IScene.hpp */,
-				7282A40B24804BC1003DB7B9 /* ECS.hpp */,
+				7240BEE824F83125007B490B /* Tests */,
 			);
 			path = ECS;
 			sourceTree = "<group>";
