@@ -145,6 +145,7 @@ struct ComponentContainer {
     }
     
     const T& GetConst(const GameObject gameObject) const {
+        assert(gameObjects.Contains(gameObject));
         return (const T&)elements[indicies[gameObject & GameObjectIndexMask]];
     }
     
