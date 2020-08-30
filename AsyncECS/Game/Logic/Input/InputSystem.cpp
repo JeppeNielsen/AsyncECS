@@ -40,4 +40,20 @@ void InputSystem::Update(Input &input) {
         }
     }
     
+    input.keysDown.clear();
+    input.keysUp.clear();
+    
+    for(auto[keyCode, modifier] : d.currentButtons) {
+        bool isDown = d.previousButtons.find(keyCode) == d.previousButtons.end();
+        if (isDown) {
+            input.keysDown.push_back({keyCode, modifier });
+        }
+    }
+    
+    for(auto[keyCode, modifier] : d.previousButtons) {
+        bool isUp = d.currentButtons.find(keyCode) == d.currentButtons.end();
+        if (isUp) {
+            input.keysUp.push_back({keyCode, modifier });
+        }
+    }
 }

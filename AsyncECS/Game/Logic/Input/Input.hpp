@@ -10,6 +10,7 @@
 #include "Math.hpp"
 #include <vector>
 #include <string>
+#include "InputManager.hpp"
 
 namespace Game {
 
@@ -25,7 +26,7 @@ namespace Game {
 
     struct InputKey {
         std::string key;
-        std::string modifier;
+        ModifierKey modifier;
     };
 
     using KeyCollection = std::vector<InputKey>;
