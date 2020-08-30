@@ -34,6 +34,9 @@ struct System : SystemBase<T...> {
                taskRunner.RunTask([this, &gameObjectsInSystem, &components, this_system, fromIndex, toIndex]() {
                    for(int i = fromIndex; i<toIndex; ++i) {
                        const auto gameObject = gameObjectsInSystem[i];
+                       if (!this->template GameObjectContainsAll(gameObject, components)) {
+                           continue;
+                       }
                        const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                        const auto iterator = std::tuple_cat(this_system, componentValues);
                        std::apply(&SystemType::Update, iterator);
@@ -46,6 +49,9 @@ struct System : SystemBase<T...> {
         } else {
             for(int i = 0; i<gameObjectsInSystem.size(); ++i) {
                 const auto gameObject = gameObjectsInSystem[i];
+                if (!this->template GameObjectContainsAll(gameObject, components)) {
+                    continue;
+                }
                 const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                 const auto iterator = std::tuple_cat(this_system, componentValues);
                 std::apply(&SystemType::Update, iterator);
@@ -53,6 +59,9 @@ struct System : SystemBase<T...> {
         }
 
         for(const auto gameObject : gameObjectsInSystem) {
+            if (!this->template GameObjectContainsAll(gameObject, components)) {
+                continue;
+            }
             this->template ChangeComponents(gameObject, components);
         }
     }

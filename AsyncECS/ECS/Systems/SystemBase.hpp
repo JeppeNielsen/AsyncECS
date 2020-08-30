@@ -58,6 +58,19 @@ struct SystemBase {
         return std::tie(Get(gameObject, components, (T*)nullptr)...);
     }
     
+    template<typename Components>
+    constexpr bool GameObjectContainsAll(const GameObject gameObject, Components& components) const {
+        const int numElements = sizeof...(T);
+        
+        bool contains[] { std::get<ComponentContainer<std::remove_const_t<T>>>(components).gameObjects.Contains(gameObject)... };
+        for(int i=0; i<numElements; ++i) {
+            if (!contains[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     template<typename O, typename Components>
     constexpr void ChangeComponent(const GameObject gameObject, Components& components, const O* ptr) const {
         /*empty*/ // no change for const components
