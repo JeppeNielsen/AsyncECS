@@ -143,6 +143,8 @@ void HierarchicalTests::Run() {
         scene.Update();
 
         scene.RemoveGameObject(parent);
+        
+        scene.Update();
 
         bool isParentValid = registry.IsGameObjectValid(parent);
         bool isChildValid = registry.IsGameObjectValid(child);
