@@ -65,8 +65,6 @@ void PickableSystem::TouchDown(const WorldTransform &transform, const Camera &ca
     std::vector<GameObject> downs;
     octreeSystem->Query(ray, downs);
     
-    
-    
     for(auto down : downs) {
         
         PickEvent e;
