@@ -25,7 +25,7 @@ void SpatialTests::Run() {
         LocalTransform t;
         
         return t.position == glm::vec3(0,0,0) &&
-                t.rotation == quat(0,0,0,1) &&
+                t.rotation == quat(1,0,0,0) &&
                 t.scale == glm::vec3(1,1,1);
     });
     
@@ -44,9 +44,10 @@ void SpatialTests::Run() {
         
         scene.Update();
         
-        //return scene.GetComponent<WorldTransform>(object).world ==
-        //Matrix3x3::CreateTranslation(position);
-        return false;
+        auto actual = scene.GetComponent<WorldTransform>(object).world;
+        auto expected = translate(mat4x4(1.0f), position);
+        
+        return actual == expected;
     });
     
     RunTest("Child LocalTransform Affected by Parent",[]() {
@@ -73,11 +74,10 @@ void SpatialTests::Run() {
         
         scene.Update();
         
-        /*return
-        scene.GetComponent<WorldTransform>(child).world ==
-        Matrix3x3::CreateTranslation(parentPosition + childPosition);
-         */
-        return false;
+        auto actual = scene.GetComponent<WorldTransform>(child).world;
+        auto expected = translate(mat4x4(1.0f), parentPosition + childPosition);
+        
+        return actual == expected;
     });
     
     RunTest("Child reparented WorldTransform should reflect",[]() {
@@ -104,18 +104,16 @@ void SpatialTests::Run() {
         
         scene.Update();
         
-        bool parentPositionWasApplied = false;
-        //scene.GetComponent<WorldTransform>(child).world ==
-        //Matrix3x3::CreateTranslation(parentPosition + childPosition);
+        
+        bool parentPositionWasApplied = scene.GetComponent<WorldTransform>(child).world ==
+            translate(mat4x4(1.0f), parentPosition + childPosition);
    
         scene.GetComponent<Hierarchy>(child).parent = AsyncECS::GameObjectNull;
    
         scene.Update();
    
-        bool parentPositionNotApplied = false;
-            // scene.GetComponent<WorldTransform>(child).world ==
-             //Matrix3x3::CreateTranslation(childPosition);
-        
+       bool parentPositionNotApplied = scene.GetComponent<WorldTransform>(child).world ==
+        translate(mat4x4(1.0f), childPosition);
    
         return parentPositionWasApplied &&
                parentPositionNotApplied;
@@ -146,20 +144,18 @@ void SpatialTests::Run() {
          
          scene.Update();
          
-        bool childPositionEqualsStart = false;
-         //scene.GetComponent<WorldTransform>(child).world ==
-         //glm::translate(parentPositionStart + childPosition);
-    
+        bool childPositionEqualsStart = scene.GetComponent<WorldTransform>(child).world ==
+        translate(mat4x4(1.0f), parentPositionStart + childPosition);
+        
          scene.GetComponent<LocalTransform>(parent).position = parentPositionEnd;
     
          scene.Update();
          
          auto childWorld = scene.GetComponent<WorldTransform>(child).world;
     
-        bool childPositionEqualsEnd = false;
-         //childWorld ==
-         //Matrix3x3::CreateTranslation(parentPositionEnd + childPosition);
-         
+        bool childPositionEqualsEnd = childWorld ==
+        translate(mat4x4(1.0f), parentPositionEnd + childPosition);
+        
          return childPositionEqualsStart &&
                 childPositionEqualsEnd;
      });
@@ -197,15 +193,15 @@ void SpatialTests::Run() {
         
         scene.Update();
         
-        //auto targetWorld = Matrix3x3::CreateTranslation(parentPositionStart + childPosition);
+        auto targetWorld = translate(mat4x4(1.0f), parentPositionStart + childPosition);
         
         bool anyNotAligned = false;
-        /*for(auto child : children) {
+        for(auto child : children) {
             auto childWorld = scene.GetComponent<WorldTransform>(child).world;
             if (childWorld!=targetWorld) {
                 anyNotAligned = true;
             }
-        }*/
+        }
         
         return !anyNotAligned;
     });
