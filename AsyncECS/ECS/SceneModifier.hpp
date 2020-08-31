@@ -76,14 +76,12 @@ namespace AsyncECS {
         template<typename Component, typename... Args>
         void AddComponent(const GameObject gameObject, Args&& ... args) {
             static_assert(TupleHelper::HasType<ComponentContainer<Component>*, Components>::value, "Component type not found");
-            scene->AddGameObjectToComponentContainer(gameObject, componentIndicies[TupleHelper::Index<ComponentContainer<Component>*, Components>::value]);
             std::get<ComponentContainer<Component>*>(componentsPtrs)->Create(gameObject,args...);
         }
         
         template<typename Component>
         void RemoveComponent(const GameObject gameObject) {
             static_assert(TupleHelper::HasType<ComponentContainer<Component>*, Components>::value, "Component type not found");
-            scene->RemoveGameObjectFromComponentContainer(gameObject, componentIndicies[TupleHelper::Index<ComponentContainer<Component>*, Components>::value]);
             std::get<ComponentContainer<Component>*>(componentsPtrs)->Remove(gameObject);
         }
         

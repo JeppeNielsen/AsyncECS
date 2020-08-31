@@ -30,6 +30,24 @@ struct SystemTypes {
 
     using AllSystems = decltype(GetDependencies());
     using UniqueSystems = TupleHelper::UniqueTypes<AllSystems>;
+    
+    
+    template<typename System, typename Component, typename ...S>
+    constexpr static auto GetSystemsWithComponentInternal(std::tuple<S...>& tuple) {
+        if constexpr (System::template HasComponentType<Component>() ||
+                      System::template HasComponentType<const Component>()) {
+            
+            return std::make_tuple(&std::get<System>(tuple));
+        } else {
+            return std::tuple<>{};
+        }
+    }
+    
+    template<typename Component, typename ...S>
+    constexpr static auto GetSystemsWithComponent(std::tuple<S...>& tuple) {
+        return std::tuple_cat(GetSystemsWithComponentInternal<S, Component>(tuple)...);
+    }
+    
 };
 
 }

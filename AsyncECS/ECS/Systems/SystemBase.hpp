@@ -39,7 +39,7 @@ struct SystemBase {
     }
     
     template<typename ComponentType>
-    constexpr bool HasComponentType() {
+    constexpr static bool HasComponentType() {
         return TupleHelper::HasType<ComponentType, std::tuple<T...> >::value;
     }
 
@@ -71,6 +71,19 @@ struct SystemBase {
         return true;
     }
     
+    template<typename Components>
+    constexpr void TryAddGameObject(const GameObject gameObject, Components& components) {
+        if (objects.Contains(gameObject)) return;
+        if (!GameObjectContainsAll(gameObject, components)) return;
+        objects.Add(gameObject);
+    }
+    
+    template<typename Components>
+    constexpr void TryRemoveGameObject(const GameObject gameObject, Components& components) {
+        if (!objects.Contains(gameObject)) return;
+        objects.Remove(gameObject);
+    }
+    
     template<typename O, typename Components>
     constexpr void ChangeComponent(const GameObject gameObject, Components& components, const O* ptr) const {
         /*empty*/ // no change for const components
@@ -87,30 +100,12 @@ struct SystemBase {
         (void) expander { 0, ((void)ChangeComponent(gameObject, components, (T*)nullptr),0)... };
     }
     
-    template<typename Components, typename ComponentObjects>
-    constexpr GameObjectCollection& GetObjects(ComponentObjects& componentObjects) const {
-        const int numElements = sizeof...(T);
-        
-        int indicies[] { TupleHelper::Index<ComponentContainer<std::remove_const_t<std::remove_pointer_t<T>>>, Components>::value... };
-        
-        int foundIndex = indicies[0];
-        int min = (int)componentObjects[foundIndex].objects.size();
-        for(int i = 1; i < numElements; ++i) {
-            int index = indicies[i];
-            int size =  (int)componentObjects[index].objects.size();
-            if (size < min) {
-                min =  size;
-                foundIndex = index;
-            }
-        }
-        return componentObjects[foundIndex];
-    }
-    
     template<typename Components>
     constexpr const GameObjectCollection::Objects& GetChangedObjects(const Components& components) {
         const int numElements = sizeof...(T);
         
-        const GameObjectCollection::Objects* objects[] { &std::get<ComponentContainer<std::remove_const_t<T>>>(components).changedThisFrame.objects...
+        const GameObjectCollection::Objects* objects[] {
+            &std::get<ComponentContainer<std::remove_const_t<T>>>(components).changedThisFrame.objects...
         };
         
         if (numElements == 1) {
@@ -146,6 +141,7 @@ struct SystemBase {
         return changedObjects.objects;
     }
     
+    GameObjectCollection objects;
     GameObjectCollection changedObjects;
     
 };

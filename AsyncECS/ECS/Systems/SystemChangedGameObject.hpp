@@ -19,12 +19,11 @@ struct SystemChangedGameObject : SystemBase<T...> {
 
     TaskRunner taskRunner;
     
-    template<typename Components, typename ComponentObjects, typename SystemType>
-    void Iterate(const Components& components, ComponentObjects& componentObjects) {
+    template<typename Components, typename SystemType>
+    void Iterate(const Components& components) {
         const auto this_system = std::make_tuple((SystemType*)this);
-        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects);
+        const auto& gameObjectsInSystem = this->objects;
         const auto& changedGameObjects = this->template GetChangedObjects<Components>(components);
-        
         
         if constexpr (Internal::has_EnableConcurrency<SystemType, int()>::value) {
             const int chunkSize = ((SystemType*)this)->EnableConcurrency();
@@ -41,9 +40,6 @@ struct SystemChangedGameObject : SystemBase<T...> {
                         if (!gameObjectsInSystem.Contains(gameObject)) {
                             continue;
                         }
-                        if (!this->template GameObjectContainsAll(gameObject, components)) {
-                            continue;
-                        }
                         const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                         const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
                         std::apply(&SystemType::Update, iterator);
@@ -58,9 +54,6 @@ struct SystemChangedGameObject : SystemBase<T...> {
                 if (!gameObjectsInSystem.Contains(gameObject)) {
                     continue;
                 }
-                if (!this->template GameObjectContainsAll(gameObject, components)) {
-                    continue;
-                }
                 const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                 const auto iterator = std::tuple_cat(this_system, std::tuple_cat( std::make_tuple(gameObject), componentValues ));
                 std::apply(&SystemType::Update, iterator);
@@ -69,9 +62,6 @@ struct SystemChangedGameObject : SystemBase<T...> {
         
         for(const auto gameObject : changedGameObjects) {
             if (!gameObjectsInSystem.Contains(gameObject)) {
-                continue;
-            }
-            if (!this->template GameObjectContainsAll(gameObject, components)) {
                 continue;
             }
             this->template ChangeComponents(gameObject, components);

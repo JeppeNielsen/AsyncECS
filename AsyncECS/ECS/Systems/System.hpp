@@ -17,11 +17,11 @@ struct System : SystemBase<T...> {
     
     TaskRunner taskRunner;
     
-    template<typename Components, typename ComponentObjects, typename SystemType>
-    void Iterate(const Components& components, ComponentObjects& componentObjects) {
+    template<typename Components, typename SystemType>
+    void Iterate(const Components& components) {
         
         const auto this_system = std::make_tuple((SystemType*)this);
-        const auto& gameObjectsInSystem = this->template GetObjects<Components>(componentObjects).objects;
+        const auto& gameObjectsInSystem = this->objects.objects;
         
         if constexpr (Internal::has_EnableConcurrency<SystemType, int()>::value) {
         
@@ -34,9 +34,6 @@ struct System : SystemBase<T...> {
                taskRunner.RunTask([this, &gameObjectsInSystem, &components, this_system, fromIndex, toIndex]() {
                    for(int i = fromIndex; i<toIndex; ++i) {
                        const auto gameObject = gameObjectsInSystem[i];
-                       if (!this->template GameObjectContainsAll(gameObject, components)) {
-                           continue;
-                       }
                        const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                        const auto iterator = std::tuple_cat(this_system, componentValues);
                        std::apply(&SystemType::Update, iterator);
@@ -49,9 +46,6 @@ struct System : SystemBase<T...> {
         } else {
             for(int i = 0; i<gameObjectsInSystem.size(); ++i) {
                 const auto gameObject = gameObjectsInSystem[i];
-                if (!this->template GameObjectContainsAll(gameObject, components)) {
-                    continue;
-                }
                 const auto componentValues = this->template GetComponentValuesFromGameObject(gameObject, components);
                 const auto iterator = std::tuple_cat(this_system, componentValues);
                 std::apply(&SystemType::Update, iterator);
@@ -59,9 +53,6 @@ struct System : SystemBase<T...> {
         }
 
         for(const auto gameObject : gameObjectsInSystem) {
-            if (!this->template GameObjectContainsAll(gameObject, components)) {
-                continue;
-            }
             this->template ChangeComponents(gameObject, components);
         }
     }
