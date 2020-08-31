@@ -35,8 +35,8 @@ void BoundingBoxTests::Run() {
         scene.AddComponent<LocalBoundingBox>(go);
         scene.AddComponent<WorldBoundingBox>(go);
         
-        //scene.GetComponent<WorldTransform>(go).world = glm::trans::CreateScale(2.0f);
-        //scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0}, {10,10}};
+        scene.GetComponent<WorldTransform>(go).world = scale(mat4x4(1.0f), {2.0f,2.0f,2.0f});
+        scene.GetComponent<LocalBoundingBox>(go).bounds = {{0,0,0}, {10,10,10}};
         
         scene.Update();
         
