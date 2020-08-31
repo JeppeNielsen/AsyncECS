@@ -19,6 +19,25 @@
 
 using namespace Game;
 
+struct KeyDeleter {
+    std::string key;
+};
+
+
+struct KeyDeleterSystem : AsyncECS::SystemChangedGameObject<const KeyDeleter, const Input>,
+AsyncECS::SceneModifier<const KeyDeleter> {
+    
+    void Update(AsyncECS::GameObject object, const KeyDeleter& deleter, const Input& input) {
+        for(auto keyDown : input.keysDown) {
+            if (keyDown.key == deleter.key) {
+                Modify([object] (Modifier& modifier) {
+                    modifier.RemoveGameObject(object);
+                });
+            }
+        }
+    }
+};
+
 struct ClickDeleter {
     
 };
@@ -32,8 +51,8 @@ AsyncECS::SceneModifier<const ClickDeleter> {
     
     void Update(const ClickDeleter& deleter, const Pickable& pickable) {
         
-        if (pickable.clicked.size()>0) {
-            auto& pickEvent = pickable.clicked[0];
+        if (pickable.down.size()>0) {
+            auto& pickEvent = pickable.down[0];
             auto object = pickEvent.object;
             Modify([object] (Modifier& modifier) {
                 modifier.RemoveGameObject(object);
@@ -100,11 +119,13 @@ struct ColorizerSystem : AsyncECS::System<Mesh, Colorizer> {
 struct State : IState {
     using ComponentTypes = AsyncECS::ComponentTypes<
         WorldBoundingBox, LocalBoundingBox, WorldTransform, Camera, Mesh, LocalTransform, Hierarchy, Rotator,
-        Colorizer, Input, Pickable, ClickScaler, ClickDeleter
+        Colorizer, Input, Pickable, ClickScaler, ClickDeleter,
+        KeyDeleter
     >;
     using Systems = AsyncECS::SystemTypes<
         RenderOctreeSystem, RenderSystem, WorldBoundingBoxSystem, HierarchySystem, WorldTransformSystem, RotatorSystem,
-        ColorizerSystem, InputSystem, PickableSystem, ClickScalerSystem, ClickDeleterSystem
+        ColorizerSystem, InputSystem, PickableSystem, ClickScalerSystem, ClickDeleterSystem,
+        KeyDeleterSystem
     >;
     
     using Registry = AsyncECS::Registry<ComponentTypes>;
@@ -117,8 +138,8 @@ struct State : IState {
     
     void Initialize() override {
         
-        //Game::Tests::LogicTests logicTests;
-        //logicTests.Run();
+        Game::Tests::LogicTests logicTests;
+        logicTests.Run();
         
         scene = std::make_shared<Scene>(registry);
         scene->GetSystem<InputSystem>().SetDevice(device.Input.Device());
@@ -138,15 +159,21 @@ struct State : IState {
         auto quad1 = CreateQuad({0,0,0}, {1.0f,1.0f,1.0f}, false);
         
         
-        //auto quad2 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
-            
+        auto quad2 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad1);
+        
+        auto quad3 = CreateQuad({2.0f,0,0}, {1.0f,1.0f,0.0f}, false, quad2);
+        
         
         for (int x=0; x<10; x++) {
             for (int y=0; y<10  ; y++) {
                 auto q = CreateQuad({x*1.0f,y*1.0f,0.0f}, {0.7f,0.7f,1.0f}, false, true ? quad1 : AsyncECS::GameObjectNull);
             
+                auto q2 = CreateQuad({0.0,1.0,0.0f}, {0.7f,0.7f,1.0f}, false, q);
+                
+                
                 if (x == 4 && y == 4) {
                     scene->AddComponent<Rotator>(q, 1.0f);
+                    scene->AddComponent<KeyDeleter>(q, "D");
                 }
             }
         }
@@ -231,7 +258,7 @@ struct State : IState {
         //vec2 pos =((screenSize * 0.5f - mPos) - screenSize*0.5f) * 0.01f;
         
         vec2 pos = mPos * 0.005f;
-        //scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
+        scene->GetComponent<LocalTransform>(0).position = vec3(pos,0);
         
         //std::cout <<"fps: " << 1.0f / dt<< "\n";
         
@@ -252,7 +279,7 @@ struct State : IState {
 
 
 
-int main() {
+int main_rendering() {
     Engine e;
     e.Start<State>();
     return 0;
